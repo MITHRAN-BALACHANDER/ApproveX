@@ -7,6 +7,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 // Import routes
+import authRoutes from './routes/authRoutes.js';
 import dutyRequestRoutes from './routes/dutyRequestRoutes.js';
 
 dotenv.config();
@@ -26,6 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/duty-requests', dutyRequestRoutes);
 
 // Basic route
@@ -36,16 +38,23 @@ app.get('/', (req, res) => {
 // MongoDB connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/odprovider';
 
+console.log('Attempting to connect to MongoDB at:', MONGODB_URI);
+
 mongoose.connect(MONGODB_URI)
   .then(() => {
-    console.log('Connected to MongoDB');
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
+    console.log('✅ Connected to MongoDB successfully!');
   })
   .catch((error) => {
-    console.error('MongoDB connection error:', error);
+    console.error('❌ MongoDB connection error:', error.message);
+    console.log('⚠️  Server will start without database connection');
+    console.log('💡 Make sure MongoDB is running on your system for full functionality');
   });
+
+// Start server regardless of DB connection
+app.listen(PORT, () => {
+  console.log(`🚀 Server is running on port ${PORT}`);
+  console.log(`📡 API available at http://localhost:${PORT}`);
+});
 
 // Error handling middleware
 app.use((error, req, res, next) => {

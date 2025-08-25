@@ -1,1 +1,34 @@
 @import "tailwindcss";
+
+:root {
+  --color-primary: #3a86ff;
+  --color-primary-light: #8bb8ff;
+  --color-secondary: #ff006e;
+  --color-dark: #2b2d42;
+  --color-light: #f8f9fa;
+  --color-success: #38b000;
+}
+
+.animated-gradient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 5px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary), var(--color-primary));
+  background-size: 200% 100%;
+  animation: gradient 3s ease infinite;
+  z-index: 1000;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
