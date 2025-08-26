@@ -52,6 +52,28 @@ const userSchema = new mongoose.Schema({
     designation: {
       type: String,
       trim: true
+    },
+    // Admin-specific fields
+    adminLevel: {
+      type: String,
+      enum: ['super_admin', 'admin'],
+      default: 'admin'
+    },
+    // Teacher management fields
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: false // Optional for manually created teachers
+    },
+    approvalStats: {
+      totalRequests: { type: Number, default: 0 },
+      approved: { type: Number, default: 0 },
+      rejected: { type: Number, default: 0 },
+      pending: { type: Number, default: 0 }
+    },
+    isApprover: {
+      type: Boolean,
+      default: function() { return this.role === 'teacher'; }
     }
   },
   createdAt: {
@@ -61,6 +83,33 @@ const userSchema = new mongoose.Schema({
   isActive: {
     type: Boolean,
     default: true
+  },
+  // Email verification fields
+  isEmailVerified: {
+    type: Boolean,
+    default: false
+  },
+  emailVerificationToken: {
+    type: String,
+    sparse: true
+  },
+  emailVerificationExpires: {
+    type: Date
+  },
+  // College email fields - optional for teachers using external emails
+  collegeEmail: {
+    type: String,
+    required: function() { return this.role === 'student'; }, // Only required for students
+    unique: function() { return this.role === 'student' && this.collegeEmail; }, // Only unique for students
+    sparse: true, // Allow multiple documents without this field
+    trim: true,
+    lowercase: true
+  },
+  rollNumber: {
+    type: String,
+    required: function() { return this.role === 'student'; },
+    trim: true,
+    uppercase: true
   }
 });
 

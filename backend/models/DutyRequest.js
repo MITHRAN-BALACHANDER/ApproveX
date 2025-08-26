@@ -163,7 +163,8 @@ const dutyRequestSchema = new mongoose.Schema({
         default: 'pending'
       },
       remarks: String,
-      approvedAt: Date
+      approvedAt: Date,
+      reviewedBy: String // Teacher name for tracking
     },
     hod: {
       teacherId: {
@@ -176,7 +177,8 @@ const dutyRequestSchema = new mongoose.Schema({
         default: 'pending'
       },
       remarks: String,
-      approvedAt: Date
+      approvedAt: Date,
+      reviewedBy: String // Teacher name for tracking
     },
     principal: {
       teacherId: {
@@ -189,9 +191,38 @@ const dutyRequestSchema = new mongoose.Schema({
         default: 'pending'
       },
       remarks: String,
-      approvedAt: Date
+      approvedAt: Date,
+      reviewedBy: String // Teacher name for tracking
     }
   },
+
+  // Approval History for Admin Tracking
+  approvalHistory: [{
+    reviewedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    reviewerName: {
+      type: String,
+      required: true
+    },
+    reviewerRole: {
+      type: String,
+      enum: ['mentor', 'hod', 'principal'],
+      required: true
+    },
+    action: {
+      type: String,
+      enum: ['approved', 'rejected'],
+      required: true
+    },
+    remarks: String,
+    reviewedAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
 
   // Supporting Documents
   documents: {

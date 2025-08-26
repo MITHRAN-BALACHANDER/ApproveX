@@ -3,10 +3,16 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Login from './components/Login';
 import Register from './components/Register';
+import NewRegister from './components/NewRegister';
+import EmailVerification from './components/EmailVerification';
+import AdminLogin from './components/AdminLogin';
+import AdminDashboard from './components/AdminDashboard';
+import TeacherManagement from './components/TeacherManagement';
+import TeacherLogin from './components/TeacherLogin';
+import TeacherDashboard from './components/TeacherDashboard';
 import Home from './pages/Home';
 import About from './pages/About';
 import Contact from './pages/Contact';
-import TeacherDashboard from './components/TeacherDashboard';
 import { getCurrentUser, isAuthenticated, removeAuthToken } from './services/api';
 
 function App() {
@@ -64,7 +70,36 @@ function App() {
           <Route 
             path='/register' 
             element={
-              user ? <Navigate to="/" replace /> : <Register onRegister={handleRegister} />
+              user ? <Navigate to="/" replace /> : <NewRegister onRegister={handleRegister} />
+            } 
+          />
+          <Route 
+            path='/verify-email' 
+            element={
+              user ? <Navigate to="/" replace /> : <EmailVerification onRegister={handleRegister} />
+            } 
+          />
+          
+          {/* Admin routes */}
+          <Route path='/admin/login' element={<AdminLogin />} />
+          <Route path='/admin/dashboard' element={<AdminDashboard />} />
+          <Route path='/admin/teachers' element={<TeacherManagement />} />
+          
+          {/* Teacher routes */}
+          <Route path='/teacher/login' element={<TeacherLogin />} />
+          <Route path='/teacher/dashboard' element={<TeacherDashboard />} />
+          
+          {/* Student routes */}
+          <Route 
+            path='/student/login' 
+            element={
+              user ? <Navigate to="/" replace /> : <Login onLogin={handleLogin} />
+            } 
+          />
+          <Route 
+            path='/student/register' 
+            element={
+              user ? <Navigate to="/" replace /> : <NewRegister onRegister={handleRegister} />
             } 
           />
           
@@ -72,7 +107,7 @@ function App() {
           <Route 
             path='/' 
             element={
-              user ? <Home user={user} /> : <Navigate to="/login" replace />
+              user ? <Home user={user} /> : <Navigate to="/student/login" replace />
             } 
           />
           <Route 
@@ -84,18 +119,18 @@ function App() {
           <Route 
             path='/about' 
             element={
-              user ? <About /> : <Navigate to="/login" replace />
+              user ? <About /> : <Navigate to="/student/login" replace />
             } 
           />
           <Route 
             path='/contact' 
             element={
-              user ? <Contact /> : <Navigate to="/login" replace />
+              user ? <Contact /> : <Navigate to="/student/login" replace />
             } 
           />
           
           {/* Fallback route */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/student/login" replace />} />
         </Routes>
       </main>
     </div>
