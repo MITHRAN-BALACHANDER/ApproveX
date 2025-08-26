@@ -194,27 +194,22 @@ router.get('/requests/:id', verifyTeacher, async (req, res) => {
   }
 });
 
-// Approve or reject OD request
+// Approve or reject OD request (Single approval system)
 router.post('/requests/:id/review', verifyTeacher, async (req, res) => {
   try {
     const { id } = req.params;
-    const { action, remarks, approvalLevel } = req.body; // approvalLevel: 'mentor', 'hod', 'principal'
+    const { action, remarks } = req.body;
 
     console.log('📝 Review request received:', {
       requestId: id,
       teacherId: req.teacher._id,
       teacherName: req.teacher.profile.fullName,
       action,
-      remarks,
-      approvalLevel
+      remarks
     });
 
     if (!['approved', 'rejected'].includes(action)) {
       return res.status(400).json({ message: 'Invalid action. Must be approved or rejected.' });
-    }
-
-    if (!['mentor', 'hod', 'principal'].includes(approvalLevel)) {
-      return res.status(400).json({ message: 'Invalid approval level.' });
     }
 
     const request = await DutyRequest.findById(id)
@@ -224,51 +219,37 @@ router.post('/requests/:id/review', verifyTeacher, async (req, res) => {
       return res.status(404).json({ message: 'Request not found' });
     }
 
-    // Check if already reviewed at this level
-    if (request.approvals[approvalLevel].status !== 'pending') {
+    // Check if already reviewed
+    if (request.approval.status !== 'pending') {
       return res.status(400).json({ 
-        message: `Request already ${request.approvals[approvalLevel].status} at ${approvalLevel} level by ${request.approvals[approvalLevel].reviewedBy}` 
+        message: `Request already ${request.approval.status} by ${request.approval.teacherName}` 
       });
     }
 
     // Update approval status
-    request.approvals[approvalLevel] = {
+    request.approval = {
       teacherId: req.teacher._id,
+      teacherName: req.teacher.profile.fullName,
+      teacherDesignation: req.teacher.profile.designation || 'Staff',
+      teacherDepartment: req.teacher.profile.department || 'N/A',
       status: action,
       remarks: remarks || '',
-      approvedAt: new Date(),
-      reviewedBy: req.teacher.profile.fullName,
-      reviewerDesignation: req.teacher.profile.designation,
-      reviewerDepartment: req.teacher.profile.department
+      approvedAt: new Date()
     };
+
+    // Update overall status (immediate approval/rejection)
+    request.overallStatus = action === 'approved' ? 'approved' : 'rejected';
 
     // Add to approval history
     request.approvalHistory.push({
       reviewedBy: req.teacher._id,
       reviewerName: req.teacher.profile.fullName,
-      reviewerDesignation: req.teacher.profile.designation,
-      reviewerDepartment: req.teacher.profile.department,
-      reviewerRole: approvalLevel,
-      action,
+      reviewerDesignation: req.teacher.profile.designation || 'Staff',
+      reviewerDepartment: req.teacher.profile.department || 'N/A',
+      action: action,
       remarks: remarks || '',
       reviewedAt: new Date()
     });
-
-    // Update overall status based on approval chain
-    if (action === 'rejected') {
-      request.overallStatus = 'rejected';
-    } else {
-      // Check if all required approvals are complete
-      const mentorApproved = request.approvals.mentor.status === 'approved';
-      const hodApproved = request.approvals.hod.status === 'approved';
-      const principalApproved = request.approvals.principal.status === 'approved';
-
-      if (mentorApproved && hodApproved && principalApproved) {
-        request.overallStatus = 'approved';
-      } else {
-        request.overallStatus = 'under_review';
-      }
-    }
 
     await request.save();
 
@@ -281,18 +262,24 @@ router.post('/requests/:id/review', verifyTeacher, async (req, res) => {
     });
 
     // Send notification email to student
-    await sendApprovalStatusEmail(
-      request.studentId.email,
-      request.studentId.profile.fullName,
-      request.eventDetails.eventTitle,
-      action,
-      approvalLevel,
-      req.teacher.profile.fullName,
-      req.teacher.profile.designation,
-      req.teacher.profile.department,
-      remarks,
-      request.overallStatus
-    );
+    try {
+      await sendApprovalStatusEmail(
+        request.studentId.email,
+        request.studentId.profile.fullName,
+        request.eventDetails.eventTitle,
+        action,
+        'teacher', // Single approval level
+        req.teacher.profile.fullName,
+        req.teacher.profile.designation || 'Staff',
+        req.teacher.profile.department || 'N/A',
+        remarks,
+        request.overallStatus
+      );
+      console.log('📧 Approval email sent successfully');
+    } catch (emailError) {
+      console.error('📧 Email sending failed:', emailError);
+      // Don't fail the request if email fails
+    }
 
     res.json({
       success: true,
@@ -300,7 +287,7 @@ router.post('/requests/:id/review', verifyTeacher, async (req, res) => {
       request: {
         id: request._id,
         overallStatus: request.overallStatus,
-        approvals: request.approvals,
+        approval: request.approval,
         approvalHistory: request.approvalHistory
       }
     });

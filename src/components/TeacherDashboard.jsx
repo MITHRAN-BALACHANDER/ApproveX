@@ -10,7 +10,6 @@ const TeacherDashboard = () => {
   const [reviewModal, setReviewModal] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [reviewData, setReviewData] = useState({
-    approvalLevel: '',
     status: '',
     remarks: ''
   });
@@ -54,7 +53,6 @@ const TeacherDashboard = () => {
   const handleReviewRequest = (request) => {
     setSelectedRequest(request);
     setReviewData({
-      approvalLevel: '',
       status: '',
       remarks: ''
     });
@@ -76,8 +74,7 @@ const TeacherDashboard = () => {
     try {
       console.log('Submitting review with data:', {
         action: reviewData.status,
-        remarks: reviewData.remarks,
-        approvalLevel: reviewData.approvalLevel
+        remarks: reviewData.remarks
       });
 
       const response = await fetch(`http://localhost:5000/api/teacher/requests/${selectedRequest._id}/review`, {
@@ -88,8 +85,7 @@ const TeacherDashboard = () => {
         },
         body: JSON.stringify({
           action: reviewData.status, // 'approved' or 'rejected'
-          remarks: reviewData.remarks,
-          approvalLevel: reviewData.approvalLevel // 'mentor', 'hod', 'principal'
+          remarks: reviewData.remarks
         })
       });
 
@@ -102,7 +98,6 @@ const TeacherDashboard = () => {
         setShowDetailedView(false);
         setSelectedRequest(null);
         setReviewData({
-          approvalLevel: '',
           status: '',
           remarks: ''
         });
@@ -196,7 +191,7 @@ const TeacherDashboard = () => {
                   <div className="flex-shrink-0">
                     <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
                       <span className="text-white text-sm font-medium">
-                        {requests.filter(r => r.overallStatus === 'pending' || r.overallStatus === 'under_review').length}
+                        {requests.filter(r => r.overallStatus === 'pending' || r.overallStatus === 'under_review' || r.overallStatus === 'submitted').length}
                       </span>
                     </div>
                   </div>
@@ -204,7 +199,7 @@ const TeacherDashboard = () => {
                     <dl>
                       <dt className="text-sm font-medium text-gray-500 truncate">Pending Review</dt>
                       <dd className="text-lg font-medium text-gray-900">
-                        {requests.filter(r => r.overallStatus === 'pending' || r.overallStatus === 'under_review').length}
+                        {requests.filter(r => r.overallStatus === 'pending' || r.overallStatus === 'under_review' || r.overallStatus === 'submitted').length}
                       </dd>
                     </dl>
                   </div>
@@ -255,7 +250,7 @@ const TeacherDashboard = () => {
                       <div className="flex items-center">
                         <div className="flex-shrink-0">
                           <div className={`w-2 h-2 rounded-full ${
-                            request.overallStatus === 'pending' || request.overallStatus === 'under_review' ? 'bg-yellow-400' :
+                            request.overallStatus === 'pending' || request.overallStatus === 'under_review' || request.overallStatus === 'submitted' ? 'bg-yellow-400' :
                             request.overallStatus === 'approved' ? 'bg-green-400' :
                             request.overallStatus === 'rejected' ? 'bg-red-400' :
                             'bg-gray-400'
@@ -275,14 +270,19 @@ const TeacherDashboard = () => {
                       </div>
                       <div className="flex items-center space-x-4">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          request.overallStatus === 'pending' || request.overallStatus === 'under_review' ? 'bg-yellow-100 text-yellow-800' :
+                          request.overallStatus === 'pending' || request.overallStatus === 'under_review' || request.overallStatus === 'submitted' ? 'bg-yellow-100 text-yellow-800' :
                           request.overallStatus === 'approved' ? 'bg-green-100 text-green-800' :
                           request.overallStatus === 'rejected' ? 'bg-red-100 text-red-800' :
                           'bg-gray-100 text-gray-800'
                         }`}>
-                          {(request.overallStatus || 'unknown').charAt(0).toUpperCase() + (request.overallStatus || 'unknown').slice(1).replace('_', ' ')}
+                          {(() => {
+                            const status = request.overallStatus || 'unknown';
+                            if (status === 'under_review') return 'Under Review';
+                            if (status === 'submitted') return 'Awaiting Review';
+                            return status.charAt(0).toUpperCase() + status.slice(1).replace('_', ' ');
+                          })()}
                         </span>
-                        {(request.overallStatus === 'pending' || request.overallStatus === 'under_review') && (
+                        {(request.overallStatus === 'pending' || request.overallStatus === 'under_review' || request.overallStatus === 'submitted') && (
                           <button
                             onClick={() => handleReviewRequest(request)}
                             className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm"
@@ -441,47 +441,46 @@ const TeacherDashboard = () => {
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h4 className="text-lg font-semibold text-gray-900 mb-3">⚡ Approval Status</h4>
                 <div className="space-y-2 text-sm">
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="text-center">
                     <div className="text-center">
-                      <p className="font-semibold">Mentor</p>
-                      <span className={`inline-block px-2 py-1 rounded text-xs ${
-                        selectedRequest.approvals?.mentor?.status === 'approved' ? 'bg-green-100 text-green-800' :
-                        selectedRequest.approvals?.mentor?.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                      <p className="font-semibold">Current Status</p>
+                      <span className={`inline-block px-3 py-2 rounded text-sm font-medium ${
+                        selectedRequest.approval?.status === 'approved' ? 'bg-green-100 text-green-800' :
+                        selectedRequest.approval?.status === 'rejected' ? 'bg-red-100 text-red-800' :
                         'bg-yellow-100 text-yellow-800'
                       }`}>
-                        {selectedRequest.approvals?.mentor?.status?.toUpperCase() || 'PENDING'}
+                        {selectedRequest.approval?.status?.toUpperCase() || 'PENDING REVIEW'}
                       </span>
                     </div>
-                    <div className="text-center">
-                      <p className="font-semibold">HOD</p>
-                      <span className={`inline-block px-2 py-1 rounded text-xs ${
-                        selectedRequest.approvals?.hod?.status === 'approved' ? 'bg-green-100 text-green-800' :
-                        selectedRequest.approvals?.hod?.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                        'bg-yellow-100 text-yellow-800'
-                      }`}>
-                        {selectedRequest.approvals?.hod?.status?.toUpperCase() || 'PENDING'}
-                      </span>
-                    </div>
-                    <div className="text-center">
-                      <p className="font-semibold">Principal</p>
-                      <span className={`inline-block px-2 py-1 rounded text-xs ${
-                        selectedRequest.approvals?.principal?.status === 'approved' ? 'bg-green-100 text-green-800' :
-                        selectedRequest.approvals?.principal?.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                        'bg-yellow-100 text-yellow-800'
-                      }`}>
-                        {selectedRequest.approvals?.principal?.status?.toUpperCase() || 'PENDING'}
-                      </span>
-                    </div>
+                    
+                    {selectedRequest.approval?.status !== 'pending' && (
+                      <div className="mt-3 text-center">
+                        <p><strong>Reviewed by:</strong> {selectedRequest.approval?.teacherName}</p>
+                        <p><strong>Designation:</strong> {selectedRequest.approval?.teacherDesignation}</p>
+                        <p><strong>Department:</strong> {selectedRequest.approval?.teacherDepartment}</p>
+                        <p><strong>Date:</strong> {new Date(selectedRequest.approval?.approvedAt).toLocaleString()}</p>
+                        {selectedRequest.approval?.remarks && (
+                          <p><strong>Remarks:</strong> {selectedRequest.approval.remarks}</p>
+                        )}
+                      </div>
+                    )}
                   </div>
+                  
                   <div className="mt-3 text-center">
                     <p><strong>Overall Status:</strong> 
                       <span className={`ml-2 px-3 py-1 rounded-full text-xs font-medium ${
                         selectedRequest.overallStatus === 'approved' ? 'bg-green-100 text-green-800' :
                         selectedRequest.overallStatus === 'rejected' ? 'bg-red-100 text-red-800' :
                         selectedRequest.overallStatus === 'under_review' ? 'bg-blue-100 text-blue-800' :
+                        selectedRequest.overallStatus === 'submitted' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-yellow-100 text-yellow-800'
                       }`}>
-                        {(selectedRequest.overallStatus || 'pending').toUpperCase().replace('_', ' ')}
+                        {(() => {
+                          const status = selectedRequest.overallStatus || 'pending';
+                          if (status === 'under_review') return 'UNDER REVIEW';
+                          if (status === 'submitted') return 'AWAITING REVIEW';
+                          return status.toUpperCase().replace('_', ' ');
+                        })()}
                       </span>
                     </p>
                   </div>
@@ -494,14 +493,20 @@ const TeacherDashboard = () => {
                 <div className="space-y-2 text-sm">
                   <p><strong>Submitted:</strong> {new Date(selectedRequest.submittedAt).toLocaleString()}</p>
                   <p><strong>Last Updated:</strong> {new Date(selectedRequest.updatedAt).toLocaleString()}</p>
-                  {selectedRequest.approvals?.mentor?.approvedAt && (
-                    <p><strong>Mentor Review:</strong> {new Date(selectedRequest.approvals.mentor.approvedAt).toLocaleString()}</p>
+                  {selectedRequest.approval?.approvedAt && (
+                    <p><strong>Reviewed:</strong> {new Date(selectedRequest.approval.approvedAt).toLocaleString()}</p>
                   )}
-                  {selectedRequest.approvals?.hod?.approvedAt && (
-                    <p><strong>HOD Review:</strong> {new Date(selectedRequest.approvals.hod.approvedAt).toLocaleString()}</p>
-                  )}
-                  {selectedRequest.approvals?.principal?.approvedAt && (
-                    <p><strong>Principal Review:</strong> {new Date(selectedRequest.approvals.principal.approvedAt).toLocaleString()}</p>
+                  {selectedRequest.approvalHistory?.length > 0 && (
+                    <div className="mt-3">
+                      <p><strong>Review History:</strong></p>
+                      {selectedRequest.approvalHistory.map((history, index) => (
+                        <div key={index} className="ml-2 mt-1 text-xs bg-white p-2 rounded border">
+                          <p><strong>{history.reviewerName}</strong> ({history.reviewerDesignation})</p>
+                          <p>{history.action.toUpperCase()} on {new Date(history.reviewedAt).toLocaleString()}</p>
+                          {history.remarks && <p>Remarks: {history.remarks}</p>}
+                        </div>
+                      ))}
+                    </div>
                   )}
                 </div>
               </div>
@@ -509,7 +514,7 @@ const TeacherDashboard = () => {
 
             {/* Action Buttons */}
             <div className="flex justify-center space-x-4 mt-6 pt-4 border-t">
-              {(selectedRequest.overallStatus === 'pending' || selectedRequest.overallStatus === 'under_review') && (
+              {(selectedRequest.overallStatus === 'pending' || selectedRequest.overallStatus === 'under_review' || selectedRequest.overallStatus === 'submitted') && (
                 <button
                   onClick={handleProceedToReview}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
@@ -544,34 +549,22 @@ const TeacherDashboard = () => {
                 <p className="text-sm text-blue-600">
                   Student: {selectedRequest.studentInfo?.fullName || (selectedRequest.studentId?.profile?.fullName)}
                 </p>
+                <p className="text-sm text-green-600">
+                  ✅ <strong>One approval from any teacher/staff is sufficient</strong>
+                </p>
               </div>
 
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Approval Level</label>
-                <select
-                  value={reviewData.approvalLevel}
-                  onChange={(e) => setReviewData({...reviewData, approvalLevel: e.target.value})}
-                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-                  required
-                >
-                  <option value="">Select Level</option>
-                  <option value="mentor">Mentor</option>
-                  <option value="hod">HOD</option>
-                  <option value="principal">Principal</option>
-                </select>
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Status</label>
+                <label className="block text-sm font-medium text-gray-700">Decision *</label>
                 <select
                   value={reviewData.status}
                   onChange={(e) => setReviewData({...reviewData, status: e.target.value})}
                   className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
                   required
                 >
-                  <option value="">Select Status</option>
-                  <option value="approved">Approve</option>
-                  <option value="rejected">Reject</option>
+                  <option value="">Select Decision</option>
+                  <option value="approved">✅ Approve Request</option>
+                  <option value="rejected">❌ Reject Request</option>
                 </select>
               </div>
 
@@ -598,7 +591,7 @@ const TeacherDashboard = () => {
                 </button>
                 <button
                   onClick={submitReview}
-                  disabled={!reviewData.approvalLevel || !reviewData.status}
+                  disabled={!reviewData.status}
                   className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
                 >
                   ✅ Submit Review Decision

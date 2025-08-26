@@ -7,9 +7,13 @@ dotenv.config();
 
 async function checkRequests() {
   try {
-    // Try local MongoDB connection
-    await mongoose.connect('mongodb://localhost:27017/odprovider');
-    console.log('🔌 Connected to MongoDB');
+    // Connect to MongoDB Atlas
+    const MONGODB_URI = process.env.MONGODB_URI;
+    if (!MONGODB_URI) {
+      throw new Error('MONGODB_URI environment variable is not set');
+    }
+    await mongoose.connect(MONGODB_URI);
+    console.log('🔌 Connected to MongoDB Atlas');
 
     const requests = await DutyRequest.find()
       .populate('studentId', 'profile.fullName email')

@@ -589,7 +589,7 @@ const ComprehensiveDutyRequestForm = () => {
             {isSubmitting ? '🔄 Submitting Request...' : '📤 Submit OD Request'}
           </button>
           <p className="text-xs text-gray-500 mt-2">
-            Your request will be reviewed by Mentor → HOD → Principal
+            Your request will be reviewed by any available teacher/staff. Only one approval is needed!
           </p>
         </div>
       </form>

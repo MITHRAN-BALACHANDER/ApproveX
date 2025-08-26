@@ -150,50 +150,22 @@ const dutyRequestSchema = new mongoose.Schema({
     }
   },
 
-  // Approval Chain
-  approvals: {
-    mentor: {
-      teacherId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-      },
-      status: {
-        type: String,
-        enum: ['pending', 'approved', 'rejected'],
-        default: 'pending'
-      },
-      remarks: String,
-      approvedAt: Date,
-      reviewedBy: String // Teacher name for tracking
+  // Single Approval System
+  approval: {
+    teacherId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
     },
-    hod: {
-      teacherId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-      },
-      status: {
-        type: String,
-        enum: ['pending', 'approved', 'rejected'],
-        default: 'pending'
-      },
-      remarks: String,
-      approvedAt: Date,
-      reviewedBy: String // Teacher name for tracking
+    teacherName: String,
+    teacherDesignation: String,
+    teacherDepartment: String,
+    status: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'pending'
     },
-    principal: {
-      teacherId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-      },
-      status: {
-        type: String,
-        enum: ['pending', 'approved', 'rejected'],
-        default: 'pending'
-      },
-      remarks: String,
-      approvedAt: Date,
-      reviewedBy: String // Teacher name for tracking
-    }
+    remarks: String,
+    approvedAt: Date
   },
 
   // Approval History for Admin Tracking
@@ -207,9 +179,12 @@ const dutyRequestSchema = new mongoose.Schema({
       type: String,
       required: true
     },
-    reviewerRole: {
+    reviewerDesignation: {
       type: String,
-      enum: ['mentor', 'hod', 'principal'],
+      required: true
+    },
+    reviewerDepartment: {
+      type: String,
       required: true
     },
     action: {

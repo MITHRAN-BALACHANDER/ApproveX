@@ -43,31 +43,25 @@ app.get('/', (req, res) => {
   res.json({ message: 'Student On Duty Request API is running!' });
 });
 
-// MongoDB connection with Atlas fallback
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/odprovider';
-const LOCAL_MONGODB_URI = 'mongodb://localhost:27017/odprovider';
+// MongoDB Atlas connection only
+const MONGODB_URI = process.env.MONGODB_URI;
 
-console.log('Attempting to connect to MongoDB at:', MONGODB_URI);
+if (!MONGODB_URI) {
+  console.error('❌ MONGODB_URI environment variable is not set');
+  console.log('💡 Please set MONGODB_URI in your .env file');
+  process.exit(1);
+}
 
-// Try Atlas first, then fallback to local if it fails
+console.log('Attempting to connect to MongoDB Atlas...');
+
 mongoose.connect(MONGODB_URI)
   .then(() => {
     console.log('✅ Connected to MongoDB Atlas successfully!');
   })
   .catch((error) => {
     console.error('❌ MongoDB Atlas connection error:', error.message);
-    console.log('🔄 Trying to connect to local MongoDB...');
-    
-    // Fallback to local MongoDB
-    mongoose.connect(LOCAL_MONGODB_URI)
-      .then(() => {
-        console.log('✅ Connected to local MongoDB successfully!');
-      })
-      .catch((localError) => {
-        console.error('❌ Local MongoDB connection also failed:', localError.message);
-        console.log('⚠️  Server will start without database connection');
-        console.log('💡 Please check your MongoDB Atlas credentials or start local MongoDB');
-      });
+    console.log('💡 Please check your MongoDB Atlas credentials and network connection');
+    process.exit(1);
   });
 
 // Start server regardless of DB connection

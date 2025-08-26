@@ -1,15 +1,23 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import User from './models/User.js';
+import dotenv from 'dotenv';
 
-// MongoDB connection string - update if different
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/odprovider';
+dotenv.config();
+
+// MongoDB connection string - Atlas only
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  console.error('❌ MONGODB_URI environment variable is not set');
+  process.exit(1);
+}
 
 async function createAdmin() {
   try {
-    // Connect to MongoDB
+    // Connect to MongoDB Atlas
     await mongoose.connect(MONGODB_URI);
-    console.log('Connected to MongoDB');
+    console.log('Connected to MongoDB Atlas');
 
     // Admin details
     const adminData = {
