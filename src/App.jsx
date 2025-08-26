@@ -1,53 +1,85 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Login from './components/Login';
-import Register from './components/Register';
+// import RoleBasedLogin from './components/RoleBasedLogin';
+import ProtectedRoute from './components/ProtectedRoute';
+import RoleBasedDashboard from './components/RoleBasedDashboard';
+import RoleBasedLogin from './components/RBLogin.jsx';
 import NewRegister from './components/NewRegister';
 import EmailVerification from './components/EmailVerification';
-import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
 import TeacherManagement from './components/TeacherManagement';
-import TeacherLogin from './components/TeacherLogin';
 import TeacherDashboard from './components/TeacherDashboard';
+import StudentDashboard from './components/StudentDashboard';
 import Home from './pages/Home';
 import About from './pages/About';
 import Contact from './pages/Contact';
-import { getCurrentUser, isAuthenticated, removeAuthToken } from './services/api';
+import authService from './services/authService';
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const initializeAuth = () => {
-      if (isAuthenticated()) {
-        const currentUser = getCurrentUser();
-        setUser(currentUser);
+    const initializeAuth = async () => {
+      try {
+        // Get current authentication status
+        const authStatus = authService.getAuthStatus();
+        
+        if (authStatus.isAuthenticated) {
+          // Verify token validity with backend
+          const verification = await authService.verifyToken();
+          
+          if (verification.valid) {
+            // Get fresh user data
+            const currentUser = await authService.getCurrentUser();
+            if (currentUser) {
+              setUser({ ...currentUser, role: authStatus.role });
+            } else {
+              // Use cached user info if API fails
+              setUser({ ...authStatus.userInfo, role: authStatus.role });
+            }
+          } else {
+            // Invalid token, clear authentication
+            authService.logout();
+            setUser(null);
+          }
+        }
+      } catch (error) {
+        console.error('Auth initialization error:', error);
+        // Use cached authentication if available
+        const authStatus = authService.getAuthStatus();
+        if (authStatus.isAuthenticated && authStatus.userInfo) {
+          setUser({ ...authStatus.userInfo, role: authStatus.role });
+        }
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     initializeAuth();
   }, []);
 
-  const handleLogin = (userData) => {
-    setUser(userData);
+  const handleLogin = async (userData, role) => {
+    setUser({ ...userData, role });
   };
 
   const handleLogout = () => {
-    removeAuthToken();
+    authService.logout();
     setUser(null);
   };
 
   const handleRegister = (userData) => {
-    setUser(userData);
+    setUser({ ...userData, role: 'student' });
   };
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-light)' }}>
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: 'var(--color-primary)' }}></div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--color-primary)' }}></div>
+          <p className="text-gray-600">Loading application...</p>
+        </div>
       </div>
     );
   }
@@ -60,77 +92,102 @@ function App() {
       
       <main>
         <Routes>
-          {/* Public routes */}
+          {/* Public login route */}
           <Route 
             path='/login' 
             element={
-              user ? <Navigate to="/" replace /> : <Login onLogin={handleLogin} />
+              user ? <Navigate to="/dashboard" replace /> : <RoleBasedLogin onLogin={handleLogin} />
             } 
           />
+          
+          {/* Registration routes */}
           <Route 
             path='/register' 
             element={
-              user ? <Navigate to="/" replace /> : <NewRegister onRegister={handleRegister} />
+              user ? <Navigate to="/dashboard" replace /> : <NewRegister onRegister={handleRegister} />
             } 
           />
           <Route 
             path='/verify-email' 
             element={
-              user ? <Navigate to="/" replace /> : <EmailVerification onRegister={handleRegister} />
+              user ? <Navigate to="/dashboard" replace /> : <EmailVerification onRegister={handleRegister} />
             } 
           />
           
-          {/* Admin routes */}
-          <Route path='/admin/login' element={<AdminLogin />} />
-          <Route path='/admin/dashboard' element={<AdminDashboard />} />
-          <Route path='/admin/teachers' element={<TeacherManagement />} />
-          
-          {/* Teacher routes */}
-          <Route path='/teacher/login' element={<TeacherLogin />} />
-          <Route path='/teacher/dashboard' element={<TeacherDashboard />} />
-          
-          {/* Student routes */}
-          <Route 
-            path='/student/login' 
-            element={
-              user ? <Navigate to="/" replace /> : <Login onLogin={handleLogin} />
-            } 
-          />
-          <Route 
-            path='/student/register' 
-            element={
-              user ? <Navigate to="/" replace /> : <NewRegister onRegister={handleRegister} />
-            } 
-          />
-          
-          {/* Protected routes */}
-          <Route 
-            path='/' 
-            element={
-              user ? <Home user={user} /> : <Navigate to="/student/login" replace />
-            } 
-          />
+          {/* Main dashboard route */}
           <Route 
             path='/dashboard' 
             element={
-              user && user.role === 'teacher' ? <TeacherDashboard /> : <Navigate to="/" replace />
+              <ProtectedRoute user={user}>
+                <RoleBasedDashboard user={user} onLogout={handleLogout} />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Admin specific routes */}
+          <Route 
+            path='/admin/dashboard' 
+            element={
+              <ProtectedRoute user={user} allowedRoles={['admin']}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path='/admin/teachers' 
+            element={
+              <ProtectedRoute user={user} allowedRoles={['admin']}>
+                <TeacherManagement />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Teacher specific routes */}
+          <Route 
+            path='/teacher/dashboard' 
+            element={
+              <ProtectedRoute user={user} allowedRoles={['teacher']}>
+                <TeacherDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Student specific routes */}
+          <Route 
+            path='/student/dashboard' 
+            element={
+              <ProtectedRoute user={user} allowedRoles={['student']}>
+                <StudentDashboard userInfo={user} onLogout={handleLogout} />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Legacy routes for compatibility */}
+          <Route 
+            path='/' 
+            element={
+              user ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />
             } 
           />
           <Route 
             path='/about' 
             element={
-              user ? <About /> : <Navigate to="/student/login" replace />
+              <ProtectedRoute user={user}>
+                <About />
+              </ProtectedRoute>
             } 
           />
           <Route 
             path='/contact' 
             element={
-              user ? <Contact /> : <Navigate to="/student/login" replace />
+              <ProtectedRoute user={user}>
+                <Contact />
+              </ProtectedRoute>
             } 
           />
           
           {/* Fallback route */}
-          <Route path="*" element={<Navigate to="/student/login" replace />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </main>
     </div>

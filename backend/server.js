@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url';
 
 // Import routes
 import authRoutes from './routes/authRoutes.js';
+import roleBasedAuth from './routes/roleBasedAuth.js';
 import dutyRequestRoutes from './routes/dutyRequestRoutes.js';
 import testRoutes from './routes/testRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
@@ -32,6 +33,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/role-auth', roleBasedAuth);
 app.use('/api/duty-requests', dutyRequestRoutes);
 app.use('/api/test', testRoutes);
 app.use('/api/admin', adminRoutes);
