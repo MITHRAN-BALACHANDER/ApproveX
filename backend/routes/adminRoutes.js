@@ -128,6 +128,7 @@ router.post('/teachers', verifyAdmin, async (req, res) => {
       employeeId,
       designation,
       department,
+      password, // Optional custom password
       sendInvite = true
     } = req.body;
 
@@ -137,13 +138,13 @@ router.post('/teachers', verifyAdmin, async (req, res) => {
       return res.status(400).json({ message: 'Teacher with this email already exists' });
     }
 
-    // Generate temporary password
-    const tempPassword = Math.random().toString(36).slice(-8);
+    // Use provided password or generate temporary password
+    const teacherPassword = password || Math.random().toString(36).slice(-8);
 
     // Create teacher user
     const teacher = new User({
       email,
-      password: tempPassword,
+      password: teacherPassword,
       role: 'teacher',
       profile: {
         fullName,
@@ -159,7 +160,9 @@ router.post('/teachers', verifyAdmin, async (req, res) => {
 
     // Send invite email if requested
     if (sendInvite) {
-      await sendTeacherInviteEmail(email, tempPassword, fullName, designation);
+      // If custom password was set, don't send it via email for security
+      const emailPassword = password ? '(Custom password set by admin)' : teacherPassword;
+      await sendTeacherInviteEmail(email, emailPassword, fullName, designation);
     }
 
     res.status(201).json({
@@ -173,7 +176,7 @@ router.post('/teachers', verifyAdmin, async (req, res) => {
         designation: teacher.profile.designation,
         department: teacher.profile.department
       },
-      tempPassword: sendInvite ? undefined : tempPassword
+      tempPassword: sendInvite || password ? undefined : teacherPassword
     });
   } catch (error) {
     console.error('Create teacher error:', error);
@@ -380,6 +383,66 @@ router.get('/teachers/:id/performance', verifyAdmin, async (req, res) => {
   } catch (error) {
     console.error('Teacher performance error:', error);
     res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Delete teacher
+router.delete('/teachers/:id', verifyAdmin, async (req, res) => {
+  try {
+    const teacherId = req.params.id;
+    const adminId = req.user._id;
+    
+    // Check if teacher exists
+    const teacher = await User.findById(teacherId);
+    if (!teacher) {
+      return res.status(404).json({ message: 'Teacher not found' });
+    }
+    
+    if (teacher.role !== 'teacher') {
+      return res.status(400).json({ message: 'User is not a teacher' });
+    }
+
+    // Prevent self-deletion if admin is somehow trying to delete themselves
+    if (teacherId === adminId.toString()) {
+      return res.status(400).json({ message: 'You cannot delete your own account' });
+    }
+
+    // Check if teacher has any pending approvals or active responsibilities
+    const pendingApprovals = await DutyRequest.countDocuments({
+      [`approvals.${teacher.profile.designation.toLowerCase().replace(/\s+/g, '')}`]: { $exists: true },
+      overallStatus: 'pending'
+    });
+
+    if (pendingApprovals > 0) {
+      return res.status(400).json({ 
+        message: `Cannot delete teacher. They have ${pendingApprovals} pending approval(s). Please reassign or complete pending requests first.` 
+      });
+    }
+
+    // Log the deletion action for audit purposes
+    console.log(`🗑️ Admin ${req.user.email} is deleting teacher: ${teacher.profile.fullName} (${teacher.email})`);
+
+    // Store teacher info for response before deletion
+    const teacherInfo = {
+      name: teacher.profile.fullName,
+      email: teacher.email,
+      employeeId: teacher.profile.employeeId,
+      department: teacher.profile.department
+    };
+
+    // Delete the teacher
+    await User.findByIdAndDelete(teacherId);
+
+    // Log successful deletion
+    console.log(`✅ Teacher successfully deleted: ${teacherInfo.name} (${teacherInfo.email})`);
+
+    res.json({
+      success: true,
+      message: `Teacher ${teacherInfo.name} has been successfully deleted from the system`
+    });
+  } catch (error) {
+    console.error('Delete teacher error:', error);
+    res.status(500).json({ message: 'Server error while deleting teacher' });
   }
 });
 

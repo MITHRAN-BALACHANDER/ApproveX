@@ -7,6 +7,7 @@ const TeacherManagement = () => {
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingTeacher, setEditingTeacher] = useState(null);
+  const [selectedTeachers, setSelectedTeachers] = useState(new Set());
   const navigate = useNavigate();
 
   const {
@@ -71,7 +72,24 @@ const TeacherManagement = () => {
 
       if (response.ok) {
         const result = await response.json();
-        alert(result.message);
+        
+        // Enhanced success message for teacher creation
+        if (!editingTeacher) {
+          let successMessage = result.message;
+          if (data.password) {
+            successMessage += '\n\nCustom password has been set for the teacher.';
+            if (!data.sendInvite) {
+              successMessage += '\nPlease share the login credentials manually.';
+            }
+          } else if (result.tempPassword) {
+            successMessage += `\n\nTemporary password: ${result.tempPassword}`;
+            successMessage += '\nPlease share this password with the teacher.';
+          }
+          alert(successMessage);
+        } else {
+          alert(result.message);
+        }
+        
         fetchTeachers();
         setShowCreateForm(false);
         setEditingTeacher(null);
@@ -108,6 +126,143 @@ const TeacherManagement = () => {
     } catch (error) {
       console.error('Toggle status error:', error);
       alert('Failed to update teacher status.');
+    }
+  };
+
+  const deleteTeacher = async (teacherId, teacherName) => {
+    // Enhanced confirmation dialog
+    const confirmMessage = `⚠️ DELETE TEACHER CONFIRMATION ⚠️\n\n` +
+      `Teacher: ${teacherName}\n\n` +
+      `This will PERMANENTLY delete:\n` +
+      `• Teacher account and profile\n` +
+      `• All login credentials\n` +
+      `• Associated data and history\n\n` +
+      `❌ This action CANNOT be undone!\n\n` +
+      `Note: Deletion will be blocked if teacher has pending approvals.\n\n` +
+      `Type "DELETE" to confirm:`;
+
+    const userInput = prompt(confirmMessage);
+    
+    if (userInput !== "DELETE") {
+      if (userInput !== null) { // User didn't cancel, but entered wrong text
+        alert('Deletion cancelled. You must type "DELETE" exactly to confirm.');
+      }
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`http://localhost:5000/api/admin/teachers/${teacherId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        alert(`✅ Success!\n\n${result.message}`);
+        fetchTeachers();
+      } else {
+        const error = await response.json();
+        alert(`❌ Deletion Failed!\n\n${error.message}`);
+      }
+    } catch (error) {
+      console.error('Delete teacher error:', error);
+      alert('❌ Network Error!\n\nFailed to delete teacher. Please check your connection and try again.');
+    }
+  };
+
+  const handleSelectTeacher = (teacherId) => {
+    const newSelected = new Set(selectedTeachers);
+    if (newSelected.has(teacherId)) {
+      newSelected.delete(teacherId);
+    } else {
+      newSelected.add(teacherId);
+    }
+    setSelectedTeachers(newSelected);
+  };
+
+  const handleSelectAll = () => {
+    if (selectedTeachers.size === teachers.length) {
+      setSelectedTeachers(new Set());
+    } else {
+      setSelectedTeachers(new Set(teachers.map(t => t._id)));
+    }
+  };
+
+  const bulkDeleteTeachers = async () => {
+    if (selectedTeachers.size === 0) {
+      alert('Please select teachers to delete.');
+      return;
+    }
+
+    const selectedTeacherNames = teachers
+      .filter(t => selectedTeachers.has(t._id))
+      .map(t => t.profile.fullName);
+
+    const confirmMessage = `⚠️ BULK DELETE CONFIRMATION ⚠️\n\n` +
+      `You are about to delete ${selectedTeachers.size} teacher(s):\n` +
+      `${selectedTeacherNames.map(name => `• ${name}`).join('\n')}\n\n` +
+      `This will PERMANENTLY delete ALL selected teachers!\n\n` +
+      `❌ This action CANNOT be undone!\n\n` +
+      `Type "DELETE ALL" to confirm:`;
+
+    const userInput = prompt(confirmMessage);
+    
+    if (userInput !== "DELETE ALL") {
+      if (userInput !== null) {
+        alert('Bulk deletion cancelled. You must type "DELETE ALL" exactly to confirm.');
+      }
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('adminToken');
+      let successCount = 0;
+      let failedTeachers = [];
+
+      // Delete teachers one by one
+      for (const teacherId of selectedTeachers) {
+        try {
+          const response = await fetch(`http://localhost:5000/api/admin/teachers/${teacherId}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
+
+          if (response.ok) {
+            successCount++;
+          } else {
+            const error = await response.json();
+            const teacher = teachers.find(t => t._id === teacherId);
+            failedTeachers.push(`${teacher.profile.fullName}: ${error.message}`);
+          }
+        } catch (error) {
+          const teacher = teachers.find(t => t._id === teacherId);
+          failedTeachers.push(`${teacher.profile.fullName}: Network error`);
+        }
+      }
+
+      // Show results
+      let resultMessage = `✅ Bulk deletion completed!\n\n`;
+      resultMessage += `Successfully deleted: ${successCount} teacher(s)\n`;
+      
+      if (failedTeachers.length > 0) {
+        resultMessage += `\n❌ Failed to delete:\n${failedTeachers.join('\n')}`;
+      }
+
+      alert(resultMessage);
+      
+      // Reset selection and refresh list
+      setSelectedTeachers(new Set());
+      fetchTeachers();
+    } catch (error) {
+      console.error('Bulk delete error:', error);
+      alert('❌ Bulk deletion failed! Please try again.');
     }
   };
 
@@ -256,6 +411,42 @@ const TeacherManagement = () => {
                     {errors.department && <p className="text-red-600 text-sm">{errors.department.message}</p>}
                   </div>
 
+                  {!editingTeacher && (
+                    <>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Password (Optional)
+                          <span className="text-xs text-gray-500 ml-1">Leave empty for auto-generated password</span>
+                        </label>
+                        <input
+                          type="password"
+                          {...register('password', { 
+                            minLength: {
+                              value: 6,
+                              message: 'Password must be at least 6 characters'
+                            }
+                          })}
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          placeholder="Enter custom password or leave empty"
+                        />
+                        {errors.password && <p className="text-red-600 text-sm">{errors.password.message}</p>}
+                      </div>
+
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          {...register('sendInvite')}
+                          defaultChecked={true}
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        <label className="ml-2 block text-sm text-gray-700">
+                          Send invitation email to teacher
+                          <span className="text-xs text-gray-500 block">Uncheck if you plan to share credentials manually</span>
+                        </label>
+                      </div>
+                    </>
+                  )}
+
                   <div className="flex space-x-4 pt-4">
                     <button
                       type="submit"
@@ -279,13 +470,30 @@ const TeacherManagement = () => {
 
         {/* Teachers List */}
         <div className="bg-white shadow-md rounded-lg">
-          <div className="px-6 py-4 border-b border-gray-200">
+          <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
             <h3 className="text-lg font-medium text-gray-900">All Teachers ({teachers.length})</h3>
+            {selectedTeachers.size > 0 && (
+              <button
+                onClick={bulkDeleteTeachers}
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center space-x-2"
+              >
+                <span>🗑️</span>
+                <span>Delete Selected ({selectedTeachers.size})</span>
+              </button>
+            )}
           </div>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <input
+                      type="checkbox"
+                      checked={selectedTeachers.size === teachers.length && teachers.length > 0}
+                      onChange={handleSelectAll}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                  </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
@@ -296,7 +504,15 @@ const TeacherManagement = () => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {teachers.map((teacher) => (
-                  <tr key={teacher._id}>
+                  <tr key={teacher._id} className={selectedTeachers.has(teacher._id) ? 'bg-blue-50' : ''}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <input
+                        type="checkbox"
+                        checked={selectedTeachers.has(teacher._id)}
+                        onChange={() => handleSelectTeacher(teacher._id)}
+                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
                         <div className="text-sm font-medium text-gray-900">{teacher.profile.fullName}</div>
@@ -349,6 +565,13 @@ const TeacherManagement = () => {
                           className="text-purple-600 hover:text-purple-900"
                         >
                           Performance
+                        </button>
+                        <button
+                          onClick={() => deleteTeacher(teacher._id, teacher.profile.fullName)}
+                          className="text-red-600 hover:text-red-900 hover:bg-red-50 px-2 py-1 rounded transition-all duration-200"
+                          title="⚠️ Delete teacher permanently (cannot be undone)"
+                        >
+                          🗑️ Delete
                         </button>
                       </div>
                     </td>

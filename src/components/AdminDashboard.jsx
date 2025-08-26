@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ChangePassword from './ChangePassword';
 
 const AdminDashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showChangePassword, setShowChangePassword] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,6 +70,12 @@ const AdminDashboard = () => {
               <p className="text-gray-600">OD Provider System</p>
             </div>
             <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setShowChangePassword(true)}
+                className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition duration-200"
+              >
+                Change Password
+              </button>
               <button
                 onClick={() => navigate('/admin/teachers')}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition duration-200"
@@ -245,6 +253,13 @@ const AdminDashboard = () => {
           </div>
         </div>
       </main>
+
+      <ChangePassword
+        isOpen={showChangePassword}
+        onClose={() => setShowChangePassword(false)}
+        userToken={localStorage.getItem('adminToken')}
+        userRole="admin"
+      />
     </div>
   );
 };

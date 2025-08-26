@@ -336,7 +336,7 @@ export const sendTeacherInviteEmail = async (email, tempPassword, name, designat
 };
 
 // Send approval status email to student
-export const sendApprovalStatusEmail = async (email, studentName, eventTitle, action, approvalLevel, teacherName, remarks, overallStatus) => {
+export const sendApprovalStatusEmail = async (email, studentName, eventTitle, action, approvalLevel, teacherName, teacherDesignation, teacherDepartment, remarks, overallStatus) => {
   const transporter = createTransporter();
   
   const statusColor = action === 'approved' ? '#4CAF50' : '#f44336';
@@ -361,8 +361,11 @@ export const sendApprovalStatusEmail = async (email, studentName, eventTitle, ac
           
           <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 25px 0;">
             <h3 style="color: #333; margin-bottom: 15px;">Review Details:</h3>
-            <p style="margin: 5px 0;"><strong>Reviewed by:</strong> ${teacherName} (${approvalLevel.toUpperCase()})</p>
-            <p style="margin: 5px 0;"><strong>Status:</strong> 
+            <p style="margin: 5px 0;"><strong>Reviewed by:</strong> ${teacherName}</p>
+            <p style="margin: 5px 0;"><strong>Designation:</strong> ${teacherDesignation}</p>
+            <p style="margin: 5px 0;"><strong>Department:</strong> ${teacherDepartment}</p>
+            <p style="margin: 5px 0;"><strong>Review Level:</strong> ${approvalLevel.toUpperCase()}</p>
+            <p style="margin: 5px 0;"><strong>Action:</strong> 
               <span style="color: ${statusColor}; font-weight: bold;">${action.toUpperCase()}</span>
             </p>
             <p style="margin: 5px 0;"><strong>Overall Status:</strong> 
@@ -421,6 +424,82 @@ export const sendApprovalStatusEmail = async (email, studentName, eventTitle, ac
     return { success: true };
   } catch (error) {
     console.error('❌ Failed to send approval status email:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+// Send password change OTP email
+export const sendPasswordChangeOTPEmail = async (email, otp, name) => {
+  const transporter = createTransporter();
+  
+  const mailOptions = {
+    from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+    to: email,
+    subject: 'Password Change OTP - OD Provider System',
+    html: `
+      <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
+        <div style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+          <h1 style="color: white; margin: 0; font-size: 28px;">🔐 Password Change Request</h1>
+        </div>
+        
+        <div style="background: white; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+          <h2 style="color: #333; margin-bottom: 20px;">Hello ${name}!</h2>
+          
+          <p style="color: #666; font-size: 16px; line-height: 1.6; margin-bottom: 25px;">
+            You have requested to change your password for the OD Provider System. Please use the OTP below to complete the password change process.
+          </p>
+          
+          <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin: 20px 0;">
+            <p style="color: #856404; margin: 0; font-weight: bold;">
+              ⚠️ Security Notice: If you didn't request this password change, please ignore this email or contact support immediately.
+            </p>
+          </div>
+          
+          <div style="text-align: center; margin: 30px 0;">
+            <p style="color: #333; font-size: 18px; margin-bottom: 15px; font-weight: bold;">Your OTP Code:</p>
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; border: 3px solid #ff6b6b; margin: 20px 0;">
+              <span style="font-size: 42px; font-weight: bold; color: #ff6b6b; letter-spacing: 10px; font-family: 'Courier New', monospace; user-select: all;">
+                ${otp}
+              </span>
+            </div>
+            <p style="color: #666; font-size: 14px; margin-top: 15px;">
+              This OTP will expire in <strong>10 minutes</strong>
+            </p>
+          </div>
+          
+          <div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; margin: 25px 0;">
+            <h4 style="color: #1976d2; margin: 0 0 10px 0;">📋 How to use this OTP:</h4>
+            <ol style="color: #666; margin: 0; padding-left: 20px;">
+              <li>Go to the password change page</li>
+              <li>Enter this OTP code</li>
+              <li>Set your new password</li>
+              <li>Confirm the change</li>
+            </ol>
+          </div>
+          
+          <div style="text-align: center; margin: 30px 0;">
+            <p style="color: #666; font-size: 14px;">
+              This OTP was requested on ${new Date().toLocaleString()}
+            </p>
+          </div>
+          
+          <hr style="border: none; border-top: 1px solid #eee; margin: 25px 0;">
+          
+          <p style="color: #999; font-size: 12px; text-align: center; margin: 0;">
+            © ${new Date().getFullYear()} OD Provider System. All rights reserved.<br>
+            This is an automated email. Please do not reply to this email.
+          </p>
+        </div>
+      </div>
+    `
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`✅ Password change OTP email sent to ${email}`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Failed to send password change OTP email:', error);
     return { success: false, error: error.message };
   }
 };

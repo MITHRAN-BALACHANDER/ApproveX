@@ -200,6 +200,15 @@ router.post('/requests/:id/review', verifyTeacher, async (req, res) => {
     const { id } = req.params;
     const { action, remarks, approvalLevel } = req.body; // approvalLevel: 'mentor', 'hod', 'principal'
 
+    console.log('📝 Review request received:', {
+      requestId: id,
+      teacherId: req.teacher._id,
+      teacherName: req.teacher.profile.fullName,
+      action,
+      remarks,
+      approvalLevel
+    });
+
     if (!['approved', 'rejected'].includes(action)) {
       return res.status(400).json({ message: 'Invalid action. Must be approved or rejected.' });
     }
@@ -218,7 +227,7 @@ router.post('/requests/:id/review', verifyTeacher, async (req, res) => {
     // Check if already reviewed at this level
     if (request.approvals[approvalLevel].status !== 'pending') {
       return res.status(400).json({ 
-        message: `Request already ${request.approvals[approvalLevel].status} at ${approvalLevel} level` 
+        message: `Request already ${request.approvals[approvalLevel].status} at ${approvalLevel} level by ${request.approvals[approvalLevel].reviewedBy}` 
       });
     }
 
@@ -228,13 +237,17 @@ router.post('/requests/:id/review', verifyTeacher, async (req, res) => {
       status: action,
       remarks: remarks || '',
       approvedAt: new Date(),
-      reviewedBy: req.teacher.profile.fullName
+      reviewedBy: req.teacher.profile.fullName,
+      reviewerDesignation: req.teacher.profile.designation,
+      reviewerDepartment: req.teacher.profile.department
     };
 
     // Add to approval history
     request.approvalHistory.push({
       reviewedBy: req.teacher._id,
       reviewerName: req.teacher.profile.fullName,
+      reviewerDesignation: req.teacher.profile.designation,
+      reviewerDepartment: req.teacher.profile.department,
       reviewerRole: approvalLevel,
       action,
       remarks: remarks || '',
@@ -275,6 +288,8 @@ router.post('/requests/:id/review', verifyTeacher, async (req, res) => {
       action,
       approvalLevel,
       req.teacher.profile.fullName,
+      req.teacher.profile.designation,
+      req.teacher.profile.department,
       remarks,
       request.overallStatus
     );

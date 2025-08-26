@@ -12,6 +12,7 @@ import dutyRequestRoutes from './routes/dutyRequestRoutes.js';
 import testRoutes from './routes/testRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import teacherRoutes from './routes/teacherRoutes.js';
+import passwordRoutes from './routes/passwordRoutes.js';
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ app.use('/api/duty-requests', dutyRequestRoutes);
 app.use('/api/test', testRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/teacher', teacherRoutes);
+app.use('/api/password', passwordRoutes);
 
 // Basic route
 app.get('/', (req, res) => {

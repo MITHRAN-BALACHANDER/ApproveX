@@ -96,6 +96,14 @@ const userSchema = new mongoose.Schema({
   emailVerificationExpires: {
     type: Date
   },
+  // Password change OTP fields
+  passwordChangeOTP: {
+    type: String,
+    sparse: true
+  },
+  passwordChangeOTPExpiry: {
+    type: Date
+  },
   // College email fields - optional for teachers using external emails
   collegeEmail: {
     type: String,

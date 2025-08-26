@@ -27,6 +27,13 @@ const ComprehensiveDutyRequestForm = () => {
     setSubmitMessage('');
 
     try {
+      // Validate required files
+      if (!files.invitation) {
+        setSubmitMessage('❌ Please upload an invitation/brochure/circular document.');
+        setIsSubmitting(false);
+        return;
+      }
+
       const formData = new FormData();
       
       // Prepare request data
@@ -67,6 +74,15 @@ const ComprehensiveDutyRequestForm = () => {
 
       formData.append('requestData', JSON.stringify(requestData));
 
+      // Log the data being sent for debugging
+      console.log('Submitting duty request with data:', requestData);
+      console.log('Files to upload:', {
+        invitation: files.invitation?.name,
+        permissionLetter: files.permissionLetter?.name,
+        travelProof: files.travelProof?.name,
+        additionalDocs: files.additionalDocs.map(f => f.name)
+      });
+
       // Append files
       if (files.invitation) {
         formData.append('invitation', files.invitation);
@@ -94,7 +110,25 @@ const ComprehensiveDutyRequestForm = () => {
       });
     } catch (error) {
       console.error('Error submitting request:', error);
-      setSubmitMessage('❌ Error submitting request. Please try again.');
+      
+      let errorMessage = '❌ Error submitting request. Please try again.';
+      
+      if (error.response?.data?.message) {
+        errorMessage = `❌ ${error.response.data.message}`;
+      } else if (error.response?.data?.errors) {
+        const errors = Array.isArray(error.response.data.errors) 
+          ? error.response.data.errors 
+          : error.response.data.errors.map(err => err.msg || err);
+        errorMessage = `❌ Validation errors:\n• ${errors.join('\n• ')}`;
+      } else if (error.response?.status === 400) {
+        errorMessage = '❌ Please check all required fields and try again.';
+      } else if (error.response?.status === 401) {
+        errorMessage = '❌ Authentication failed. Please login again.';
+      } else if (error.message.includes('Network Error')) {
+        errorMessage = '❌ Network error. Please check your connection.';
+      }
+      
+      setSubmitMessage(errorMessage);
     } finally {
       setIsSubmitting(false);
     }

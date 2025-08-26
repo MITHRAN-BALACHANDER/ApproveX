@@ -48,22 +48,64 @@ const upload = multer({
 
 // Validation rules for duty request
 const dutyRequestValidation = [
-  body('studentInfo.fullName').notEmpty().trim().withMessage('Full name is required'),
-  body('studentInfo.registerNumber').notEmpty().trim().withMessage('Register number is required'),
-  body('studentInfo.department').notEmpty().trim().withMessage('Department is required'),
-  body('studentInfo.year').notEmpty().trim().withMessage('Year is required'),
-  body('studentInfo.section').notEmpty().trim().withMessage('Section is required'),
-  body('eventDetails.reasonType').isIn([
-    'seminar', 'workshop', 'symposium', 'internship', 'hackathon', 
-    'placement_drive', 'cultural', 'sports', 'medical', 
-    'conference', 'competition', 'training', 'other'
-  ]).withMessage('Invalid reason type'),
-  body('eventDetails.eventTitle').notEmpty().trim().withMessage('Event title is required'),
-  body('eventDetails.venue.institutionName').notEmpty().trim().withMessage('Institution name is required'),
-  body('eventDetails.venue.city').notEmpty().trim().withMessage('City is required'),
-  body('eventDetails.dateRange.startDate').isISO8601().withMessage('Valid start date is required'),
-  body('eventDetails.dateRange.endDate').isISO8601().withMessage('Valid end date is required'),
-  body('eventDetails.organizer.name').notEmpty().trim().withMessage('Organizer name is required'),
+  body('requestData').custom((value, { req }) => {
+    try {
+      const data = typeof value === 'string' ? JSON.parse(value) : value;
+      
+      // Validate required fields
+      if (!data.studentInfo?.fullName?.trim()) {
+        throw new Error('Full name is required');
+      }
+      if (!data.studentInfo?.registerNumber?.trim()) {
+        throw new Error('Register number is required');
+      }
+      if (!data.studentInfo?.department?.trim()) {
+        throw new Error('Department is required');
+      }
+      if (!data.studentInfo?.year?.trim()) {
+        throw new Error('Year is required');
+      }
+      if (!data.studentInfo?.section?.trim()) {
+        throw new Error('Section is required');
+      }
+      if (!data.eventDetails?.eventTitle?.trim()) {
+        throw new Error('Event title is required');
+      }
+      if (!data.eventDetails?.venue?.institutionName?.trim()) {
+        throw new Error('Institution name is required');
+      }
+      if (!data.eventDetails?.venue?.city?.trim()) {
+        throw new Error('City is required');
+      }
+      if (!data.eventDetails?.organizer?.name?.trim()) {
+        throw new Error('Organizer name is required');
+      }
+      
+      // Validate reason type
+      const validReasonTypes = [
+        'seminar', 'workshop', 'symposium', 'internship', 'hackathon', 
+        'placement_drive', 'cultural', 'sports', 'medical', 
+        'conference', 'competition', 'training', 'other'
+      ];
+      if (!validReasonTypes.includes(data.eventDetails?.reasonType)) {
+        throw new Error('Invalid reason type');
+      }
+      
+      // Validate dates
+      const startDate = new Date(data.eventDetails?.dateRange?.startDate);
+      const endDate = new Date(data.eventDetails?.dateRange?.endDate);
+      if (isNaN(startDate.getTime())) {
+        throw new Error('Valid start date is required');
+      }
+      if (isNaN(endDate.getTime())) {
+        throw new Error('Valid end date is required');
+      }
+      
+      return true;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  })
 ];
 
 // Create uploads directory if it doesn't exist
@@ -135,16 +177,36 @@ router.post('/',
   dutyRequestValidation,
   async (req, res) => {
     try {
+      // Check for validation errors
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        console.log('Validation errors:', errors.array());
+        return res.status(400).json({ 
+          message: 'Validation failed', 
+          errors: errors.array().map(err => err.msg)
+        });
       }
 
+      // Check for required files
       if (!req.files || !req.files.invitation) {
+        console.log('Missing invitation file:', req.files);
         return res.status(400).json({ message: 'Invitation document is required' });
       }
 
-      const requestData = JSON.parse(req.body.requestData);
+      // Parse request data
+      let requestData;
+      try {
+        requestData = JSON.parse(req.body.requestData);
+      } catch (error) {
+        console.log('Error parsing requestData:', error);
+        return res.status(400).json({ message: 'Invalid request data format' });
+      }
+
+      console.log('Received duty request data:', {
+        studentId: req.user._id,
+        eventTitle: requestData.eventDetails?.eventTitle,
+        files: Object.keys(req.files || {})
+      });
 
       // Validate date range
       const startDate = new Date(requestData.eventDetails.dateRange.startDate);
