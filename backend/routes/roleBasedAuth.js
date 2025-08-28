@@ -15,7 +15,106 @@ const generateToken = (userId, role) => {
   );
 };
 
-// Input validation
+// Input validation for auto-login
+const autoLoginValidation = [
+  body('email')
+    .isEmail()
+    .normalizeEmail()
+    .withMessage('Valid email is required'),
+  body('password')
+    .isLength({ min: 6 })
+    .withMessage('Password must be at least 6 characters long')
+];
+
+// Auto-detect role login endpoint
+router.post('/auto-login', autoLoginValidation, async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ 
+        success: false,
+        errors: errors.array() 
+      });
+    }
+
+    const { email, password } = req.body;
+
+    // Try to find user with any role
+    const user = await User.findOne({ 
+      email: email.toLowerCase() 
+    });
+
+    if (!user) {
+      return res.status(401).json({ 
+        success: false,
+        message: 'Invalid credentials' 
+      });
+    }
+
+    // Check if account is active
+    if (!user.isActive) {
+      return res.status(403).json({ 
+        success: false,
+        message: 'Account deactivated. Contact admin.' 
+      });
+    }
+
+    // For students, check email verification
+    if (user.role === 'student' && !user.isEmailVerified) {
+      return res.status(403).json({ 
+        success: false,
+        message: 'Email not verified. Please verify your email first.' 
+      });
+    }
+
+    // Check password
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ 
+        success: false,
+        message: 'Invalid credentials' 
+      });
+    }
+
+    // Generate JWT token
+    const token = generateToken(user._id, user.role);
+
+    // Prepare user data for response (exclude sensitive information)
+    const userData = {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+      profile: user.profile,
+      isEmailVerified: user.isEmailVerified,
+      isActive: user.isActive
+    };
+
+    // Role-specific dashboard routes
+    const dashboardRoutes = {
+      student: '/student/dashboard',
+      teacher: '/teacher/dashboard',
+      admin: '/admin/dashboard'
+    };
+
+    res.json({
+      success: true,
+      message: `${user.role.charAt(0).toUpperCase() + user.role.slice(1)} login successful`,
+      token,
+      user: userData,
+      role: user.role,
+      redirectTo: dashboardRoutes[user.role]
+    });
+
+  } catch (error) {
+    console.error('Auto-login error:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Server error during login' 
+    });
+  }
+});
+
+// Input validation for role-specific login
 const loginValidation = [
   body('email')
     .isEmail()

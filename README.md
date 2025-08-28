@@ -36,6 +36,14 @@ Open [http://localhost:3000](http://localhost:5173) to view it in the browser.
 npm run build
 ```
 
+Set an environment variable to point the frontend at your backend API host:
+
+Create a `.env` file in the project root (or set it in your hosting env):
+
+VITE_API_BASE_URL=https://your-api-host.com/api
+
+Then rebuild.
+
 ### Preview Production Build
 
 ```bash

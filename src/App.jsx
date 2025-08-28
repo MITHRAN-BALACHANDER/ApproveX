@@ -1,20 +1,20 @@
-import { useState, useEffect } from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom'
-import Navbar from './components/Navbar'
-// import RoleBasedLogin from './components/RoleBasedLogin';
-import ProtectedRoute from './components/ProtectedRoute'
-import RoleBasedDashboard from './components/RoleBasedDashboard'
-import RoleBasedLogin from './components/RBLogin.jsx'
-import NewRegister from './components/NewRegister'
-import EmailVerification from './components/EmailVerification'
-import AdminDashboard from './components/AdminDashboard'
-import TeacherManagement from './components/TeacherManagement'
-import TeacherDashboard from './components/TeacherDashboard'
-import StudentDashboard from './components/StudentDashboard'
-import Home from './pages/Home'
-import About from './pages/About'
-import Contact from './pages/Contact'
-import authService from './services/authService'
+import { useState, useEffect } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import ProtectedRoute from './components/ProtectedRoute';
+import RoleBasedDashboard from './components/RoleBasedDashboard';
+import UnifiedLogin from './components/UnifiedLogin';
+import NewRegister from './components/NewRegister';
+import EmailVerification from './components/EmailVerification';
+import ForbiddenPage from './components/ForbiddenPage';
+import AdminDashboard from './components/AdminDashboard';
+import TeacherManagement from './components/TeacherManagement';
+import TeacherDashboard from './components/TeacherDashboard';
+import StudentDashboard from './components/StudentDashboard';
+import Home from './pages/Home';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import authService from './services/authService';
 
 function App() {
   const [user, setUser] = useState(null)
@@ -34,23 +34,31 @@ function App() {
             // Get fresh user data
             const currentUser = await authService.getCurrentUser()
             if (currentUser) {
-              setUser({ ...currentUser, role: authStatus.role })
+              const userData = { ...currentUser, role: authStatus.role }
+              setUser(userData)
             } else {
               // Use cached user info if API fails
-              setUser({ ...authStatus.userInfo, role: authStatus.role })
+              const userData = { ...authStatus.userInfo, role: authStatus.role }
+              setUser(userData)
             }
           } else {
             // Invalid token, clear authentication
             authService.logout()
             setUser(null)
           }
+        } else {
+          // No authentication found
+          setUser(null)
         }
       } catch (error) {
         console.error('Auth initialization error:', error)
         // Use cached authentication if available
         const authStatus = authService.getAuthStatus()
         if (authStatus.isAuthenticated && authStatus.userInfo) {
-          setUser({ ...authStatus.userInfo, role: authStatus.role })
+          const userData = { ...authStatus.userInfo, role: authStatus.role }
+          setUser(userData)
+        } else {
+          setUser(null)
         }
       } finally {
         setLoading(false)
@@ -58,7 +66,7 @@ function App() {
     }
 
     initializeAuth()
-  }, [])
+  }, []) // Keep empty dependency array to run only once on mount
 
   const handleLogin = async (userData, role) => {
     setUser({ ...userData, role })
@@ -111,7 +119,7 @@ function App() {
               user ? (
                 <Navigate to='/dashboard' replace />
               ) : (
-                <RoleBasedLogin onLogin={handleLogin} />
+                <UnifiedLogin onLogin={handleLogin} />
               )
             }
           />
@@ -214,6 +222,11 @@ function App() {
             }
           />
 
+          {/* Fallback route */}
+                    
+          {/* 403 Forbidden Page */}
+          <Route path="/forbidden" element={<ForbiddenPage />} />
+          
           {/* Fallback route */}
           <Route path='*' element={<Navigate to='/login' replace />} />
         </Routes>

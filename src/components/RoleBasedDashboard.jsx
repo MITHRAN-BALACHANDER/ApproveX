@@ -47,7 +47,7 @@ const RoleBasedDashboard = () => {
     }
 
     determineUserRole()
-  }, [navigate])
+  }, []) // Remove navigate from dependency array
 
   const handleLogout = () => {
     // Clear all authentication data

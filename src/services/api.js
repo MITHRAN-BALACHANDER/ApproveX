@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const API_BASE_URL = 'http://localhost:5000/api'
+// Use Vite env var for API base; fallback to localhost
+const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:5000/api'
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -9,10 +10,14 @@ const api = axios.create({
   },
 })
 
-// Add auth token to requests
+// Add auth token to requests (supports role-based tokens)
 api.interceptors.request.use(
   config => {
-    const token = localStorage.getItem('token')
+    const token =
+      localStorage.getItem('adminToken') ||
+      localStorage.getItem('teacherToken') ||
+      localStorage.getItem('userToken') ||
+      localStorage.getItem('token') // legacy key
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
@@ -28,8 +33,15 @@ api.interceptors.response.use(
   response => response,
   error => {
     if (error.response?.status === 401) {
+      // Clear all known auth entries and redirect to login
       localStorage.removeItem('token')
       localStorage.removeItem('user')
+      localStorage.removeItem('adminToken')
+      localStorage.removeItem('adminInfo')
+      localStorage.removeItem('teacherToken')
+      localStorage.removeItem('teacherInfo')
+      localStorage.removeItem('userToken')
+      localStorage.removeItem('userInfo')
       window.location.href = '/login'
     }
     return Promise.reject(error)
@@ -92,12 +104,38 @@ export const removeAuthToken = () => {
 }
 
 export const getCurrentUser = () => {
+  // Check for role-specific user info in the correct localStorage keys
+  const adminInfo = localStorage.getItem('adminInfo')
+  const teacherInfo = localStorage.getItem('teacherInfo')
+  const userInfo = localStorage.getItem('userInfo') // student info
+  
+  if (adminInfo) {
+    const admin = JSON.parse(adminInfo)
+    return admin.email ? admin : null
+  }
+  
+  if (teacherInfo) {
+    const teacher = JSON.parse(teacherInfo)
+    return teacher.email ? teacher : null
+  }
+  
+  if (userInfo) {
+    const student = JSON.parse(userInfo)
+    return student.email ? student : null
+  }
+  
+  // Fallback to old format for backward compatibility
   const user = localStorage.getItem('user')
   return user ? JSON.parse(user) : null
 }
 
 export const isAuthenticated = () => {
-  return !!localStorage.getItem('token')
+  // Check for role-specific tokens
+  const adminToken = localStorage.getItem('adminToken')
+  const teacherToken = localStorage.getItem('teacherToken')
+  const userToken = localStorage.getItem('userToken') // student token
+  
+  return !!(adminToken || teacherToken || userToken || localStorage.getItem('token'))
 }
 
 export default api

@@ -26,6 +26,16 @@ A full-stack MERN application for managing student on-duty requests with file up
 - Express.js
 - MongoDB with Mongoose
 - Multer (file uploads)
+
+## Backend production notes
+
+- Ensure `.env` contains:
+   - PORT=5000
+   - CLIENT_ORIGIN=https://your-frontend-host.com
+   - MONGODB_URI=...
+   - JWT_SECRET=strong-secret
+   - EMAIL_USER / EMAIL_PASS if email features are used
+- CORS is restricted via CLIENT_ORIGIN (wildcard in dev). Helmet and a basic rate limiter are enabled.
 - Express Validator
 - CORS
 
