@@ -11,6 +11,7 @@ A modern React application template with Vite, React Router, Tailwind CSS, and P
 - ✨ **Prettier** - Code formatting
 - 📦 **ESLint** - Code linting and formatting
 - 🔧 **PostCSS** - CSS processing with autoprefixer
+- 
 
 ## Getting Started
 
