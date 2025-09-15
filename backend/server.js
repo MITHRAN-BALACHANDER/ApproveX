@@ -45,6 +45,15 @@ const limiter = rateLimit({
   max: 1000,
 });
 app.use(limiter);
+// Serve frontend build (React/Vue/etc.)
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Catch-all route: send index.html for client-side routing (SPA)
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+});
+
+
 
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

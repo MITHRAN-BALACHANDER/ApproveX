@@ -147,6 +147,3 @@ npm start            # Start production server
 npm run dev          # Start development server with nodemon
 ```
 
-## License
-
-This project is licensed under the MIT License.
