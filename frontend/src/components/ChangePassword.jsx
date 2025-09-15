@@ -1,9 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import {
+  Key,
+  Mail,
+  Clock,
+  CheckCircle,
+  X
+} from 'lucide-react'
 
 const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
-  const [method, setMethod] = useState('password') // 'password' or 'otp'
-  const [step, setStep] = useState(1) // 1: choose method, 2: enter details, 3: success
+  const [method, setMethod] = useState('password')
+  const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -21,8 +28,7 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
 
   const newPassword = watch('newPassword')
 
-  // Timer for OTP countdown
-  useState(() => {
+  useEffect(() => {
     if (timeLeft > 0) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
       return () => clearTimeout(timer)
@@ -55,7 +61,7 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
 
       if (response.ok) {
         setOtpSent(true)
-        setTimeLeft(600) // 10 minutes
+        setTimeLeft(600)
         setSuccess('OTP sent to your email address')
         setStep(2)
       } else {
@@ -159,25 +165,14 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
         <div className='mt-3'>
           <div className='flex justify-between items-center mb-4'>
             <h3 className='text-lg font-medium text-gray-900'>
-              🔐 Change Password
+              <Key className='inline-block w-6 h-6 mr-1 text-blue-600' />
+              Change Password
             </h3>
             <button
               onClick={handleClose}
               className='text-gray-400 hover:text-gray-600'
             >
-              <svg
-                className='w-6 h-6'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth='2'
-                  d='M6 18L18 6M6 6l12 12'
-                />
-              </svg>
+              <X className='w-6 h-6' />
             </button>
           </div>
 
@@ -209,7 +204,7 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
                 >
                   <div className='flex items-center'>
                     <div className='w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3'>
-                      🔑
+                      <Key className='w-5 h-5 text-blue-600' />
                     </div>
                     <div>
                       <p className='font-medium'>Use Current Password</p>
@@ -229,7 +224,7 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
                 >
                   <div className='flex items-center'>
                     <div className='w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3'>
-                      📧
+                      <Mail className='w-5 h-5 text-green-600' />
                     </div>
                     <div>
                       <p className='font-medium'>Use Email OTP</p>
@@ -331,11 +326,13 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
               <div className='space-y-4'>
                 {otpSent && (
                   <div className='bg-blue-50 border border-blue-200 rounded-md p-3'>
-                    <p className='text-blue-800 text-sm'>
-                      📧 OTP sent to your email address
+                    <p className='text-blue-800 text-sm flex items-center'>
+                      <Mail className='w-5 h-5 mr-1 text-blue-600' />
+                      OTP sent to your email address
                       {timeLeft > 0 && (
-                        <span className='block mt-1 font-mono'>
-                          ⏰ Expires in: {formatTime(timeLeft)}
+                        <span className='block mt-1 font-mono flex items-center'>
+                          <Clock className='w-4 h-4 mr-1 text-blue-600' />
+                          Expires in: {formatTime(timeLeft)}
                         </span>
                       )}
                     </p>
@@ -419,7 +416,7 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
                   <button
                     type='button'
                     onClick={requestOTP}
-                    disabled={loading || timeLeft > 540} // Disable if recently sent (1 min cooldown)
+                    disabled={loading || timeLeft > 540}
                     className='px-3 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 disabled:opacity-50 text-sm'
                   >
                     {loading ? 'Sending...' : 'Resend OTP'}
@@ -439,19 +436,7 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
           {step === 3 && (
             <div className='text-center'>
               <div className='w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4'>
-                <svg
-                  className='w-8 h-8 text-green-600'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    d='M5 13l4 4L19 7'
-                  />
-                </svg>
+                <CheckCircle className='w-8 h-8 text-green-600' />
               </div>
               <h4 className='text-lg font-medium text-gray-900 mb-2'>
                 Password Changed Successfully!

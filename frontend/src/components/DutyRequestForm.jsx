@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { dutyRequestAPI, getCurrentUser } from '../services/api'
+import { XCircle, CheckCircle, RotateCcw, Send } from 'lucide-react'
 
 const ComprehensiveDutyRequestForm = () => {
   const {
@@ -36,7 +37,7 @@ const ComprehensiveDutyRequestForm = () => {
       // Validate required files
       if (!files.invitation) {
         setSubmitMessage(
-          '❌ Please upload an invitation/brochure/circular document.'
+          'Please upload an invitation/brochure/circular document.'
         )
         setIsSubmitting(false)
         return
@@ -111,7 +112,7 @@ const ComprehensiveDutyRequestForm = () => {
 
       await dutyRequestAPI.create(formData)
       setSubmitMessage(
-        '✅ Request submitted successfully! Your request is now under review.'
+        'Request submitted successfully! Your request is now under review.'
       )
       reset()
       setFiles({
@@ -123,21 +124,21 @@ const ComprehensiveDutyRequestForm = () => {
     } catch (error) {
       console.error('Error submitting request:', error)
 
-      let errorMessage = '❌ Error submitting request. Please try again.'
+      let errorMessage = 'Error submitting request. Please try again.'
 
       if (error.response?.data?.message) {
-        errorMessage = `❌ ${error.response.data.message}`
+        errorMessage = `${error.response.data.message}`
       } else if (error.response?.data?.errors) {
         const errors = Array.isArray(error.response.data.errors)
           ? error.response.data.errors
           : error.response.data.errors.map(err => err.msg || err)
-        errorMessage = `❌ Validation errors:\n• ${errors.join('\n• ')}`
+        errorMessage = `Validation errors:\n• ${errors.join('\n• ')}`
       } else if (error.response?.status === 400) {
-        errorMessage = '❌ Please check all required fields and try again.'
+        errorMessage = 'Please check all required fields and try again.'
       } else if (error.response?.status === 401) {
-        errorMessage = '❌ Authentication failed. Please login again.'
+        errorMessage = 'Authentication failed. Please login again.'
       } else if (error.message.includes('Network Error')) {
-        errorMessage = '❌ Network error. Please check your connection.'
+        errorMessage = 'Network error. Please check your connection.'
       }
 
       setSubmitMessage(errorMessage)
@@ -186,9 +187,14 @@ const ComprehensiveDutyRequestForm = () => {
 
       {submitMessage && (
         <div
-          className={`p-4 rounded-lg mb-6 ${submitMessage.includes('Error') || submitMessage.includes('❌') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}
+          className={`p-4 rounded-lg mb-6 flex items-start space-x-3 ${submitMessage.includes('Error') || submitMessage.includes('error') || submitMessage.includes('failed') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}
         >
-          {submitMessage}
+          {submitMessage.includes('Error') || submitMessage.includes('error') || submitMessage.includes('failed') ? (
+            <XCircle size={20} className="flex-shrink-0 mt-0.5" />
+          ) : (
+            <CheckCircle size={20} className="flex-shrink-0 mt-0.5" />
+          )}
+          <span>{submitMessage}</span>
         </div>
       )}
 
@@ -786,10 +792,20 @@ const ComprehensiveDutyRequestForm = () => {
           <button
             type='submit'
             disabled={isSubmitting}
-            className='px-8 py-4 text-white font-bold text-lg rounded-lg transition-all transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed'
+            className='px-8 py-4 text-white font-bold text-lg rounded-lg transition-all transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2'
             style={{ backgroundColor: 'var(--color-primary)' }}
           >
-            {isSubmitting ? '🔄 Submitting Request...' : '📤 Submit OD Request'}
+            {isSubmitting ? (
+              <>
+                <RotateCcw size={20} className="animate-spin" />
+                <span>Submitting Request...</span>
+              </>
+            ) : (
+              <>
+                <Send size={20} />
+                <span>Submit OD Request</span>
+              </>
+            )}
           </button>
           <p className='text-xs text-gray-500 mt-2'>
             Your request will be reviewed by any available teacher/staff. Only

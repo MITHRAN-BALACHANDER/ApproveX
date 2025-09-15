@@ -12,7 +12,7 @@
 The system now supports the college email format: `name + year + department + @srishakthi.ac.in`
 
 **Example**: `mithrans23it@srishakthi.ac.in`
-- **Name**: mithrans → Mithrans
+- **Name**: mithrans → Mithran
 - **Year**: 23 → 2023 admission year → Current year of study: 3rd year
 - **Department**: it → Information Technology
 - **Roll Number**: MITHRANS23IT

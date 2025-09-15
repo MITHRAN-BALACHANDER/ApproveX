@@ -1,7 +1,8 @@
 import axios from 'axios'
 
 // Use Vite env var for API base; fallback to localhost
-const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:5000/api'
+const API_BASE_URL =
+  import.meta.env?.VITE_API_BASE_URL || 'http://localhost:5000/api'
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -108,22 +109,22 @@ export const getCurrentUser = () => {
   const adminInfo = localStorage.getItem('adminInfo')
   const teacherInfo = localStorage.getItem('teacherInfo')
   const userInfo = localStorage.getItem('userInfo') // student info
-  
+
   if (adminInfo) {
     const admin = JSON.parse(adminInfo)
     return admin.email ? admin : null
   }
-  
+
   if (teacherInfo) {
     const teacher = JSON.parse(teacherInfo)
     return teacher.email ? teacher : null
   }
-  
+
   if (userInfo) {
     const student = JSON.parse(userInfo)
     return student.email ? student : null
   }
-  
+
   // Fallback to old format for backward compatibility
   const user = localStorage.getItem('user')
   return user ? JSON.parse(user) : null
@@ -134,8 +135,13 @@ export const isAuthenticated = () => {
   const adminToken = localStorage.getItem('adminToken')
   const teacherToken = localStorage.getItem('teacherToken')
   const userToken = localStorage.getItem('userToken') // student token
-  
-  return !!(adminToken || teacherToken || userToken || localStorage.getItem('token'))
+
+  return !!(
+    adminToken ||
+    teacherToken ||
+    userToken ||
+    localStorage.getItem('token')
+  )
 }
 
 export default api

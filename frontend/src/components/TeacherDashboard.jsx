@@ -1,19 +1,47 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { 
+  Lock, 
+  FileText, 
+  Target, 
+  BookOpen, 
+  Paperclip, 
+  CheckCircle, 
+  XCircle, 
+  Clock, 
+  Search,
+  Eye,
+  Scale,
+  Zap,
+  AlertTriangle,
+  User
+} from 'lucide-react'
 import ChangePassword from './ChangePassword'
 
 const TeacherDashboard = () => {
+  const [activeTab, setActiveTab] = useState('od-requests')
   const [requests, setRequests] = useState([])
+  const [leaveRequests, setLeaveRequests] = useState([])
   const [loading, setLoading] = useState(true)
+  const [leaveLoading, setLeaveLoading] = useState(true)
   const [error, setError] = useState('')
+  const [leaveError, setLeaveError] = useState('')
   const [selectedRequest, setSelectedRequest] = useState(null)
+  const [selectedLeaveRequest, setSelectedLeaveRequest] = useState(null)
   const [reviewModal, setReviewModal] = useState(false)
+  const [leaveReviewModal, setLeaveReviewModal] = useState(false)
   const [showChangePassword, setShowChangePassword] = useState(false)
   const [reviewData, setReviewData] = useState({
     status: '',
     remarks: '',
   })
+  const [leaveReviewData, setLeaveReviewData] = useState({
+    approvalType: 'classTeacher',
+    status: '',
+    remarks: '',
+  })
   const [showDetailedView, setShowDetailedView] = useState(false)
+  const [showLeaveDetailedView, setShowLeaveDetailedView] = useState(false)
   const navigate = useNavigate()
 
   const teacherInfo = JSON.parse(localStorage.getItem('teacherInfo') || '{}')
@@ -25,6 +53,7 @@ const TeacherDashboard = () => {
       return
     }
     fetchRequests()
+    fetchLeaveRequests()
   }, [teacherToken, navigate])
 
   const fetchRequests = async () => {
@@ -50,6 +79,32 @@ const TeacherDashboard = () => {
       console.error('Error fetching requests:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchLeaveRequests = async () => {
+    try {
+      const response = await fetch(
+        'http://localhost:5000/api/leave-requests/pending/approvals?level=classTeacher',
+        {
+          headers: {
+            Authorization: `Bearer ${teacherToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+
+      if (response.ok) {
+        const data = await response.json()
+        setLeaveRequests(data.pendingRequests || [])
+      } else {
+        setLeaveError('Failed to fetch leave requests')
+      }
+    } catch (error) {
+      setLeaveError('Network error occurred')
+      console.error('Error fetching leave requests:', error)
+    } finally {
+      setLeaveLoading(false)
     }
   }
 
@@ -108,15 +163,77 @@ const TeacherDashboard = () => {
           remarks: '',
         })
         fetchRequests() // Refresh the list
-        alert('✅ Review submitted successfully!')
+        alert('Review submitted successfully!')
       } else {
         const error = await response.json()
         console.log('Review error:', error)
-        alert(`❌ Error: ${error.message}`)
+        alert(`Error: ${error.message}`)
       }
     } catch (error) {
       console.error('Network error submitting review:', error)
-      alert('❌ Network error occurred. Please check your connection.')
+      alert('Network error occurred. Please check your connection.')
+    }
+  }
+
+  // Leave Request Functions
+  const handleReviewLeaveRequest = request => {
+    setSelectedLeaveRequest(request)
+    setLeaveReviewData({
+      approvalType: 'classTeacher',
+      status: '',
+      remarks: '',
+    })
+    setShowLeaveDetailedView(true)
+  }
+
+  const handleCloseLeaveDetailedView = () => {
+    setShowLeaveDetailedView(false)
+    setLeaveReviewModal(false)
+    setSelectedLeaveRequest(null)
+  }
+
+  const handleProceedToLeaveReview = () => {
+    setShowLeaveDetailedView(false)
+    setLeaveReviewModal(true)
+  }
+
+  const submitLeaveReview = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/leave-requests/${selectedLeaveRequest._id}/approve`,
+        {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${teacherToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            approvalType: leaveReviewData.approvalType,
+            status: leaveReviewData.status,
+            remarks: leaveReviewData.remarks,
+          }),
+        }
+      )
+
+      if (response.ok) {
+        const result = await response.json()
+        setLeaveReviewModal(false)
+        setShowLeaveDetailedView(false)
+        setSelectedLeaveRequest(null)
+        setLeaveReviewData({
+          approvalType: 'classTeacher',
+          status: '',
+          remarks: '',
+        })
+        fetchLeaveRequests() // Refresh the list
+        alert('Leave request review submitted successfully!')
+      } else {
+        const error = await response.json()
+        alert(`Error: ${error.message}`)
+      }
+    } catch (error) {
+      console.error('Network error submitting leave review:', error)
+      alert('Network error occurred. Please check your connection.')
     }
   }
 
@@ -151,9 +268,10 @@ const TeacherDashboard = () => {
             <div className='flex space-x-3'>
               <button
                 onClick={() => setShowChangePassword(true)}
-                className='bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium'
+                className='bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center space-x-2'
               >
-                🔐 Change Password
+                <Lock size={16} />
+                <span>Change Password</span>
               </button>
               <button
                 onClick={handleLogout}
@@ -352,9 +470,10 @@ const TeacherDashboard = () => {
                           request.overallStatus === 'submitted') && (
                           <button
                             onClick={() => handleReviewRequest(request)}
-                            className='bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm'
+                            className='bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm flex items-center space-x-1'
                           >
-                            📋 Review Application
+                            <FileText size={14} />
+                            <span>Review Application</span>
                           </button>
                         )}
                       </div>
@@ -372,8 +491,9 @@ const TeacherDashboard = () => {
         <div className='fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50'>
           <div className='relative top-4 mx-auto p-6 border max-w-4xl shadow-lg rounded-md bg-white mb-8'>
             <div className='flex justify-between items-center mb-6'>
-              <h3 className='text-2xl font-bold text-gray-900'>
-                📋 Review Application Details
+              <h3 className='text-2xl font-bold text-gray-900 flex items-center space-x-2'>
+                <FileText size={24} />
+                <span>Review Application Details</span>
               </h3>
               <button
                 onClick={handleCloseDetailedView}
@@ -386,8 +506,9 @@ const TeacherDashboard = () => {
             <div className='space-y-6'>
               {/* Student Information */}
               <div className='bg-blue-50 p-4 rounded-lg'>
-                <h4 className='text-lg font-semibold text-blue-900 mb-3'>
-                  👤 Student Information
+                <h4 className='text-lg font-semibold text-blue-900 mb-3 flex items-center space-x-2'>
+                  <User size={18} />
+                  <span>Student Information</span>
                 </h4>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4 text-sm'>
                   <div>
@@ -424,8 +545,9 @@ const TeacherDashboard = () => {
 
               {/* Event Details */}
               <div className='bg-green-50 p-4 rounded-lg'>
-                <h4 className='text-lg font-semibold text-green-900 mb-3'>
-                  🎯 Event Details
+                <h4 className='text-lg font-semibold text-green-900 mb-3 flex items-center space-x-2'>
+                  <Target size={18} />
+                  <span>Event Details</span>
                 </h4>
                 <div className='space-y-3 text-sm'>
                   <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -521,8 +643,9 @@ const TeacherDashboard = () => {
 
               {/* Academic Details */}
               <div className='bg-yellow-50 p-4 rounded-lg'>
-                <h4 className='text-lg font-semibold text-yellow-900 mb-3'>
-                  📚 Academic Impact
+                <h4 className='text-lg font-semibold text-yellow-900 mb-3 flex items-center space-x-2'>
+                  <BookOpen size={18} />
+                  <span>Academic Impact</span>
                 </h4>
                 <div className='space-y-3 text-sm'>
                   <div>
@@ -573,8 +696,9 @@ const TeacherDashboard = () => {
 
               {/* Documents */}
               <div className='bg-purple-50 p-4 rounded-lg'>
-                <h4 className='text-lg font-semibold text-purple-900 mb-3'>
-                  📎 Supporting Documents
+                <h4 className='text-lg font-semibold text-purple-900 mb-3 flex items-center space-x-2'>
+                  <Paperclip size={18} />
+                  <span>Supporting Documents</span>
                 </h4>
                 <div className='space-y-2 text-sm'>
                   <div className='grid grid-cols-2 gap-4'>
@@ -582,29 +706,42 @@ const TeacherDashboard = () => {
                       <p>
                         <strong>Invitation/Brochure:</strong>
                         <span
-                          className={
+                          className={`flex items-center space-x-1 ${
                             selectedRequest.documents?.invitation
                               ? 'text-green-600'
                               : 'text-red-600'
-                          }
+                          }`}
                         >
-                          {selectedRequest.documents?.invitation
-                            ? ' ✅ Uploaded'
-                            : ' ❌ Missing'}
+                          {selectedRequest.documents?.invitation ? (
+                            <>
+                              <CheckCircle size={14} />
+                              <span>Uploaded</span>
+                            </>
+                          ) : (
+                            <>
+                              <XCircle size={14} />
+                              <span>Missing</span>
+                            </>
+                          )}
                         </span>
                       </p>
                       <p>
                         <strong>Permission Letter:</strong>
                         <span
-                          className={
+                          className={`flex items-center space-x-1 ${
                             selectedRequest.documents?.permissionLetter
                               ? 'text-green-600'
                               : 'text-gray-500'
-                          }
+                          }`}
                         >
-                          {selectedRequest.documents?.permissionLetter
-                            ? ' ✅ Uploaded'
-                            : ' ⚪ Optional'}
+                          {selectedRequest.documents?.permissionLetter ? (
+                            <>
+                              <CheckCircle size={14} />
+                              <span>Uploaded</span>
+                            </>
+                          ) : (
+                            <span>Optional</span>
+                          )}
                         </span>
                       </p>
                     </div>
@@ -612,15 +749,20 @@ const TeacherDashboard = () => {
                       <p>
                         <strong>Travel Proof:</strong>
                         <span
-                          className={
+                          className={`flex items-center space-x-1 ${
                             selectedRequest.documents?.travelProof
                               ? 'text-green-600'
                               : 'text-gray-500'
-                          }
+                          }`}
                         >
-                          {selectedRequest.documents?.travelProof
-                            ? ' ✅ Uploaded'
-                            : ' ⚪ Optional'}
+                          {selectedRequest.documents?.travelProof ? (
+                            <>
+                              <CheckCircle size={14} />
+                              <span>Uploaded</span>
+                            </>
+                          ) : (
+                            <span>Optional</span>
+                          )}
                         </span>
                       </p>
                       <p>
@@ -638,8 +780,9 @@ const TeacherDashboard = () => {
 
               {/* Current Approval Status */}
               <div className='bg-gray-50 p-4 rounded-lg'>
-                <h4 className='text-lg font-semibold text-gray-900 mb-3'>
-                  ⚡ Approval Status
+                <h4 className='text-lg font-semibold text-gray-900 mb-3 flex items-center space-x-2'>
+                  <Zap size={18} />
+                  <span>Approval Status</span>
                 </h4>
                 <div className='space-y-2 text-sm'>
                   <div className='text-center'>
@@ -720,8 +863,9 @@ const TeacherDashboard = () => {
 
               {/* Application Timeline */}
               <div className='bg-indigo-50 p-4 rounded-lg'>
-                <h4 className='text-lg font-semibold text-indigo-900 mb-3'>
-                  ⏰ Application Timeline
+                <h4 className='text-lg font-semibold text-indigo-900 mb-3 flex items-center space-x-2'>
+                  <Clock size={18} />
+                  <span>Application Timeline</span>
                 </h4>
                 <div className='space-y-2 text-sm'>
                   <p>
@@ -774,16 +918,18 @@ const TeacherDashboard = () => {
                 selectedRequest.overallStatus === 'submitted') && (
                 <button
                   onClick={handleProceedToReview}
-                  className='bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors'
+                  className='bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2'
                 >
-                  🔍 Proceed to Review & Approve/Reject
+                  <Search size={18} />
+                  <span>Proceed to Review & Approve/Reject</span>
                 </button>
               )}
               <button
                 onClick={handleCloseDetailedView}
-                className='bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors'
+                className='bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2'
               >
-                📄 Close Application View
+                <Eye size={18} />
+                <span>Close Application View</span>
               </button>
             </div>
           </div>
@@ -795,8 +941,9 @@ const TeacherDashboard = () => {
         <div className='fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50'>
           <div className='relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white'>
             <div className='mt-3'>
-              <h3 className='text-lg font-medium text-gray-900 text-center mb-4'>
-                ⚖️ Submit Review Decision
+              <h3 className='text-lg font-medium text-gray-900 text-center mb-4 flex items-center justify-center space-x-2'>
+                <Scale size={20} />
+                <span>Submit Review Decision</span>
               </h3>
 
               <div className='mb-4 bg-blue-50 p-3 rounded'>
@@ -809,8 +956,8 @@ const TeacherDashboard = () => {
                   {selectedRequest.studentInfo?.fullName ||
                     selectedRequest.studentId?.profile?.fullName}
                 </p>
-                <p className='text-sm text-green-600'>
-                  ✅{' '}
+                <p className='text-sm text-green-600 flex items-center space-x-1'>
+                  <CheckCircle size={14} />
                   <strong>
                     One approval from any teacher/staff is sufficient
                   </strong>
@@ -830,8 +977,8 @@ const TeacherDashboard = () => {
                   required
                 >
                   <option value=''>Select Decision</option>
-                  <option value='approved'>✅ Approve Request</option>
-                  <option value='rejected'>❌ Reject Request</option>
+                  <option value='approved'>Approve Request</option>
+                  <option value='rejected'>Reject Request</option>
                 </select>
               </div>
 
@@ -863,9 +1010,10 @@ const TeacherDashboard = () => {
                 <button
                   onClick={submitReview}
                   disabled={!reviewData.status}
-                  className='px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50'
+                  className='px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 flex items-center space-x-2'
                 >
-                  ✅ Submit Review Decision
+                  <CheckCircle size={16} />
+                  <span>Submit Review Decision</span>
                 </button>
               </div>
             </div>

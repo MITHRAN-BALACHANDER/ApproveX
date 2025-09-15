@@ -1,24 +1,32 @@
-import { useState, useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import ProtectedRoute from './components/ProtectedRoute';
-import RoleBasedDashboard from './components/RoleBasedDashboard';
-import UnifiedLogin from './components/UnifiedLogin';
-import NewRegister from './components/NewRegister';
-import EmailVerification from './components/EmailVerification';
-import ForbiddenPage from './components/ForbiddenPage';
-import AdminDashboard from './components/AdminDashboard';
-import TeacherManagement from './components/TeacherManagement';
-import TeacherDashboard from './components/TeacherDashboard';
-import StudentDashboard from './components/StudentDashboard';
-import Home from './pages/Home';
-import About from './pages/About';
-import Contact from './pages/Contact';
-import authService from './services/authService';
+import { useState, useEffect } from 'react'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import Navbar from './components/Navbar'
+import ProtectedRoute from './components/ProtectedRoute'
+import RoleBasedDashboard from './components/RoleBasedDashboard'
+import UnifiedLogin from './components/UnifiedLogin'
+import NewRegister from './components/NewRegister'
+import EmailVerification from './components/EmailVerification'
+import ForbiddenPage from './components/ForbiddenPage'
+import AdminDashboard from './components/AdminDashboard'
+import TeacherManagement from './components/TeacherManagement'
+import TeacherDashboard from './components/TeacherDashboard'
+import StudentDashboard from './components/StudentDashboard'
+import Home from './pages/Home'
+import About from './pages/About'
+import Contact from './pages/Contact'
+import authService from './services/authService'
 
 function App() {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const location = useLocation()
+
+  // Check if current route is a dashboard route
+  const isDashboardRoute =
+    location.pathname.includes('/dashboard') ||
+    location.pathname.includes('/admin') ||
+    location.pathname.includes('/teacher') ||
+    location.pathname.includes('/student')
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -108,7 +116,10 @@ function App() {
     >
       <div className='animated-gradient'></div>
 
-      {user && <Navbar user={user} onLogout={handleLogout} />}
+      {/* Only show main navbar on non-dashboard pages */}
+      {user && !isDashboardRoute && (
+        <Navbar user={user} onLogout={handleLogout} />
+      )}
 
       <main>
         <Routes>
@@ -223,10 +234,10 @@ function App() {
           />
 
           {/* Fallback route */}
-                    
+
           {/* 403 Forbidden Page */}
-          <Route path="/forbidden" element={<ForbiddenPage />} />
-          
+          <Route path='/forbidden' element={<ForbiddenPage />} />
+
           {/* Fallback route */}
           <Route path='*' element={<Navigate to='/login' replace />} />
         </Routes>

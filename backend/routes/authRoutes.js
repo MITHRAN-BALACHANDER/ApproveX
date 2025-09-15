@@ -546,4 +546,80 @@ router.post('/change-password', authenticateToken, [
   }
 });
 
+// PUT /api/auth/update-profile
+router.put('/update-profile', authenticateToken, [
+  body('fullName').notEmpty().trim().withMessage('Full name is required'),
+  body('registerNumber').notEmpty().trim().withMessage('Register number is required'),
+  body('department').notEmpty().trim().withMessage('Department is required'),
+  body('year').notEmpty().trim().withMessage('Year is required'),
+  body('section').notEmpty().trim().withMessage('Section is required'),
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ 
+        success: false,
+        errors: errors.array() 
+      });
+    }
+
+    const { fullName, registerNumber, department, year, section } = req.body;
+    const userId = req.user._id;
+
+    // Check if register number is already taken by another user
+    const existingUser = await User.findOne({ 
+      'profile.registerNumber': registerNumber,
+      _id: { $ne: userId }
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'Register number is already taken by another user' 
+      });
+    }
+
+    // Update user profile
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          'profile.fullName': fullName,
+          'profile.registerNumber': registerNumber,
+          'profile.department': department,
+          'profile.year': year,
+          'profile.section': section,
+        }
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ 
+        success: false,
+        message: 'User not found' 
+      });
+    }
+
+    res.json({ 
+      success: true,
+      message: 'Profile updated successfully',
+      user: {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+        profile: user.profile,
+        isEmailVerified: user.isEmailVerified,
+        isActive: user.isActive
+      }
+    });
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Error updating profile' 
+    });
+  }
+});
+
 export default router;

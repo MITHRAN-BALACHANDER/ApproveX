@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import { AlertTriangle, Trash2, CheckCircle, XCircle } from 'lucide-react'
 
 const TeacherManagement = () => {
   const [teachers, setTeachers] = useState([])
@@ -136,13 +137,13 @@ const TeacherManagement = () => {
   const deleteTeacher = async (teacherId, teacherName) => {
     // Enhanced confirmation dialog
     const confirmMessage =
-      `⚠️ DELETE TEACHER CONFIRMATION ⚠️\n\n` +
+      `DELETE TEACHER CONFIRMATION\n\n` +
       `Teacher: ${teacherName}\n\n` +
       `This will PERMANENTLY delete:\n` +
       `• Teacher account and profile\n` +
       `• All login credentials\n` +
       `• Associated data and history\n\n` +
-      `❌ This action CANNOT be undone!\n\n` +
+      `This action CANNOT be undone!\n\n` +
       `Note: Deletion will be blocked if teacher has pending approvals.\n\n` +
       `Type "DELETE" to confirm:`
 
@@ -171,16 +172,16 @@ const TeacherManagement = () => {
 
       if (response.ok) {
         const result = await response.json()
-        alert(`✅ Success!\n\n${result.message}`)
+        alert(`Success!\n\n${result.message}`)
         fetchTeachers()
       } else {
         const error = await response.json()
-        alert(`❌ Deletion Failed!\n\n${error.message}`)
+        alert(`Deletion Failed!\n\n${error.message}`)
       }
     } catch (error) {
       console.error('Delete teacher error:', error)
       alert(
-        '❌ Network Error!\n\nFailed to delete teacher. Please check your connection and try again.'
+        'Network Error!\n\nFailed to delete teacher. Please check your connection and try again.'
       )
     }
   }
@@ -214,11 +215,11 @@ const TeacherManagement = () => {
       .map(t => t.profile.fullName)
 
     const confirmMessage =
-      `⚠️ BULK DELETE CONFIRMATION ⚠️\n\n` +
+      `BULK DELETE CONFIRMATION\n\n` +
       `You are about to delete ${selectedTeachers.size} teacher(s):\n` +
       `${selectedTeacherNames.map(name => `• ${name}`).join('\n')}\n\n` +
       `This will PERMANENTLY delete ALL selected teachers!\n\n` +
-      `❌ This action CANNOT be undone!\n\n` +
+      `This action CANNOT be undone!\n\n` +
       `Type "DELETE ALL" to confirm:`
 
     const userInput = prompt(confirmMessage)
@@ -265,11 +266,11 @@ const TeacherManagement = () => {
       }
 
       // Show results
-      let resultMessage = `✅ Bulk deletion completed!\n\n`
+      let resultMessage = `Bulk deletion completed!\n\n`
       resultMessage += `Successfully deleted: ${successCount} teacher(s)\n`
 
       if (failedTeachers.length > 0) {
-        resultMessage += `\n❌ Failed to delete:\n${failedTeachers.join('\n')}`
+        resultMessage += `\nFailed to delete:\n${failedTeachers.join('\n')}`
       }
 
       alert(resultMessage)
@@ -279,7 +280,7 @@ const TeacherManagement = () => {
       fetchTeachers()
     } catch (error) {
       console.error('Bulk delete error:', error)
-      alert('❌ Bulk deletion failed! Please try again.')
+      alert('Bulk deletion failed! Please try again.')
     }
   }
 
@@ -566,7 +567,7 @@ const TeacherManagement = () => {
                 onClick={bulkDeleteTeachers}
                 className='bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center space-x-2'
               >
-                <span>🗑️</span>
+                <Trash2 size={16} />
                 <span>Delete Selected ({selectedTeachers.size})</span>
               </button>
             )}
@@ -697,10 +698,11 @@ const TeacherManagement = () => {
                           onClick={() =>
                             deleteTeacher(teacher._id, teacher.profile.fullName)
                           }
-                          className='text-red-600 hover:text-red-900 hover:bg-red-50 px-2 py-1 rounded transition-all duration-200'
-                          title='⚠️ Delete teacher permanently (cannot be undone)'
+                          className='text-red-600 hover:text-red-900 hover:bg-red-50 px-2 py-1 rounded transition-all duration-200 flex items-center space-x-1'
+                          title='Delete teacher permanently (cannot be undone)'
                         >
-                          🗑️ Delete
+                          <Trash2 size={14} />
+                          <span>Delete</span>
                         </button>
                       </div>
                     </td>
