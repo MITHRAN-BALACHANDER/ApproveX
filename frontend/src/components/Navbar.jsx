@@ -38,36 +38,36 @@ const Navbar = ({ user, onLogout }) => {
   ]
 
   return (
-    <nav className='sticky top-0 z-50 glass bg-white/95 backdrop-blur-lg border-b border-white/20 shadow-lg'>
+    <nav className='sticky top-0 z-50 bg-background border-b border-border'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
         <div className='flex items-center justify-between h-16'>
           {/* Logo and brand */}
           <div className='flex items-center'>
-            <Link to='/' className='flex items-center group'>
-              <div className='h-10 w-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center text-white text-xl mr-3 shadow-lg group-hover:scale-105 transition-transform duration-200'>
+            <Link to='/' className='flex items-center group gap-3'>
+              <div className='h-10 w-10 bg-primary rounded-lg flex items-center justify-center text-primary-foreground shadow-sm group-hover:scale-105 transition-transform duration-200'>
                 <GraduationCap size={20} />
               </div>
               <div>
-                <span className='text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent'>
+                <span className='text-lg font-bold text-foreground tracking-tight block leading-none'>
                   OD Provider
                 </span>
-                <div className='text-xs text-gray-500 font-medium'>
+                <span className='text-xs text-muted-foreground font-medium block mt-0.5'>
                   Management System
-                </div>
+                </span>
               </div>
             </Link>
           </div>
 
           {/* Desktop navigation */}
-          <div className='hidden md:flex items-center space-x-1'>
+          <div className='hidden md:flex items-center gap-1'>
             {navLinks.map(link => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
                   isActive(link.path)
-                    ? 'bg-blue-50 text-blue-600 shadow-md'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    ? 'bg-secondary text-secondary-foreground'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 }`}
               >
                 <link.icon size={16} />
@@ -77,25 +77,25 @@ const Navbar = ({ user, onLogout }) => {
           </div>
 
           {/* User menu - Desktop */}
-          <div className='hidden md:flex items-center space-x-4'>
-            <div className='flex items-center space-x-3 px-4 py-2 bg-gray-50 rounded-xl border border-gray-200'>
-              <div className='h-8 w-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-white text-sm font-bold'>
+          <div className='hidden md:flex items-center gap-4'>
+            <div className='flex items-center gap-3 px-3 py-1.5 rounded-md border border-border bg-card'>
+              <div className='h-8 w-8 bg-muted rounded-full flex items-center justify-center text-muted-foreground text-sm font-bold'>
                 {user?.name?.charAt(0)?.toUpperCase() ||
                   user?.fullName?.charAt(0)?.toUpperCase() ||
                   'U'}
               </div>
               <div className='text-left'>
-                <div className='text-sm font-semibold text-gray-900'>
+                <div className='text-sm font-medium text-foreground leading-none'>
                   {user?.name || user?.fullName || 'User'}
                 </div>
-                <div className='text-xs text-gray-500 capitalize'>
+                <div className='text-xs text-muted-foreground capitalize mt-0.5'>
                   {user?.role || 'Student'}
                 </div>
               </div>
             </div>
             <button
               onClick={handleLogout}
-              className='flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-xl text-sm font-semibold transform hover:scale-105 transition-all duration-200 shadow-md hover:shadow-lg'
+              className='flex items-center gap-2 px-4 py-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-md text-sm font-medium transition-colors duration-200 shadow-sm'
             >
               <LogOut size={16} />
               <span>Logout</span>
@@ -106,7 +106,7 @@ const Navbar = ({ user, onLogout }) => {
           <div className='md:hidden'>
             <button
               onClick={toggleMenu}
-              className='p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200'
+              className='p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring transition-colors duration-200'
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -115,16 +115,16 @@ const Navbar = ({ user, onLogout }) => {
 
         {/* Mobile menu */}
         {isMenuOpen && (
-          <div className='md:hidden'>
-            <div className='px-2 pt-2 pb-4 space-y-2 border-t border-gray-200 bg-white/95 backdrop-blur-sm'>
+          <div className='md:hidden border-t border-border bg-background'>
+            <div className='px-2 pt-2 pb-4 space-y-1'>
               {navLinks.map(link => (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`flex items-center space-x-3 px-4 py-3 rounded-xl text-base font-semibold transition-all duration-200 ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-md text-base font-medium transition-colors duration-200 ${
                     isActive(link.path)
-                      ? 'bg-blue-50 text-blue-600 shadow-md'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      ? 'bg-secondary text-secondary-foreground'
+                      : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -133,25 +133,25 @@ const Navbar = ({ user, onLogout }) => {
                 </Link>
               ))}
 
-              <div className='border-t border-gray-200 pt-4 mt-4'>
-                <div className='flex items-center space-x-3 px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 mb-3'>
-                  <div className='h-10 w-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-white text-sm font-bold'>
+              <div className='border-t border-border pt-4 mt-4'>
+                <div className='flex items-center gap-3 px-4 py-3 bg-muted/50 rounded-md mb-3'>
+                  <div className='h-10 w-10 bg-muted rounded-full flex items-center justify-center text-muted-foreground text-sm font-bold border border-border'>
                     {user?.name?.charAt(0)?.toUpperCase() ||
                       user?.fullName?.charAt(0)?.toUpperCase() ||
                       'U'}
                   </div>
                   <div className='text-left'>
-                    <div className='text-sm font-semibold text-gray-900'>
+                    <div className='text-sm font-medium text-foreground'>
                       {user?.name || user?.fullName || 'User'}
                     </div>
-                    <div className='text-xs text-gray-500 capitalize'>
+                    <div className='text-xs text-muted-foreground capitalize'>
                       {user?.role || 'Student'}
                     </div>
                   </div>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className='flex items-center justify-center space-x-2 w-full px-4 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-xl text-base font-semibold transition-all duration-200 shadow-md'
+                  className='flex items-center justify-center gap-2 w-full px-4 py-3 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-md text-base font-medium transition-colors duration-200 shadow-sm'
                 >
                   <LogOut size={18} />
                   <span>Logout</span>

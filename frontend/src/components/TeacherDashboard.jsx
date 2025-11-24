@@ -14,18 +14,22 @@ import {
   Scale,
   Zap,
   AlertTriangle,
-  User
+  User,
+  LogOut,
+  LayoutDashboard,
+  Palmtree,
+  Filter,
+  ChevronRight
 } from 'lucide-react'
 import ChangePassword from './ChangePassword'
+import config from '../config/config'
 
 const TeacherDashboard = () => {
   const [activeTab, setActiveTab] = useState('od-requests')
   const [requests, setRequests] = useState([])
   const [leaveRequests, setLeaveRequests] = useState([])
   const [loading, setLoading] = useState(true)
-  const [leaveLoading, setLeaveLoading] = useState(true)
   const [error, setError] = useState('')
-  const [leaveError, setLeaveError] = useState('')
   const [selectedRequest, setSelectedRequest] = useState(null)
   const [selectedLeaveRequest, setSelectedLeaveRequest] = useState(null)
   const [reviewModal, setReviewModal] = useState(false)
@@ -49,7 +53,7 @@ const TeacherDashboard = () => {
 
   useEffect(() => {
     if (!teacherToken) {
-      navigate('/teacher/login')
+      navigate('/login')
       return
     }
     fetchRequests()
@@ -59,7 +63,7 @@ const TeacherDashboard = () => {
   const fetchRequests = async () => {
     try {
       const response = await fetch(
-        'http://localhost:5000/api/teacher/requests',
+        `${config.api.baseUrl}/teacher/requests`,
         {
           headers: {
             Authorization: `Bearer ${teacherToken}`,
@@ -85,7 +89,7 @@ const TeacherDashboard = () => {
   const fetchLeaveRequests = async () => {
     try {
       const response = await fetch(
-        'http://localhost:5000/api/leave-requests/pending/approvals?level=classTeacher',
+        `${config.api.leaveRequests}/pending/approvals?level=classTeacher`,
         {
           headers: {
             Authorization: `Bearer ${teacherToken}`,
@@ -97,14 +101,9 @@ const TeacherDashboard = () => {
       if (response.ok) {
         const data = await response.json()
         setLeaveRequests(data.pendingRequests || [])
-      } else {
-        setLeaveError('Failed to fetch leave requests')
       }
     } catch (error) {
-      setLeaveError('Network error occurred')
       console.error('Error fetching leave requests:', error)
-    } finally {
-      setLeaveLoading(false)
     }
   }
 
@@ -130,13 +129,8 @@ const TeacherDashboard = () => {
 
   const submitReview = async () => {
     try {
-      console.log('Submitting review with data:', {
-        action: reviewData.status,
-        remarks: reviewData.remarks,
-      })
-
       const response = await fetch(
-        `http://localhost:5000/api/teacher/requests/${selectedRequest._id}/review`,
+        `${config.api.baseUrl}/teacher/requests/${selectedRequest._id}/review`,
         {
           method: 'POST',
           headers: {
@@ -144,95 +138,24 @@ const TeacherDashboard = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            action: reviewData.status, // 'approved' or 'rejected'
+            action: reviewData.status,
             remarks: reviewData.remarks,
           }),
         }
       )
 
-      console.log('Review response status:', response.status)
-
       if (response.ok) {
-        const result = await response.json()
-        console.log('Review submitted successfully:', result)
         setReviewModal(false)
         setShowDetailedView(false)
         setSelectedRequest(null)
-        setReviewData({
-          status: '',
-          remarks: '',
-        })
-        fetchRequests() // Refresh the list
+        setReviewData({ status: '', remarks: '' })
+        fetchRequests()
         alert('Review submitted successfully!')
       } else {
         const error = await response.json()
-        console.log('Review error:', error)
         alert(`Error: ${error.message}`)
       }
     } catch (error) {
-      console.error('Network error submitting review:', error)
-      alert('Network error occurred. Please check your connection.')
-    }
-  }
-
-  // Leave Request Functions
-  const handleReviewLeaveRequest = request => {
-    setSelectedLeaveRequest(request)
-    setLeaveReviewData({
-      approvalType: 'classTeacher',
-      status: '',
-      remarks: '',
-    })
-    setShowLeaveDetailedView(true)
-  }
-
-  const handleCloseLeaveDetailedView = () => {
-    setShowLeaveDetailedView(false)
-    setLeaveReviewModal(false)
-    setSelectedLeaveRequest(null)
-  }
-
-  const handleProceedToLeaveReview = () => {
-    setShowLeaveDetailedView(false)
-    setLeaveReviewModal(true)
-  }
-
-  const submitLeaveReview = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/leave-requests/${selectedLeaveRequest._id}/approve`,
-        {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${teacherToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            approvalType: leaveReviewData.approvalType,
-            status: leaveReviewData.status,
-            remarks: leaveReviewData.remarks,
-          }),
-        }
-      )
-
-      if (response.ok) {
-        const result = await response.json()
-        setLeaveReviewModal(false)
-        setShowLeaveDetailedView(false)
-        setSelectedLeaveRequest(null)
-        setLeaveReviewData({
-          approvalType: 'classTeacher',
-          status: '',
-          remarks: '',
-        })
-        fetchLeaveRequests() // Refresh the list
-        alert('Leave request review submitted successfully!')
-      } else {
-        const error = await response.json()
-        alert(`Error: ${error.message}`)
-      }
-    } catch (error) {
-      console.error('Network error submitting leave review:', error)
       alert('Network error occurred. Please check your connection.')
     }
   }
@@ -240,741 +163,419 @@ const TeacherDashboard = () => {
   const handleLogout = () => {
     localStorage.removeItem('teacherToken')
     localStorage.removeItem('teacherInfo')
-    navigate('/teacher/login')
+    navigate('/login')
   }
 
   if (loading) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-gray-50'>
-        <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-green-600'></div>
+      <div className='min-h-screen flex items-center justify-center bg-background'>
+        <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary'></div>
       </div>
     )
   }
 
+  const pendingCount = requests.filter(r => ['pending', 'under_review', 'submitted'].includes(r.overallStatus)).length
+  const approvedCount = requests.filter(r => r.overallStatus === 'approved').length
+
   return (
-    <div className='min-h-screen bg-gray-50'>
+    <div className='min-h-screen bg-background font-sans text-foreground'>
       {/* Header */}
-      <div className='bg-white shadow'>
+      <header className='bg-card border-b border-border sticky top-0 z-10'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='flex justify-between items-center py-6'>
-            <div>
-              <h1 className='text-3xl font-bold text-gray-900'>
-                Teacher Dashboard
-              </h1>
-              <p className='text-gray-600'>
-                Welcome, {teacherInfo.firstName} {teacherInfo.lastName}
-              </p>
+          <div className='flex justify-between items-center py-4'>
+            <div className="flex items-center gap-4">
+              <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+                <LayoutDashboard size={20} />
+              </div>
+              <div>
+                <h1 className='text-xl font-bold text-foreground tracking-tight'>
+                  Teacher Dashboard
+                </h1>
+                <p className='text-sm text-muted-foreground'>
+                  Welcome, {teacherInfo.firstName} {teacherInfo.lastName}
+                </p>
+              </div>
             </div>
-            <div className='flex space-x-3'>
+            <div className='flex items-center gap-2'>
               <button
                 onClick={() => setShowChangePassword(true)}
-                className='bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center space-x-2'
+                className='p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors'
+                title="Change Password"
               >
-                <Lock size={16} />
-                <span>Change Password</span>
+                <Lock size={20} />
               </button>
               <button
                 onClick={handleLogout}
-                className='bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium'
+                className='flex items-center gap-2 px-3 py-2 text-sm font-medium text-destructive hover:bg-destructive/10 rounded-md transition-colors'
               >
-                Logout
+                <LogOut size={18} />
+                <span className="hidden sm:inline">Logout</span>
               </button>
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Main Content */}
-      <div className='max-w-7xl mx-auto py-6 sm:px-6 lg:px-8'>
-        <div className='px-4 py-6 sm:px-0'>
-          {error && (
-            <div className='bg-red-50 border border-red-200 rounded-md p-4 mb-6'>
-              <p className='text-red-800'>{error}</p>
-            </div>
-          )}
-
-          {/* Statistics Cards */}
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
-            <div className='bg-white overflow-hidden shadow rounded-lg'>
-              <div className='p-5'>
-                <div className='flex items-center'>
-                  <div className='flex-shrink-0'>
-                    <div className='w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center'>
-                      <span className='text-white text-sm font-medium'>
-                        {requests.length}
-                      </span>
-                    </div>
-                  </div>
-                  <div className='ml-5 w-0 flex-1'>
-                    <dl>
-                      <dt className='text-sm font-medium text-gray-500 truncate'>
-                        Total Requests
-                      </dt>
-                      <dd className='text-lg font-medium text-gray-900'>
-                        {requests.length}
-                      </dd>
-                    </dl>
-                  </div>
-                </div>
+      <main className='max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8'>
+        {/* Stats Overview */}
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
+          <div className='bg-card border border-border rounded-xl p-6 shadow-sm'>
+            <div className='flex items-center justify-between'>
+              <div>
+                <p className='text-sm font-medium text-muted-foreground'>Total Requests</p>
+                <p className='text-3xl font-bold text-foreground mt-1'>{requests.length}</p>
               </div>
-            </div>
-
-            <div className='bg-white overflow-hidden shadow rounded-lg'>
-              <div className='p-5'>
-                <div className='flex items-center'>
-                  <div className='flex-shrink-0'>
-                    <div className='w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center'>
-                      <span className='text-white text-sm font-medium'>
-                        {
-                          requests.filter(
-                            r =>
-                              r.overallStatus === 'pending' ||
-                              r.overallStatus === 'under_review' ||
-                              r.overallStatus === 'submitted'
-                          ).length
-                        }
-                      </span>
-                    </div>
-                  </div>
-                  <div className='ml-5 w-0 flex-1'>
-                    <dl>
-                      <dt className='text-sm font-medium text-gray-500 truncate'>
-                        Pending Review
-                      </dt>
-                      <dd className='text-lg font-medium text-gray-900'>
-                        {
-                          requests.filter(
-                            r =>
-                              r.overallStatus === 'pending' ||
-                              r.overallStatus === 'under_review' ||
-                              r.overallStatus === 'submitted'
-                          ).length
-                        }
-                      </dd>
-                    </dl>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className='bg-white overflow-hidden shadow rounded-lg'>
-              <div className='p-5'>
-                <div className='flex items-center'>
-                  <div className='flex-shrink-0'>
-                    <div className='w-8 h-8 bg-green-500 rounded-full flex items-center justify-center'>
-                      <span className='text-white text-sm font-medium'>
-                        {
-                          requests.filter(r => r.overallStatus === 'approved')
-                            .length
-                        }
-                      </span>
-                    </div>
-                  </div>
-                  <div className='ml-5 w-0 flex-1'>
-                    <dl>
-                      <dt className='text-sm font-medium text-gray-500 truncate'>
-                        Approved
-                      </dt>
-                      <dd className='text-lg font-medium text-gray-900'>
-                        {
-                          requests.filter(r => r.overallStatus === 'approved')
-                            .length
-                        }
-                      </dd>
-                    </dl>
-                  </div>
-                </div>
+              <div className='h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center text-primary'>
+                <FileText size={24} />
               </div>
             </div>
           </div>
 
-          {/* Requests Table */}
-          <div className='bg-white shadow overflow-hidden sm:rounded-md'>
-            <div className='px-4 py-5 sm:px-6'>
-              <h3 className='text-lg leading-6 font-medium text-gray-900'>
-                OD Requests for Review
-              </h3>
-              <p className='mt-1 max-w-2xl text-sm text-gray-500'>
-                Review and approve/reject student on-duty requests
-              </p>
+          <div className='bg-card border border-border rounded-xl p-6 shadow-sm'>
+            <div className='flex items-center justify-between'>
+              <div>
+                <p className='text-sm font-medium text-muted-foreground'>Pending Review</p>
+                <p className='text-3xl font-bold text-foreground mt-1'>{pendingCount}</p>
+              </div>
+              <div className='h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center text-primary'>
+                <Clock size={24} />
+              </div>
             </div>
-            <ul className='divide-y divide-gray-200'>
+          </div>
+
+          <div className='bg-card border border-border rounded-xl p-6 shadow-sm'>
+            <div className='flex items-center justify-between'>
+              <div>
+                <p className='text-sm font-medium text-muted-foreground'>Approved</p>
+                <p className='text-3xl font-bold text-foreground mt-1'>{approvedCount}</p>
+              </div>
+              <div className='h-12 w-12 bg-green-500/10 rounded-full flex items-center justify-center text-green-600'>
+                <CheckCircle size={24} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="mb-6 border-b border-border">
+          <nav className="flex gap-6">
+            <button
+              onClick={() => setActiveTab('od-requests')}
+              className={`pb-4 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
+                activeTab === 'od-requests'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <FileText size={18} />
+              OD Requests
+            </button>
+            <button
+              onClick={() => setActiveTab('leave-requests')}
+              className={`pb-4 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
+                activeTab === 'leave-requests'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <Palmtree size={18} />
+              Leave Requests
+              {leaveRequests.length > 0 && (
+                <span className="bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 rounded-full">
+                  {leaveRequests.length}
+                </span>
+              )}
+            </button>
+          </nav>
+        </div>
+
+        {/* Content */}
+        {activeTab === 'od-requests' && (
+          <div className='bg-card border border-border rounded-xl shadow-sm overflow-hidden'>
+            <div className='px-6 py-4 border-b border-border flex justify-between items-center bg-muted/30'>
+              <div className="flex items-center gap-2">
+                <Filter size={16} className="text-muted-foreground" />
+                <h3 className='text-sm font-medium text-foreground'>
+                  OD Requests ({requests.length})
+                </h3>
+              </div>
+            </div>
+            
+            <div className="divide-y divide-border">
               {requests.length === 0 ? (
-                <li className='px-4 py-4 text-center text-gray-500'>
-                  No requests available for review
-                </li>
+                <div className='p-12 text-center'>
+                  <div className="h-16 w-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                    <FileText size={32} className="text-muted-foreground" />
+                  </div>
+                  <h3 className="text-lg font-medium text-foreground">No requests found</h3>
+                  <p className='text-muted-foreground mt-1'>
+                    There are no OD requests to review at the moment.
+                  </p>
+                </div>
               ) : (
                 requests.map(request => (
-                  <li key={request._id} className='px-4 py-4 sm:px-6'>
-                    <div className='flex items-center justify-between'>
-                      <div className='flex items-center'>
-                        <div className='flex-shrink-0'>
-                          <div
-                            className={`w-2 h-2 rounded-full ${
-                              request.overallStatus === 'pending' ||
-                              request.overallStatus === 'under_review' ||
-                              request.overallStatus === 'submitted'
-                                ? 'bg-yellow-400'
-                                : request.overallStatus === 'approved'
-                                  ? 'bg-green-400'
-                                  : request.overallStatus === 'rejected'
-                                    ? 'bg-red-400'
-                                    : 'bg-gray-400'
-                            }`}
-                          ></div>
-                        </div>
-                        <div className='ml-4'>
-                          <div className='text-sm font-medium text-gray-900'>
-                            {request.studentInfo?.fullName ||
-                              request.studentId?.profile?.fullName}
-                          </div>
-                          <div className='text-sm text-gray-500'>
-                            {request.studentInfo?.email ||
-                              request.studentId?.email}{' '}
-                            • {request.studentInfo?.registerNumber}
-                          </div>
-                          <div className='text-sm text-gray-500'>
-                            {request.eventDetails?.eventTitle} •{' '}
-                            {new Date(
-                              request.eventDetails?.dateRange?.startDate
-                            ).toLocaleDateString()}
+                  <div key={request._id} className='p-6 hover:bg-muted/30 transition-colors'>
+                    <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
+                      <div className='flex items-start gap-4'>
+                        <div className={`mt-1 h-2 w-2 rounded-full shrink-0 ${
+                          ['pending', 'under_review', 'submitted'].includes(request.overallStatus)
+                            ? 'bg-primary'
+                            : request.overallStatus === 'approved'
+                              ? 'bg-green-500'
+                              : 'bg-destructive'
+                        }`} />
+                        <div>
+                          <h4 className='text-base font-semibold text-foreground'>
+                            {request.studentInfo?.fullName || request.studentId?.profile?.fullName}
+                          </h4>
+                          <p className='text-sm text-muted-foreground'>
+                            {request.studentInfo?.registerNumber} • {request.studentInfo?.department}
+                          </p>
+                          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <Target size={14} />
+                              {request.eventDetails?.eventTitle}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Clock size={14} />
+                              {new Date(request.eventDetails?.dateRange?.startDate).toLocaleDateString()}
+                            </span>
                           </div>
                         </div>
                       </div>
-                      <div className='flex items-center space-x-4'>
-                        <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            request.overallStatus === 'pending' ||
-                            request.overallStatus === 'under_review' ||
-                            request.overallStatus === 'submitted'
-                              ? 'bg-yellow-100 text-yellow-800'
-                              : request.overallStatus === 'approved'
-                                ? 'bg-green-100 text-green-800'
-                                : request.overallStatus === 'rejected'
-                                  ? 'bg-red-100 text-red-800'
-                                  : 'bg-gray-100 text-gray-800'
-                          }`}
-                        >
-                          {(() => {
-                            const status = request.overallStatus || 'unknown'
-                            if (status === 'under_review') return 'Under Review'
-                            if (status === 'submitted') return 'Awaiting Review'
-                            return (
-                              status.charAt(0).toUpperCase() +
-                              status.slice(1).replace('_', ' ')
-                            )
-                          })()}
+
+                      <div className='flex items-center gap-3 self-end sm:self-center'>
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${
+                          ['pending', 'under_review', 'submitted'].includes(request.overallStatus)
+                            ? 'bg-primary/10 text-primary border-primary/20'
+                            : request.overallStatus === 'approved'
+                              ? 'bg-green-500/10 text-green-600 border-green-500/20'
+                              : 'bg-destructive/10 text-destructive border-destructive/20'
+                        }`}>
+                          {request.overallStatus.replace('_', ' ').toUpperCase()}
                         </span>
-                        {(request.overallStatus === 'pending' ||
-                          request.overallStatus === 'under_review' ||
-                          request.overallStatus === 'submitted') && (
+                        
+                        {['pending', 'under_review', 'submitted'].includes(request.overallStatus) && (
                           <button
                             onClick={() => handleReviewRequest(request)}
-                            className='bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm flex items-center space-x-1'
+                            className='flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm'
                           >
-                            <FileText size={14} />
-                            <span>Review Application</span>
+                            <span>Review</span>
+                            <ChevronRight size={16} />
                           </button>
                         )}
                       </div>
                     </div>
-                  </li>
+                  </div>
                 ))
               )}
-            </ul>
+            </div>
           </div>
-        </div>
-      </div>
+        )}
 
-      {/* Detailed Application View Modal */}
+        {activeTab === 'leave-requests' && (
+          <div className='bg-card border border-border rounded-xl shadow-sm overflow-hidden'>
+             <div className='px-6 py-4 border-b border-border flex justify-between items-center bg-muted/30'>
+              <div className="flex items-center gap-2">
+                <Filter size={16} className="text-muted-foreground" />
+                <h3 className='text-sm font-medium text-foreground'>
+                  Pending Leave Requests ({leaveRequests.length})
+                </h3>
+              </div>
+            </div>
+            
+            <div className="divide-y divide-border">
+              {leaveRequests.length === 0 ? (
+                <div className='p-12 text-center'>
+                  <div className="h-16 w-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Palmtree size={32} className="text-muted-foreground" />
+                  </div>
+                  <h3 className="text-lg font-medium text-foreground">No pending leave requests</h3>
+                  <p className='text-muted-foreground mt-1'>
+                    You have no leave requests pending for approval.
+                  </p>
+                </div>
+              ) : (
+                leaveRequests.map(request => (
+                  <div key={request._id} className='p-6 hover:bg-muted/30 transition-colors'>
+                    {/* Leave Request Item Structure - similar to OD but with leave details */}
+                    <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
+                      <div className='flex items-start gap-4'>
+                        <div className="mt-1 h-2 w-2 rounded-full bg-primary shrink-0" />
+                        <div>
+                          <h4 className='text-base font-semibold text-foreground'>
+                            {request.studentId?.profile?.fullName}
+                          </h4>
+                          <p className='text-sm text-muted-foreground'>
+                            {request.studentId?.profile?.registerNumber} • {request.leaveType} Leave
+                          </p>
+                          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <Clock size={14} />
+                              {new Date(request.startDate).toLocaleDateString()} - {new Date(request.endDate).toLocaleDateString()}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <FileText size={14} />
+                              {request.totalDays} Days
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <button
+                        onClick={() => {
+                          // Implement leave review logic
+                          alert('Leave review implementation pending')
+                        }}
+                        className='flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm'
+                      >
+                        <span>Review</span>
+                        <ChevronRight size={16} />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+      </main>
+
+      {/* Detailed View Modal */}
       {showDetailedView && selectedRequest && (
-        <div className='fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50'>
-          <div className='relative top-4 mx-auto p-6 border max-w-4xl shadow-lg rounded-md bg-white mb-8'>
-            <div className='flex justify-between items-center mb-6'>
-              <h3 className='text-2xl font-bold text-gray-900 flex items-center space-x-2'>
-                <FileText size={24} />
-                <span>Review Application Details</span>
+        <div className='fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4'>
+          <div className='bg-card border border-border w-full max-w-4xl shadow-lg rounded-xl overflow-hidden max-h-[90vh] flex flex-col'>
+            <div className='px-6 py-4 border-b border-border flex justify-between items-center bg-muted/30'>
+              <h3 className='text-lg font-semibold text-foreground flex items-center gap-2'>
+                <FileText size={20} />
+                Review Application
               </h3>
-              <button
-                onClick={handleCloseDetailedView}
-                className='text-gray-500 hover:text-gray-700 text-2xl'
-              >
-                ✕
+              <button onClick={handleCloseDetailedView} className="text-muted-foreground hover:text-foreground">
+                <XCircle size={24} />
               </button>
             </div>
 
-            <div className='space-y-6'>
-              {/* Student Information */}
-              <div className='bg-blue-50 p-4 rounded-lg'>
-                <h4 className='text-lg font-semibold text-blue-900 mb-3 flex items-center space-x-2'>
-                  <User size={18} />
-                  <span>Student Information</span>
+            <div className='p-6 overflow-y-auto flex-1 space-y-6'>
+              {/* Student Info */}
+              <div className='bg-muted/30 p-4 rounded-lg border border-border'>
+                <h4 className='text-sm font-semibold text-foreground mb-3 flex items-center gap-2'>
+                  <User size={16} /> Student Information
                 </h4>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4 text-sm'>
                   <div>
-                    <p>
-                      <strong>Full Name:</strong>{' '}
-                      {selectedRequest.studentInfo?.fullName ||
-                        selectedRequest.studentId?.profile?.fullName}
-                    </p>
-                    <p>
-                      <strong>Register Number:</strong>{' '}
-                      {selectedRequest.studentInfo?.registerNumber}
-                    </p>
-                    <p>
-                      <strong>Email:</strong>{' '}
-                      {selectedRequest.studentInfo?.email ||
-                        selectedRequest.studentId?.email}
-                    </p>
+                    <p className="text-muted-foreground">Full Name</p>
+                    <p className="font-medium text-foreground">{selectedRequest.studentInfo?.fullName || selectedRequest.studentId?.profile?.fullName}</p>
                   </div>
                   <div>
-                    <p>
-                      <strong>Department:</strong>{' '}
-                      {selectedRequest.studentInfo?.department}
-                    </p>
-                    <p>
-                      <strong>Year:</strong> {selectedRequest.studentInfo?.year}
-                    </p>
-                    <p>
-                      <strong>Section:</strong>{' '}
-                      {selectedRequest.studentInfo?.section}
-                    </p>
+                    <p className="text-muted-foreground">Register Number</p>
+                    <p className="font-medium text-foreground">{selectedRequest.studentInfo?.registerNumber}</p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground">Department</p>
+                    <p className="font-medium text-foreground">{selectedRequest.studentInfo?.department}</p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground">Year & Section</p>
+                    <p className="font-medium text-foreground">{selectedRequest.studentInfo?.year} - {selectedRequest.studentInfo?.section}</p>
                   </div>
                 </div>
               </div>
 
               {/* Event Details */}
-              <div className='bg-green-50 p-4 rounded-lg'>
-                <h4 className='text-lg font-semibold text-green-900 mb-3 flex items-center space-x-2'>
-                  <Target size={18} />
-                  <span>Event Details</span>
+              <div className='bg-muted/30 p-4 rounded-lg border border-border'>
+                <h4 className='text-sm font-semibold text-foreground mb-3 flex items-center gap-2'>
+                  <Target size={16} /> Event Details
                 </h4>
-                <div className='space-y-3 text-sm'>
-                  <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                    <div>
-                      <p>
-                        <strong>Event Title:</strong>{' '}
-                        {selectedRequest.eventDetails?.eventTitle}
-                      </p>
-                      <p>
-                        <strong>Event Type:</strong>{' '}
-                        {selectedRequest.eventDetails?.reasonType?.toUpperCase()}
-                      </p>
-                      <p>
-                        <strong>Event Theme:</strong>{' '}
-                        {selectedRequest.eventDetails?.eventTheme || 'N/A'}
-                      </p>
-                    </div>
-                    <div>
-                      <p>
-                        <strong>Institution:</strong>{' '}
-                        {selectedRequest.eventDetails?.venue?.institutionName}
-                      </p>
-                      <p>
-                        <strong>City:</strong>{' '}
-                        {selectedRequest.eventDetails?.venue?.city}
-                      </p>
-                      <p>
-                        <strong>Address:</strong>{' '}
-                        {selectedRequest.eventDetails?.venue?.address || 'N/A'}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                    <div>
-                      <p>
-                        <strong>Start Date:</strong>{' '}
-                        {new Date(
-                          selectedRequest.eventDetails?.dateRange?.startDate
-                        ).toLocaleDateString()}
-                      </p>
-                      <p>
-                        <strong>End Date:</strong>{' '}
-                        {new Date(
-                          selectedRequest.eventDetails?.dateRange?.endDate
-                        ).toLocaleDateString()}
-                      </p>
-                      <p>
-                        <strong>Duration:</strong>{' '}
-                        {Math.ceil(
-                          (new Date(
-                            selectedRequest.eventDetails?.dateRange?.endDate
-                          ) -
-                            new Date(
-                              selectedRequest.eventDetails?.dateRange?.startDate
-                            )) /
-                            (1000 * 60 * 60 * 24)
-                        ) + 1}{' '}
-                        days
-                      </p>
-                    </div>
-                    <div>
-                      <p>
-                        <strong>Start Time:</strong>{' '}
-                        {selectedRequest.eventDetails?.dateRange?.startTime ||
-                          'N/A'}
-                      </p>
-                      <p>
-                        <strong>End Time:</strong>{' '}
-                        {selectedRequest.eventDetails?.dateRange?.endTime ||
-                          'N/A'}
-                      </p>
-                    </div>
-                  </div>
-
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4 text-sm'>
                   <div>
-                    <p>
-                      <strong>Organizer:</strong>{' '}
-                      {selectedRequest.eventDetails?.organizer?.name}
-                    </p>
-                    <p>
-                      <strong>Organizer Type:</strong>{' '}
-                      {selectedRequest.eventDetails?.organizer?.type?.toUpperCase()}
-                    </p>
-                    <p>
-                      <strong>Contact Info:</strong>{' '}
-                      {selectedRequest.eventDetails?.organizer?.contactInfo ||
-                        'N/A'}
+                    <p className="text-muted-foreground">Event Title</p>
+                    <p className="font-medium text-foreground">{selectedRequest.eventDetails?.eventTitle}</p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground">Type</p>
+                    <p className="font-medium text-foreground capitalize">{selectedRequest.eventDetails?.reasonType}</p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground">Date Range</p>
+                    <p className="font-medium text-foreground">
+                      {new Date(selectedRequest.eventDetails?.dateRange?.startDate).toLocaleDateString()} - {new Date(selectedRequest.eventDetails?.dateRange?.endDate).toLocaleDateString()}
                     </p>
                   </div>
-                </div>
-              </div>
-
-              {/* Academic Details */}
-              <div className='bg-yellow-50 p-4 rounded-lg'>
-                <h4 className='text-lg font-semibold text-yellow-900 mb-3 flex items-center space-x-2'>
-                  <BookOpen size={18} />
-                  <span>Academic Impact</span>
-                </h4>
-                <div className='space-y-3 text-sm'>
                   <div>
-                    <p>
-                      <strong>Classes/Subjects to be Missed:</strong>
+                    <p className="text-muted-foreground">Venue</p>
+                    <p className="font-medium text-foreground">
+                      {selectedRequest.eventDetails?.venue?.institutionName}, {selectedRequest.eventDetails?.venue?.city}
                     </p>
-                    <div className='bg-white p-3 rounded border mt-2'>
-                      {selectedRequest.academicDetails?.subjectsMissed?.length >
-                      0 ? (
-                        selectedRequest.academicDetails.subjectsMissed.map(
-                          (subject, index) => (
-                            <div
-                              key={index}
-                              className='mb-2 pb-2 border-b border-gray-200 last:border-b-0'
-                            >
-                              <p>
-                                <strong>{subject.subjectName}</strong> -{' '}
-                                {subject.facultyName}
-                              </p>
-                              <p className='text-xs text-gray-600'>
-                                {new Date(subject.date).toLocaleDateString()} |{' '}
-                                {subject.timeSlot} |{' '}
-                                {subject.classType?.toUpperCase()}
-                              </p>
-                            </div>
-                          )
-                        )
-                      ) : (
-                        <p className='text-gray-600'>
-                          No specific subjects mentioned
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div>
-                    <p>
-                      <strong>Student Undertaking:</strong>
-                    </p>
-                    <div className='bg-white p-3 rounded border mt-2'>
-                      <p className='text-xs'>
-                        {selectedRequest.academicDetails?.undertaking}
-                      </p>
-                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Documents */}
-              <div className='bg-purple-50 p-4 rounded-lg'>
-                <h4 className='text-lg font-semibold text-purple-900 mb-3 flex items-center space-x-2'>
-                  <Paperclip size={18} />
-                  <span>Supporting Documents</span>
+              <div className='bg-muted/30 p-4 rounded-lg border border-border'>
+                <h4 className='text-sm font-semibold text-foreground mb-3 flex items-center gap-2'>
+                  <Paperclip size={16} /> Documents
                 </h4>
-                <div className='space-y-2 text-sm'>
-                  <div className='grid grid-cols-2 gap-4'>
-                    <div>
-                      <p>
-                        <strong>Invitation/Brochure:</strong>
-                        <span
-                          className={`flex items-center space-x-1 ${
-                            selectedRequest.documents?.invitation
-                              ? 'text-green-600'
-                              : 'text-red-600'
-                          }`}
-                        >
-                          {selectedRequest.documents?.invitation ? (
-                            <>
-                              <CheckCircle size={14} />
-                              <span>Uploaded</span>
-                            </>
-                          ) : (
-                            <>
-                              <XCircle size={14} />
-                              <span>Missing</span>
-                            </>
-                          )}
-                        </span>
-                      </p>
-                      <p>
-                        <strong>Permission Letter:</strong>
-                        <span
-                          className={`flex items-center space-x-1 ${
-                            selectedRequest.documents?.permissionLetter
-                              ? 'text-green-600'
-                              : 'text-gray-500'
-                          }`}
-                        >
-                          {selectedRequest.documents?.permissionLetter ? (
-                            <>
-                              <CheckCircle size={14} />
-                              <span>Uploaded</span>
-                            </>
-                          ) : (
-                            <span>Optional</span>
-                          )}
-                        </span>
-                      </p>
-                    </div>
-                    <div>
-                      <p>
-                        <strong>Travel Proof:</strong>
-                        <span
-                          className={`flex items-center space-x-1 ${
-                            selectedRequest.documents?.travelProof
-                              ? 'text-green-600'
-                              : 'text-gray-500'
-                          }`}
-                        >
-                          {selectedRequest.documents?.travelProof ? (
-                            <>
-                              <CheckCircle size={14} />
-                              <span>Uploaded</span>
-                            </>
-                          ) : (
-                            <span>Optional</span>
-                          )}
-                        </span>
-                      </p>
-                      <p>
-                        <strong>Additional Docs:</strong>
-                        <span className='text-blue-600'>
-                          {selectedRequest.documents?.additionalDocs?.length ||
-                            0}{' '}
-                          files
-                        </span>
-                      </p>
-                    </div>
+                <div className='flex gap-4 text-sm'>
+                  <div className={`flex items-center gap-2 ${selectedRequest.documents?.invitation ? 'text-green-600' : 'text-destructive'}`}>
+                    {selectedRequest.documents?.invitation ? <CheckCircle size={16} /> : <XCircle size={16} />}
+                    <span>Invitation</span>
                   </div>
-                </div>
-              </div>
-
-              {/* Current Approval Status */}
-              <div className='bg-gray-50 p-4 rounded-lg'>
-                <h4 className='text-lg font-semibold text-gray-900 mb-3 flex items-center space-x-2'>
-                  <Zap size={18} />
-                  <span>Approval Status</span>
-                </h4>
-                <div className='space-y-2 text-sm'>
-                  <div className='text-center'>
-                    <div className='text-center'>
-                      <p className='font-semibold'>Current Status</p>
-                      <span
-                        className={`inline-block px-3 py-2 rounded text-sm font-medium ${
-                          selectedRequest.approval?.status === 'approved'
-                            ? 'bg-green-100 text-green-800'
-                            : selectedRequest.approval?.status === 'rejected'
-                              ? 'bg-red-100 text-red-800'
-                              : 'bg-yellow-100 text-yellow-800'
-                        }`}
-                      >
-                        {selectedRequest.approval?.status?.toUpperCase() ||
-                          'PENDING REVIEW'}
-                      </span>
-                    </div>
-
-                    {selectedRequest.approval?.status !== 'pending' && (
-                      <div className='mt-3 text-center'>
-                        <p>
-                          <strong>Reviewed by:</strong>{' '}
-                          {selectedRequest.approval?.teacherName}
-                        </p>
-                        <p>
-                          <strong>Designation:</strong>{' '}
-                          {selectedRequest.approval?.teacherDesignation}
-                        </p>
-                        <p>
-                          <strong>Department:</strong>{' '}
-                          {selectedRequest.approval?.teacherDepartment}
-                        </p>
-                        <p>
-                          <strong>Date:</strong>{' '}
-                          {new Date(
-                            selectedRequest.approval?.approvedAt
-                          ).toLocaleString()}
-                        </p>
-                        {selectedRequest.approval?.remarks && (
-                          <p>
-                            <strong>Remarks:</strong>{' '}
-                            {selectedRequest.approval.remarks}
-                          </p>
-                        )}
-                      </div>
-                    )}
+                  <div className={`flex items-center gap-2 ${selectedRequest.documents?.permissionLetter ? 'text-green-600' : 'text-muted-foreground'}`}>
+                    {selectedRequest.documents?.permissionLetter ? <CheckCircle size={16} /> : <div className="w-4" />}
+                    <span>Permission Letter</span>
                   </div>
-
-                  <div className='mt-3 text-center'>
-                    <p>
-                      <strong>Overall Status:</strong>
-                      <span
-                        className={`ml-2 px-3 py-1 rounded-full text-xs font-medium ${
-                          selectedRequest.overallStatus === 'approved'
-                            ? 'bg-green-100 text-green-800'
-                            : selectedRequest.overallStatus === 'rejected'
-                              ? 'bg-red-100 text-red-800'
-                              : selectedRequest.overallStatus === 'under_review'
-                                ? 'bg-blue-100 text-blue-800'
-                                : selectedRequest.overallStatus === 'submitted'
-                                  ? 'bg-yellow-100 text-yellow-800'
-                                  : 'bg-yellow-100 text-yellow-800'
-                        }`}
-                      >
-                        {(() => {
-                          const status =
-                            selectedRequest.overallStatus || 'pending'
-                          if (status === 'under_review') return 'UNDER REVIEW'
-                          if (status === 'submitted') return 'AWAITING REVIEW'
-                          return status.toUpperCase().replace('_', ' ')
-                        })()}
-                      </span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Application Timeline */}
-              <div className='bg-indigo-50 p-4 rounded-lg'>
-                <h4 className='text-lg font-semibold text-indigo-900 mb-3 flex items-center space-x-2'>
-                  <Clock size={18} />
-                  <span>Application Timeline</span>
-                </h4>
-                <div className='space-y-2 text-sm'>
-                  <p>
-                    <strong>Submitted:</strong>{' '}
-                    {new Date(selectedRequest.submittedAt).toLocaleString()}
-                  </p>
-                  <p>
-                    <strong>Last Updated:</strong>{' '}
-                    {new Date(selectedRequest.updatedAt).toLocaleString()}
-                  </p>
-                  {selectedRequest.approval?.approvedAt && (
-                    <p>
-                      <strong>Reviewed:</strong>{' '}
-                      {new Date(
-                        selectedRequest.approval.approvedAt
-                      ).toLocaleString()}
-                    </p>
-                  )}
-                  {selectedRequest.approvalHistory?.length > 0 && (
-                    <div className='mt-3'>
-                      <p>
-                        <strong>Review History:</strong>
-                      </p>
-                      {selectedRequest.approvalHistory.map((history, index) => (
-                        <div
-                          key={index}
-                          className='ml-2 mt-1 text-xs bg-white p-2 rounded border'
-                        >
-                          <p>
-                            <strong>{history.reviewerName}</strong> (
-                            {history.reviewerDesignation})
-                          </p>
-                          <p>
-                            {history.action.toUpperCase()} on{' '}
-                            {new Date(history.reviewedAt).toLocaleString()}
-                          </p>
-                          {history.remarks && <p>Remarks: {history.remarks}</p>}
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className='flex justify-center space-x-4 mt-6 pt-4 border-t'>
-              {(selectedRequest.overallStatus === 'pending' ||
-                selectedRequest.overallStatus === 'under_review' ||
-                selectedRequest.overallStatus === 'submitted') && (
-                <button
-                  onClick={handleProceedToReview}
-                  className='bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2'
-                >
-                  <Search size={18} />
-                  <span>Proceed to Review & Approve/Reject</span>
-                </button>
-              )}
+            <div className='p-6 border-t border-border bg-muted/30 flex justify-end gap-4'>
               <button
                 onClick={handleCloseDetailedView}
-                className='bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2'
+                className='px-4 py-2 border border-input bg-background hover:bg-muted text-foreground rounded-md text-sm font-medium transition-colors'
               >
-                <Eye size={18} />
-                <span>Close Application View</span>
+                Close
+              </button>
+              <button
+                onClick={handleProceedToReview}
+                className='px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-sm font-medium transition-colors shadow-sm flex items-center gap-2'
+              >
+                <Scale size={16} />
+                Proceed to Decision
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Review Modal */}
+      {/* Review Decision Modal */}
       {reviewModal && selectedRequest && (
-        <div className='fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50'>
-          <div className='relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white'>
-            <div className='mt-3'>
-              <h3 className='text-lg font-medium text-gray-900 text-center mb-4 flex items-center justify-center space-x-2'>
+        <div className='fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4'>
+          <div className='bg-card border border-border w-full max-w-md shadow-lg rounded-xl overflow-hidden'>
+            <div className='px-6 py-4 border-b border-border bg-muted/30'>
+              <h3 className='text-lg font-semibold text-foreground flex items-center gap-2'>
                 <Scale size={20} />
-                <span>Submit Review Decision</span>
+                Submit Decision
               </h3>
-
-              <div className='mb-4 bg-blue-50 p-3 rounded'>
-                <p className='text-sm text-blue-800'>
-                  <strong>Application:</strong>{' '}
-                  {selectedRequest.eventDetails?.eventTitle}
+            </div>
+            
+            <div className='p-6 space-y-4'>
+              <div className='bg-primary/10 p-3 rounded-md border border-primary/20'>
+                <p className='text-sm text-primary font-medium'>
+                  Reviewing: {selectedRequest.eventDetails?.eventTitle}
                 </p>
-                <p className='text-sm text-blue-600'>
-                  Student:{' '}
-                  {selectedRequest.studentInfo?.fullName ||
-                    selectedRequest.studentId?.profile?.fullName}
-                </p>
-                <p className='text-sm text-green-600 flex items-center space-x-1'>
-                  <CheckCircle size={14} />
-                  <strong>
-                    One approval from any teacher/staff is sufficient
-                  </strong>
+                <p className='text-xs text-muted-foreground mt-1'>
+                  Student: {selectedRequest.studentInfo?.fullName || selectedRequest.studentId?.profile?.fullName}
                 </p>
               </div>
 
-              <div className='mb-4'>
-                <label className='block text-sm font-medium text-gray-700'>
+              <div>
+                <label className='block text-sm font-medium text-foreground mb-1'>
                   Decision *
                 </label>
                 <select
                   value={reviewData.status}
-                  onChange={e =>
-                    setReviewData({ ...reviewData, status: e.target.value })
-                  }
-                  className='mt-1 block w-full border border-gray-300 rounded-md px-3 py-2'
-                  required
+                  onChange={e => setReviewData({ ...reviewData, status: e.target.value })}
+                  className='w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 >
                   <option value=''>Select Decision</option>
                   <option value='approved'>Approve Request</option>
@@ -982,40 +583,37 @@ const TeacherDashboard = () => {
                 </select>
               </div>
 
-              <div className='mb-4'>
-                <label className='block text-sm font-medium text-gray-700'>
+              <div>
+                <label className='block text-sm font-medium text-foreground mb-1'>
                   Remarks
                 </label>
                 <textarea
                   value={reviewData.remarks}
-                  onChange={e =>
-                    setReviewData({ ...reviewData, remarks: e.target.value })
-                  }
+                  onChange={e => setReviewData({ ...reviewData, remarks: e.target.value })}
                   rows='3'
-                  className='mt-1 block w-full border border-gray-300 rounded-md px-3 py-2'
-                  placeholder='Add your comments...'
+                  className='w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  placeholder='Add comments...'
                 />
               </div>
+            </div>
 
-              <div className='flex justify-end space-x-4'>
-                <button
-                  onClick={() => {
-                    setReviewModal(false)
-                    setShowDetailedView(true)
-                  }}
-                  className='px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400'
-                >
-                  ← Back to Application
-                </button>
-                <button
-                  onClick={submitReview}
-                  disabled={!reviewData.status}
-                  className='px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 flex items-center space-x-2'
-                >
-                  <CheckCircle size={16} />
-                  <span>Submit Review Decision</span>
-                </button>
-              </div>
+            <div className='p-6 border-t border-border bg-muted/30 flex justify-end gap-3'>
+              <button
+                onClick={() => {
+                  setReviewModal(false)
+                  setShowDetailedView(true)
+                }}
+                className='px-4 py-2 border border-input bg-background hover:bg-muted text-foreground rounded-md text-sm font-medium transition-colors'
+              >
+                Back
+              </button>
+              <button
+                onClick={submitReview}
+                disabled={!reviewData.status}
+                className='px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-sm font-medium transition-colors shadow-sm disabled:opacity-50'
+              >
+                Submit Decision
+              </button>
             </div>
           </div>
         </div>

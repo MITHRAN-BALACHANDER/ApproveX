@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
+import { CheckCircle, Lock, RefreshCw, Key } from 'lucide-react'
+import config from '../config/config'
 
 const EmailVerification = ({ onRegister }) => {
   const [searchParams] = useSearchParams()
@@ -34,19 +36,16 @@ const EmailVerification = ({ onRegister }) => {
     setMessage('')
 
     try {
-      const response = await fetch(
-        'http://localhost:5000/api/auth/verify-email',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            token,
-            password,
-          }),
-        }
-      )
+      const response = await fetch(`${config.api.auth}/verify-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          token,
+          password,
+        }),
+      })
 
       const result = await response.json()
 
@@ -70,28 +69,16 @@ const EmailVerification = ({ onRegister }) => {
   }
 
   return (
-    <div className='min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8'>
-      <div className='max-w-md w-full space-y-8'>
+    <div className='min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-background'>
+      <div className='max-w-md w-full space-y-8 bg-card p-8 rounded-xl shadow-lg border border-border'>
         <div className='text-center'>
-          <div className='mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-indigo-100'>
-            <svg
-              className='h-6 w-6 text-indigo-600'
-              fill='none'
-              viewBox='0 0 24 24'
-              stroke='currentColor'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={2}
-                d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'
-              />
-            </svg>
+          <div className='mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-primary/10'>
+            <CheckCircle className='h-6 w-6 text-primary' />
           </div>
-          <h2 className='mt-6 text-3xl font-extrabold text-gray-900'>
+          <h2 className='mt-6 text-3xl font-extrabold text-foreground'>
             Verify Your Email
           </h2>
-          <p className='mt-2 text-sm text-gray-600'>
+          <p className='mt-2 text-sm text-muted-foreground'>
             Complete your registration by setting a password
           </p>
         </div>
@@ -101,60 +88,79 @@ const EmailVerification = ({ onRegister }) => {
             <div>
               <label
                 htmlFor='token'
-                className='block text-sm font-medium text-gray-700'
+                className='block text-sm font-medium text-foreground mb-1'
               >
                 Verification Token
               </label>
-              <input
-                type='text'
-                value={token}
-                onChange={e => setToken(e.target.value)}
-                className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
-                placeholder='Enter verification token'
-                required
-              />
+              <div className='relative'>
+                <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+                  <Key className='h-5 w-5 text-muted-foreground' />
+                </div>
+                <input
+                  type='text'
+                  value={token}
+                  onChange={e => setToken(e.target.value)}
+                  className='block w-full pl-10 pr-3 py-2 border border-input rounded-md leading-5 bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm'
+                  placeholder='Enter verification token'
+                  required
+                />
+              </div>
             </div>
 
             <div>
               <label
                 htmlFor='password'
-                className='block text-sm font-medium text-gray-700'
+                className='block text-sm font-medium text-foreground mb-1'
               >
                 Set Password
               </label>
-              <input
-                type='password'
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
-                placeholder='Create a secure password'
-                required
-                minLength={6}
-              />
+              <div className='relative'>
+                <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+                  <Lock className='h-5 w-5 text-muted-foreground' />
+                </div>
+                <input
+                  type='password'
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  className='block w-full pl-10 pr-3 py-2 border border-input rounded-md leading-5 bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm'
+                  placeholder='Create a secure password'
+                  required
+                  minLength={6}
+                />
+              </div>
             </div>
 
             <div>
               <label
                 htmlFor='confirmPassword'
-                className='block text-sm font-medium text-gray-700'
+                className='block text-sm font-medium text-foreground mb-1'
               >
                 Confirm Password
               </label>
-              <input
-                type='password'
-                value={confirmPassword}
-                onChange={e => setConfirmPassword(e.target.value)}
-                className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
-                placeholder='Confirm your password'
-                required
-                minLength={6}
-              />
+              <div className='relative'>
+                <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+                  <Lock className='h-5 w-5 text-muted-foreground' />
+                </div>
+                <input
+                  type='password'
+                  value={confirmPassword}
+                  onChange={e => setConfirmPassword(e.target.value)}
+                  className='block w-full pl-10 pr-3 py-2 border border-input rounded-md leading-5 bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm'
+                  placeholder='Confirm your password'
+                  required
+                  minLength={6}
+                />
+              </div>
             </div>
           </div>
 
           {message && (
             <div
-              className={`p-4 rounded-md ${message.includes('successfully') ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}
+              className={`p-4 rounded-md ${
+                message.includes('successfully')
+                  ? 'bg-green-500/10 text-green-600'
+                  : 'bg-destructive/10 text-destructive'
+              }`}
             >
               <p className='text-sm'>{message}</p>
             </div>
@@ -164,9 +170,13 @@ const EmailVerification = ({ onRegister }) => {
             <button
               type='submit'
               disabled={loading}
-              className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50'
+              className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 transition-colors'
             >
-              {loading ? 'Verifying...' : 'Verify Email & Set Password'}
+              {loading ? (
+                <RefreshCw className='h-5 w-5 animate-spin' />
+              ) : (
+                'Verify Email & Set Password'
+              )}
             </button>
           </div>
         </form>

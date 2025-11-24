@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { GraduationCap, AlertTriangle } from 'lucide-react'
+import { GraduationCap, AlertCircle, ArrowRight, Lock, Mail } from 'lucide-react'
+import config from '../config/config.js'
 
 function UnifiedLogin({ onLogin }) {
   const [loading, setLoading] = useState(false)
@@ -25,6 +26,9 @@ function UnifiedLogin({ onLogin }) {
     setLoading(true)
     setError('')
 
+    console.log('Config object:', config); // Debugging config
+    console.log('AutoLogin URL:', config.api.autoLogin); // Debugging URL
+
     // Basic validation
     if (!formData.email || !formData.password) {
       setError('Please fill in all fields')
@@ -33,11 +37,7 @@ function UnifiedLogin({ onLogin }) {
     }
 
     try {
-      // Use the auto-login endpoint that detects role automatically
-      const API_BASE_URL =
-        import.meta.env?.VITE_API_BASE_URL || 'http://localhost:5000/api'
-
-      const response = await fetch(`${API_BASE_URL}/role-auth/auto-login`, {
+      const response = await fetch(config.api.autoLogin, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -95,122 +95,114 @@ function UnifiedLogin({ onLogin }) {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden'>
-      {/* Animated background elements */}
-      <div className='absolute inset-0 overflow-hidden'>
-        <div className='absolute -top-10 -right-10 w-96 h-96 bg-gradient-to-br from-blue-200/20 to-purple-200/20 rounded-full blur-3xl animate-pulse'></div>
-        <div className='absolute -bottom-10 -left-10 w-96 h-96 bg-gradient-to-br from-indigo-200/20 to-blue-200/20 rounded-full blur-3xl animate-pulse delay-1000'></div>
+    <div className='min-h-screen bg-background flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden'>
+      {/* Background elements */}
+      <div className='absolute inset-0 overflow-hidden pointer-events-none'>
+        <div className='absolute -top-[20%] -right-[10%] w-[70%] h-[70%] bg-primary/5 rounded-full blur-3xl'></div>
+        <div className='absolute -bottom-[20%] -left-[10%] w-[70%] h-[70%] bg-secondary/5 rounded-full blur-3xl'></div>
       </div>
 
       <div className='max-w-md w-full space-y-8 relative z-10'>
         {/* Header */}
         <div className='text-center'>
-          <div className='mx-auto h-20 w-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center text-4xl mb-6 shadow-lg transform hover:scale-105 transition-transform duration-300 hover:rotate-3'>
-            <GraduationCap size={32} className="text-white" />
+          <div className='mx-auto h-16 w-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6'>
+            <GraduationCap size={32} className="text-primary" />
           </div>
-          <h2 className='text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3'>
-            OD Provider System
+          <h2 className='text-3xl font-bold text-foreground mb-2'>
+            Welcome Back
           </h2>
-          <p className='text-gray-600 text-lg'>
+          <p className='text-muted-foreground'>
             Sign in to access your dashboard
           </p>
         </div>
 
         {/* Login Form */}
-        <div className='bg-white/80 backdrop-blur-lg border border-white/30 rounded-2xl shadow-2xl p-8 hover:shadow-3xl transition-all duration-300 hover:bg-white/90'>
+        <div className='bg-card border border-border rounded-xl shadow-sm p-8'>
           {error && (
-            <div className='mb-6 p-4 border border-red-200 rounded-xl bg-red-50/80 backdrop-blur-sm animate-shake'>
-              <div className='flex items-center'>
-                <div className='flex-shrink-0'>
-                  <AlertTriangle size={20} className="text-red-500" />
-                </div>
-                <div className='ml-3'>
-                  <p className='text-sm text-red-700 font-medium'>{error}</p>
-                </div>
-              </div>
+            <div className='mb-6 p-4 border border-destructive/20 rounded-lg bg-destructive/10 flex items-center gap-3 text-destructive'>
+              <AlertCircle size={20} />
+              <p className='text-sm font-medium'>{error}</p>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className='space-y-6'>
             <div className='space-y-4'>
-              <div className='group'>
+              <div>
                 <label
                   htmlFor='email'
-                  className='block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-blue-600 transition-colors'
+                  className='block text-sm font-medium text-foreground mb-1.5'
                 >
                   Email Address
                 </label>
-                <input
-                  id='email'
-                  name='email'
-                  type='email'
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                  autoComplete='email'
-                  className='appearance-none relative block w-full px-4 py-3 border border-gray-200 placeholder-gray-400 text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:z-10 transition-all duration-200 bg-gray-50 hover:bg-white focus:bg-white group-hover:shadow-md'
-                  placeholder='Enter your email'
-                />
+                <div className="relative">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                    <Mail size={18} />
+                  </div>
+                  <input
+                    id='email'
+                    name='email'
+                    type='email'
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    autoComplete='email'
+                    className='w-full pl-10 pr-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                    placeholder='Enter your email'
+                  />
+                </div>
               </div>
 
-              <div className='group'>
+              <div>
                 <label
                   htmlFor='password'
-                  className='block text-sm font-semibold text-gray-700 mb-2 group-focus-within:text-blue-600 transition-colors'
+                  className='block text-sm font-medium text-foreground mb-1.5'
                 >
                   Password
                 </label>
-                <input
-                  id='password'
-                  name='password'
-                  type='password'
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  required
-                  autoComplete='current-password'
-                  className='appearance-none relative block w-full px-4 py-3 border border-gray-200 placeholder-gray-400 text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:z-10 transition-all duration-200 bg-gray-50 hover:bg-white focus:bg-white group-hover:shadow-md'
-                  placeholder='Enter your password'
-                />
+                <div className="relative">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                    <Lock size={18} />
+                  </div>
+                  <input
+                    id='password'
+                    name='password'
+                    type='password'
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    required
+                    autoComplete='current-password'
+                    className='w-full pl-10 pr-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                    placeholder='Enter your password'
+                  />
+                </div>
               </div>
             </div>
 
-            <div>
-              <button
-                type='submit'
-                disabled={loading}
-                className='group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-lg hover:shadow-xl'
-              >
-                {loading ? (
-                  <div className='flex items-center'>
-                    <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2'></div>
-                    Signing in...
-                  </div>
-                ) : (
-                  <span className='flex items-center'>
-                    Sign in
-                    <svg
-                      className='ml-2 -mr-1 w-4 h-4 group-hover:translate-x-1 transition-transform'
-                      fill='currentColor'
-                      viewBox='0 0 20 20'
-                    >
-                      <path
-                        fillRule='evenodd'
-                        d='M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z'
-                        clipRule='evenodd'
-                      />
-                    </svg>
-                  </span>
-                )}
-              </button>
-            </div>
+            <button
+              type='submit'
+              disabled={loading}
+              className='w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm'
+            >
+              {loading ? (
+                <div className='flex items-center gap-2'>
+                  <div className='h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin'></div>
+                  <span>Signing in...</span>
+                </div>
+              ) : (
+                <span className='flex items-center gap-2'>
+                  Sign in
+                  <ArrowRight size={16} />
+                </span>
+              )}
+            </button>
           </form>
 
-          <div className='mt-6 text-center'>
-            <p className='text-sm text-gray-600'>
+          <div className='mt-6 text-center pt-6 border-t border-border'>
+            <p className='text-sm text-muted-foreground'>
               Don't have an account?{' '}
               <button
                 onClick={() => navigate('/register')}
-                className='font-semibold text-blue-600 hover:text-blue-800 transition-colors hover:underline'
+                className='font-medium text-primary hover:text-primary/80 transition-colors hover:underline'
               >
                 Register here
               </button>
@@ -219,9 +211,11 @@ function UnifiedLogin({ onLogin }) {
         </div>
 
         {/* Information */}
-        <div className='text-center text-sm text-gray-600 bg-white/50 backdrop-blur-sm rounded-xl p-4 border border-white/30'>
-          <p className='font-medium'>🔒 Secure login system</p>
-          <p className='mt-1'>System automatically detects your role</p>
+        <div className='text-center text-xs text-muted-foreground'>
+          <p className='flex items-center justify-center gap-1.5'>
+            <Lock size={12} />
+            Secure login system with automatic role detection
+          </p>
         </div>
       </div>
     </div>

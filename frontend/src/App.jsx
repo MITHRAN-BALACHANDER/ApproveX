@@ -11,7 +11,6 @@ import AdminDashboard from './components/AdminDashboard'
 import TeacherManagement from './components/TeacherManagement'
 import TeacherDashboard from './components/TeacherDashboard'
 import StudentDashboard from './components/StudentDashboard'
-import Home from './pages/Home'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import authService from './services/authService'
@@ -91,31 +90,17 @@ function App() {
 
   if (loading) {
     return (
-      <div
-        className='min-h-screen flex items-center justify-center'
-        style={{ backgroundColor: 'var(--color-light)' }}
-      >
+      <div className='min-h-screen flex items-center justify-center bg-background'>
         <div className='text-center'>
-          <div
-            className='animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4'
-            style={{ borderColor: 'var(--color-primary)' }}
-          ></div>
-          <p className='text-gray-600'>Loading application...</p>
+          <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4'></div>
+          <p className='text-muted-foreground'>Loading application...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div
-      className='min-h-screen'
-      style={{
-        backgroundColor: 'var(--color-light)',
-        color: 'var(--color-dark)',
-      }}
-    >
-      <div className='animated-gradient'></div>
-
+    <div className='min-h-screen bg-background text-foreground'>
       {/* Only show main navbar on non-dashboard pages */}
       {user && !isDashboardRoute && (
         <Navbar user={user} onLogout={handleLogout} />

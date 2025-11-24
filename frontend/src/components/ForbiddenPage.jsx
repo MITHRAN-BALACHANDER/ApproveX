@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import { AlertTriangle, ArrowRight, LogOut } from 'lucide-react'
 
 const ForbiddenPage = () => {
   const navigate = useNavigate()
@@ -36,37 +37,25 @@ const ForbiddenPage = () => {
   }
 
   return (
-    <div className='min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
+    <div className='min-h-screen bg-background flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
       <div className='sm:mx-auto sm:w-full sm:max-w-md'>
-        <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
+        <div className='bg-card py-8 px-4 shadow-lg border border-border sm:rounded-xl sm:px-10'>
           <div className='text-center'>
             {/* 403 Icon */}
-            <div className='mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100'>
-              <svg
-                className='h-6 w-6 text-red-600'
-                fill='none'
-                viewBox='0 0 24 24'
-                stroke='currentColor'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.1 16.5c-.77.833.192 2.5 1.732 2.5z'
-                />
-              </svg>
+            <div className='mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-destructive/10'>
+              <AlertTriangle className='h-6 w-6 text-destructive' />
             </div>
 
-            <h2 className='mt-6 text-3xl font-extrabold text-gray-900'>
+            <h2 className='mt-6 text-3xl font-extrabold text-foreground'>
               Access Forbidden
             </h2>
 
-            <p className='mt-2 text-sm text-gray-600'>
+            <p className='mt-2 text-sm text-muted-foreground'>
               You don't have permission to access this page.
             </p>
 
             {userRole && (
-              <p className='mt-2 text-sm text-blue-600'>
+              <p className='mt-2 text-sm text-primary'>
                 You are logged in as:{' '}
                 <span className='font-medium capitalize'>{userRole}</span>
               </p>
@@ -76,23 +65,26 @@ const ForbiddenPage = () => {
               {userRole ? (
                 <button
                   onClick={handleGoToDashboard}
-                  className='w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+                  className='w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors'
                 >
                   Go to My Dashboard
+                  <ArrowRight className='ml-2 h-4 w-4' />
                 </button>
               ) : (
                 <button
                   onClick={() => navigate('/login')}
-                  className='w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+                  className='w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors'
                 >
                   Go to Login
+                  <ArrowRight className='ml-2 h-4 w-4' />
                 </button>
               )}
 
               <button
                 onClick={handleLogout}
-                className='w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+                className='w-full flex justify-center items-center py-2 px-4 border border-input rounded-md shadow-sm text-sm font-medium text-foreground bg-background hover:bg-muted focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors'
               >
+                <LogOut className='mr-2 h-4 w-4' />
                 Logout & Login as Different User
               </button>
             </div>

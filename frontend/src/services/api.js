@@ -1,11 +1,8 @@
 import axios from 'axios'
-
-// Use Vite env var for API base; fallback to localhost
-const API_BASE_URL =
-  import.meta.env?.VITE_API_BASE_URL || 'http://localhost:5000/api'
+import config from '../config/config'
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: config.api.baseUrl,
   headers: {
     'Content-Type': 'application/json',
   },

@@ -6,7 +6,10 @@ import {
   Clock, 
   RotateCcw, 
   ClipboardList,
-  FileText
+  FileText,
+  Calendar,
+  MessageSquare,
+  Paperclip
 } from 'lucide-react'
 
 const RequestStatus = () => {
@@ -60,30 +63,32 @@ const RequestStatus = () => {
   const getStatusColor = status => {
     switch (status) {
       case 'resolved':
-        return 'bg-green-500'
+      case 'approved':
+        return 'bg-green-500/10 text-green-600 border-green-500/20'
       case 'rejected':
-        return 'bg-red-500'
+        return 'bg-destructive/10 text-destructive border-destructive/20'
       case 'pending':
-        return 'bg-yellow-500'
+        return 'bg-primary/10 text-primary border-primary/20'
       case 'in-progress':
-        return 'bg-blue-500'
+        return 'bg-secondary/10 text-secondary border-secondary/20'
       default:
-        return 'bg-gray-500'
+        return 'bg-muted text-muted-foreground border-border'
     }
   }
 
   const getStatusIcon = status => {
     switch (status) {
       case 'resolved':
-        return <CheckCircle size={24} className="text-green-600" />
+      case 'approved':
+        return <CheckCircle size={20} className="text-green-600" />
       case 'rejected':
-        return <XCircle size={24} className="text-red-600" />
+        return <XCircle size={20} className="text-destructive" />
       case 'pending':
-        return <Clock size={24} className="text-yellow-600" />
+        return <Clock size={20} className="text-primary" />
       case 'in-progress':
-        return <RotateCcw size={24} className="text-blue-600" />
+        return <RotateCcw size={20} className="text-secondary" />
       default:
-        return <ClipboardList size={24} className="text-gray-600" />
+        return <ClipboardList size={20} className="text-muted-foreground" />
     }
   }
 
@@ -99,8 +104,8 @@ const RequestStatus = () => {
     return (
       <div className='flex items-center justify-center py-12'>
         <div className='text-center'>
-          <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4'></div>
-          <p className='text-gray-600 font-medium'>Loading your requests...</p>
+          <div className='animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto mb-4'></div>
+          <p className='text-muted-foreground font-medium'>Loading your requests...</p>
         </div>
       </div>
     )
@@ -109,98 +114,84 @@ const RequestStatus = () => {
   return (
     <div className='space-y-6'>
       {requests.length === 0 ? (
-        <div className='text-center py-12 bg-white/80 backdrop-blur-sm rounded-2xl border border-white/30'>
+        <div className='text-center py-12 bg-card rounded-xl border border-border border-dashed'>
           <div className='flex justify-center mb-4'>
-            <FileText size={64} className="text-gray-400" />
+            <div className="h-16 w-16 bg-muted rounded-full flex items-center justify-center">
+              <FileText size={32} className="text-muted-foreground" />
+            </div>
           </div>
-          <h3 className='text-xl font-bold text-gray-900 mb-2'>
+          <h3 className='text-lg font-semibold text-foreground mb-1'>
             No OD Requests Yet
           </h3>
-          <p className='text-gray-600'>
+          <p className='text-muted-foreground max-w-sm mx-auto'>
             You haven't submitted any on-duty requests. Click on "New OD
             Request" to get started.
           </p>
         </div>
       ) : (
-        <div className='grid gap-6'>
+        <div className='grid gap-4'>
           {requests.map(request => (
             <div
               key={request._id}
-              className='bg-white/80 backdrop-blur-sm border border-white/30 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] p-6'
+              className='bg-card border border-border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-5'
             >
-              <div className='flex items-start justify-between'>
-                <div className='flex-1'>
-                  <div className='flex items-center mb-3'>
-                    <div className='mr-3'>
+              <div className='flex flex-col sm:flex-row sm:items-start justify-between gap-4'>
+                <div className='flex-1 space-y-3'>
+                  <div className='flex items-start gap-3'>
+                    <div className='mt-1'>
                       {getStatusIcon(request.status)}
                     </div>
                     <div>
-                      <h3 className='text-lg font-bold text-gray-900 line-clamp-1'>
+                      <h3 className='text-base font-semibold text-foreground line-clamp-1'>
                         {request.description ||
                           request.name ||
                           'On-Duty Request'}
                       </h3>
-                      <p className='text-sm text-gray-600'>
+                      <p className='text-xs text-muted-foreground mt-0.5'>
                         Submitted on {formatDate(request.submittedAt)}
                       </p>
                     </div>
                   </div>
 
-                  {request.eventName && (
-                    <div className='mb-3'>
-                      <p className='text-sm font-semibold text-gray-700'>
-                        Event:
-                      </p>
-                      <p className='text-gray-600'>{request.eventName}</p>
-                    </div>
-                  )}
+                  <div className="pl-8 space-y-2">
+                    {request.eventName && (
+                      <div className='flex items-center gap-2 text-sm'>
+                        <span className='font-medium text-foreground min-w-[60px]'>Event:</span>
+                        <span className='text-muted-foreground'>{request.eventName}</span>
+                      </div>
+                    )}
 
-                  {request.eventDate && (
-                    <div className='mb-3'>
-                      <p className='text-sm font-semibold text-gray-700'>
-                        Date:
-                      </p>
-                      <p className='text-gray-600'>
-                        {formatDate(request.eventDate)}
-                      </p>
-                    </div>
-                  )}
+                    {request.eventDate && (
+                      <div className='flex items-center gap-2 text-sm'>
+                        <Calendar size={14} className="text-muted-foreground" />
+                        <span className='text-muted-foreground'>
+                          {formatDate(request.eventDate)}
+                        </span>
+                      </div>
+                    )}
 
-                  {request.comments && (
-                    <div className='mb-3'>
-                      <p className='text-sm font-semibold text-gray-700'>
-                        Comments:
-                      </p>
-                      <p className='text-gray-600 text-sm'>
-                        {request.comments}
-                      </p>
-                    </div>
-                  )}
+                    {request.comments && (
+                      <div className='flex items-start gap-2 text-sm bg-muted/30 p-2 rounded-md'>
+                        <MessageSquare size={14} className="text-muted-foreground mt-0.5" />
+                        <span className='text-muted-foreground'>
+                          {request.comments}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                <div className='ml-4 flex flex-col items-end'>
+                <div className='flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-3 pl-8 sm:pl-0'>
                   <div
-                    className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold text-white ${getStatusColor(request.status)} shadow-md`}
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(request.status)}`}
                   >
                     {request.status.charAt(0).toUpperCase() +
                       request.status.slice(1).replace('-', ' ')}
                   </div>
 
                   {request.documents && request.documents.length > 0 && (
-                    <div className='mt-3 text-sm text-gray-500 flex items-center'>
-                      <svg
-                        className='w-4 h-4 mr-1'
-                        fill='none'
-                        viewBox='0 0 24 24'
-                        stroke='currentColor'
-                      >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          strokeWidth={2}
-                          d='M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13'
-                        />
-                      </svg>
+                    <div className='text-xs text-muted-foreground flex items-center gap-1'>
+                      <Paperclip size={12} />
                       {request.documents.length} file(s)
                     </div>
                   )}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
+import config from '../config/config'
 
 const ProtectedRoute = ({
   children,
@@ -41,9 +42,7 @@ const ProtectedRoute = ({
         }
 
         // Verify token with backend
-        const API_BASE_URL =
-          import.meta.env?.VITE_API_BASE_URL || 'http://localhost:5000/api'
-        const response = await fetch(`${API_BASE_URL}/role-auth/verify`, {
+        const response = await fetch(`${config.api.roleAuth}/verify`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -109,10 +108,10 @@ const ProtectedRoute = ({
   // Show loading spinner while verifying
   if (isVerifying) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-gray-50'>
+      <div className='min-h-screen flex items-center justify-center bg-background'>
         <div className='text-center'>
-          <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4'></div>
-          <p className='text-gray-600'>Verifying authentication...</p>
+          <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4'></div>
+          <p className='text-muted-foreground'>Verifying authentication...</p>
         </div>
       </div>
     )

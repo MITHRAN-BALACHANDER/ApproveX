@@ -46,12 +46,12 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 // Serve frontend build (React/Vue/etc.)
-app.use(express.static(path.join(__dirname, 'public')));
+//  app.use(express.static(path.join(__dirname, 'public')));
 
 // Catch-all route: send index.html for client-side routing (SPA)
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
-});
+// app.get('*', (req, res) => {
+//   res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+// });
 
 
 
@@ -94,7 +94,7 @@ mongoose.connect(MONGODB_URI)
     process.exit(1);
   });
 
-// Start server regardless of DB connection
+// Start server regardless of DB con  nection
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on port ${PORT}`);
   console.log(`📡 API available at http://localhost:${PORT}`);

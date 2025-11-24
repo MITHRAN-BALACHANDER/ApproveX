@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import config from '../config/config.js'
+import { X, User, Hash, BookOpen, Calendar, Layers, AlertCircle, CheckCircle, Save } from 'lucide-react'
 
 const EditProfile = ({ userInfo, onClose, onUpdate }) => {
   const [formData, setFormData] = useState({
@@ -30,7 +32,7 @@ const EditProfile = ({ userInfo, onClose, onUpdate }) => {
     try {
       const userToken = localStorage.getItem('userToken')
       const response = await fetch(
-        'http://localhost:5000/api/auth/update-profile',
+        config.api.updateProfile,
         {
           method: 'PUT',
           headers: {
@@ -78,149 +80,190 @@ const EditProfile = ({ userInfo, onClose, onUpdate }) => {
   }
 
   return (
-    <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
-      <div className='bg-white rounded-lg shadow-xl max-w-md w-full mx-4 max-h-screen overflow-y-auto'>
+    <div className='fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50 p-4'>
+      <div className='bg-card border border-border rounded-xl shadow-lg max-w-md w-full max-h-[90vh] overflow-y-auto'>
         <div className='p-6'>
           <div className='flex justify-between items-center mb-6'>
-            <h2 className='text-xl font-bold text-gray-900'>Edit Profile</h2>
+            <h2 className='text-xl font-bold text-foreground flex items-center gap-2'>
+              <User className="w-5 h-5 text-primary" />
+              Edit Profile
+            </h2>
             <button
               onClick={onClose}
-              className='text-gray-400 hover:text-gray-600'
+              className='text-muted-foreground hover:text-foreground transition-colors'
             >
-              <span className='text-2xl'>&times;</span>
+              <X size={24} />
             </button>
           </div>
 
           {error && (
-            <div className='mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded'>
+            <div className='mb-4 p-3 bg-destructive/10 border border-destructive/20 text-destructive rounded-lg flex items-center gap-2 text-sm'>
+              <AlertCircle size={16} />
               {error}
             </div>
           )}
 
           {success && (
-            <div className='mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded'>
+            <div className='mb-4 p-3 bg-green-500/10 border border-green-500/20 text-green-600 rounded-lg flex items-center gap-2 text-sm'>
+              <CheckCircle size={16} />
               {success}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className='space-y-4'>
             <div>
-              <label className='block text-sm font-medium text-gray-700 mb-1'>
+              <label className='block text-sm font-medium text-foreground mb-1.5'>
                 Full Name
               </label>
-              <input
-                type='text'
-                name='fullName'
-                value={formData.fullName}
-                onChange={handleInputChange}
-                required
-                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
-              />
+              <div className="relative">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                  <User size={16} />
+                </div>
+                <input
+                  type='text'
+                  name='fullName'
+                  value={formData.fullName}
+                  onChange={handleInputChange}
+                  required
+                  className='w-full pl-9 pr-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  placeholder="Enter your full name"
+                />
+              </div>
             </div>
 
             <div>
-              <label className='block text-sm font-medium text-gray-700 mb-1'>
+              <label className='block text-sm font-medium text-foreground mb-1.5'>
                 Register Number
               </label>
-              <input
-                type='text'
-                name='registerNumber'
-                value={formData.registerNumber}
-                onChange={handleInputChange}
-                required
-                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
-              />
+              <div className="relative">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                  <Hash size={16} />
+                </div>
+                <input
+                  type='text'
+                  name='registerNumber'
+                  value={formData.registerNumber}
+                  onChange={handleInputChange}
+                  required
+                  className='w-full pl-9 pr-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  placeholder="Enter register number"
+                />
+              </div>
             </div>
 
             <div>
-              <label className='block text-sm font-medium text-gray-700 mb-1'>
+              <label className='block text-sm font-medium text-foreground mb-1.5'>
                 Department
               </label>
-              <select
-                name='department'
-                value={formData.department}
-                onChange={handleInputChange}
-                required
-                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
-              >
-                <option value=''>Select Department</option>
-                <option value='Computer Science Engineering'>
-                  Computer Science Engineering
-                </option>
-                <option value='Information Technology'>
-                  Information Technology
-                </option>
-                <option value='Electronics and Communication Engineering'>
-                  Electronics and Communication Engineering
-                </option>
-                <option value='Electrical and Electronics Engineering'>
-                  Electrical and Electronics Engineering
-                </option>
-                <option value='Mechanical Engineering'>
-                  Mechanical Engineering
-                </option>
-                <option value='Civil Engineering'>Civil Engineering</option>
-                <option value='Biomedical Engineering'>
-                  Biomedical Engineering
-                </option>
-                <option value='Chemical Engineering'>
-                  Chemical Engineering
-                </option>
-              </select>
+              <div className="relative">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                  <BookOpen size={16} />
+                </div>
+                <select
+                  name='department'
+                  value={formData.department}
+                  onChange={handleInputChange}
+                  required
+                  className='w-full pl-9 pr-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors appearance-none'
+                >
+                  <option value=''>Select Department</option>
+                  <option value='Computer Science Engineering'>
+                    Computer Science Engineering
+                  </option>
+                  <option value='Information Technology'>
+                    Information Technology
+                  </option>
+                  <option value='Electronics and Communication Engineering'>
+                    Electronics and Communication Engineering
+                  </option>
+                  <option value='Electrical and Electronics Engineering'>
+                    Electrical and Electronics Engineering
+                  </option>
+                  <option value='Mechanical Engineering'>
+                    Mechanical Engineering
+                  </option>
+                  <option value='Civil Engineering'>Civil Engineering</option>
+                  <option value='Biomedical Engineering'>
+                    Biomedical Engineering
+                  </option>
+                  <option value='Chemical Engineering'>
+                    Chemical Engineering
+                  </option>
+                </select>
+              </div>
             </div>
 
-            <div>
-              <label className='block text-sm font-medium text-gray-700 mb-1'>
-                Year
-              </label>
-              <select
-                name='year'
-                value={formData.year}
-                onChange={handleInputChange}
-                required
-                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
-              >
-                <option value=''>Select Year</option>
-                <option value='1'>1st Year</option>
-                <option value='2'>2nd Year</option>
-                <option value='3'>3rd Year</option>
-                <option value='4'>4th Year</option>
-              </select>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className='block text-sm font-medium text-foreground mb-1.5'>
+                  Year
+                </label>
+                <div className="relative">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                    <Calendar size={16} />
+                  </div>
+                  <select
+                    name='year'
+                    value={formData.year}
+                    onChange={handleInputChange}
+                    required
+                    className='w-full pl-9 pr-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors appearance-none'
+                  >
+                    <option value=''>Select Year</option>
+                    <option value='1'>1st Year</option>
+                    <option value='2'>2nd Year</option>
+                    <option value='3'>3rd Year</option>
+                    <option value='4'>4th Year</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className='block text-sm font-medium text-foreground mb-1.5'>
+                  Section
+                </label>
+                <div className="relative">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                    <Layers size={16} />
+                  </div>
+                  <select
+                    name='section'
+                    value={formData.section}
+                    onChange={handleInputChange}
+                    required
+                    className='w-full pl-9 pr-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors appearance-none'
+                  >
+                    <option value=''>Select Section</option>
+                    <option value='A'>Section A</option>
+                    <option value='B'>Section B</option>
+                    <option value='C'>Section C</option>
+                    <option value='D'>Section D</option>
+                  </select>
+                </div>
+              </div>
             </div>
 
-            <div>
-              <label className='block text-sm font-medium text-gray-700 mb-1'>
-                Section
-              </label>
-              <select
-                name='section'
-                value={formData.section}
-                onChange={handleInputChange}
-                required
-                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
-              >
-                <option value=''>Select Section</option>
-                <option value='A'>Section A</option>
-                <option value='B'>Section B</option>
-                <option value='C'>Section C</option>
-                <option value='D'>Section D</option>
-              </select>
-            </div>
-
-            <div className='flex space-x-3 pt-4'>
+            <div className='flex gap-3 pt-4 mt-6 border-t border-border'>
               <button
                 type='button'
                 onClick={onClose}
-                className='flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                className='flex-1 px-4 py-2 border border-input bg-background text-foreground rounded-lg hover:bg-muted transition-colors font-medium text-sm'
               >
                 Cancel
               </button>
               <button
                 type='submit'
                 disabled={loading}
-                className='flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50'
+                className='flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-colors font-medium text-sm flex items-center justify-center gap-2'
               >
-                {loading ? 'Updating...' : 'Update Profile'}
+                {loading ? (
+                  'Updating...'
+                ) : (
+                  <>
+                    <Save size={16} />
+                    Update Profile
+                  </>
+                )}
               </button>
             </div>
           </form>

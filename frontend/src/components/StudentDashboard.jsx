@@ -1,5 +1,20 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { 
+  FileText, 
+  Plus, 
+  Stethoscope, 
+  Palmtree, 
+  User, 
+  Lock, 
+  LogOut, 
+  GraduationCap, 
+  Pencil,
+  Clock,
+  CheckCircle,
+  XCircle
+} from 'lucide-react'
+import config from '../config/config.js'
 import DutyRequestForm from './DutyRequestForm'
 import RequestStatus from './RequestStatus'
 import LeaveRequestForm from './LeaveRequestForm'
@@ -45,7 +60,7 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
 
       // Fetch OD requests stats
       const odResponse = await fetch(
-        'http://localhost:5000/api/duty-requests',
+        config.api.odRequests,
         {
           headers: {
             Authorization: `Bearer ${userToken}`,
@@ -55,7 +70,7 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
 
       // Fetch Leave requests stats
       const leaveResponse = await fetch(
-        'http://localhost:5000/api/leave-requests',
+        config.api.leaveRequests,
         {
           headers: {
             Authorization: `Bearer ${userToken}`,
@@ -107,438 +122,285 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
   }
 
   const tabs = [
-    { id: 'od-requests', name: 'OD Requests', icon: '📝' },
-    { id: 'new-od-request', name: 'New OD Request', icon: '➕' },
-    { id: 'leave-requests', name: 'Leave Requests', icon: '🏥' },
-    { id: 'new-leave-request', name: 'New Leave Request', icon: '🏖️' },
-    { id: 'profile', name: 'Profile', icon: '👤' },
+    { id: 'od-requests', name: 'OD Requests', icon: FileText },
+    { id: 'new-od-request', name: 'New OD Request', icon: Plus },
+    { id: 'leave-requests', name: 'Leave Requests', icon: Stethoscope },
+    { id: 'new-leave-request', name: 'New Leave Request', icon: Palmtree },
+    { id: 'profile', name: 'Profile', icon: User },
   ]
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30'>
-      {/* Animated background elements */}
-      <div className='absolute inset-0 overflow-hidden pointer-events-none'>
-        <div className='absolute -top-10 -right-10 w-96 h-96 bg-gradient-to-br from-blue-200/10 to-purple-200/10 rounded-full blur-3xl animate-pulse'></div>
-        <div className='absolute -bottom-10 -left-10 w-96 h-96 bg-gradient-to-br from-indigo-200/10 to-blue-200/10 rounded-full blur-3xl animate-pulse delay-1000'></div>
-      </div>
-
+    <div className='min-h-screen bg-background font-sans text-foreground'>
       {/* Header */}
-      <div className='glass bg-white/90 backdrop-blur-lg border-b border-white/20 shadow-lg relative z-10'>
+      <div className='bg-card border-b border-border sticky top-0 z-10'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='flex justify-between items-center py-6'>
-            <div className='flex items-center space-x-4'>
-              <div className='h-12 w-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center text-2xl shadow-lg transform hover:scale-105 transition-transform duration-200'>
-                🎓
+          <div className='flex justify-between items-center py-4'>
+            <div className='flex items-center gap-4'>
+              <div className='h-10 w-10 bg-primary rounded-lg flex items-center justify-center text-primary-foreground shadow-sm'>
+                <GraduationCap size={20} />
               </div>
               <div>
-                <h1 className='text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent'>
+                <h1 className='text-xl font-bold text-foreground tracking-tight'>
                   Student Dashboard
                 </h1>
-                <p className='text-gray-600 font-medium'>
+                <p className='text-sm text-muted-foreground'>
                   Welcome back,{' '}
                   {currentUserInfo?.fullName ||
                     currentUserInfo?.profile?.fullName}
                 </p>
               </div>
             </div>
-            <div className='flex space-x-3'>
+            <div className='flex gap-2'>
               <button
                 onClick={() => setShowChangePassword(true)}
-                className='bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-2 rounded-xl text-sm font-semibold transform hover:scale-105 transition-all duration-200 shadow-md hover:shadow-lg flex items-center space-x-2'
+                className='flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors'
               >
-                <span>🔐</span>
-                <span>Change Password</span>
+                <Lock size={16} />
+                <span className="hidden sm:inline">Change Password</span>
               </button>
               <button
                 onClick={onLogout}
-                className='bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-4 py-2 rounded-xl text-sm font-semibold transform hover:scale-105 transition-all duration-200 shadow-md hover:shadow-lg flex items-center space-x-2'
+                className='flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors'
               >
-                <span>👋</span>
-                <span>Logout</span>
+                <LogOut size={16} />
+                <span className="hidden sm:inline">Logout</span>
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className='max-w-7xl mx-auto py-8 sm:px-6 lg:px-8 relative z-10'>
-        <div className='px-4 py-6 sm:px-0'>
+      <div className='max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8'>
+        {/* Stats Section */}
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8'>
           {/* OD Request Stats */}
-          <div className='mb-8'>
-            <div className='flex items-center mb-6'>
-              <div className='h-8 w-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center text-white text-sm font-bold mr-3'>
-                📝
-              </div>
-              <h3 className='text-xl font-bold text-gray-900'>
-                On-Duty Request Statistics
+          <div className='space-y-4'>
+            <div className='flex items-center gap-2 mb-2'>
+              <FileText className="w-5 h-5 text-primary" />
+              <h3 className='text-lg font-semibold text-foreground'>
+                On-Duty Requests
               </h3>
             </div>
-            <div className='grid grid-cols-1 md:grid-cols-4 gap-6'>
-              <div className='glass bg-white/90 backdrop-blur-lg border border-white/30 overflow-hidden shadow-lg rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105'>
-                <div className='p-6'>
-                  <div className='flex items-center'>
-                    <div className='flex-shrink-0'>
-                      <div className='w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg'>
-                        <span className='text-white text-lg font-bold'>
-                          {stats.totalRequests}
-                        </span>
-                      </div>
-                    </div>
-                    <div className='ml-5 w-0 flex-1'>
-                      <dl>
-                        <dt className='text-sm font-semibold text-gray-600 truncate'>
-                          Total OD Requests
-                        </dt>
-                        <dd className='text-2xl font-bold text-gray-900'>
-                          {stats.totalRequests}
-                        </dd>
-                      </dl>
-                    </div>
-                  </div>
-                </div>
+            <div className='grid grid-cols-2 sm:grid-cols-4 gap-4'>
+              <div className='bg-card border border-border rounded-lg p-4 shadow-sm'>
+                <div className='text-sm text-muted-foreground mb-1'>Total</div>
+                <div className='text-2xl font-bold text-foreground'>{stats.totalRequests}</div>
               </div>
-
-              <div className='glass bg-white/90 backdrop-blur-lg border border-white/30 overflow-hidden shadow-lg rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105'>
-                <div className='p-6'>
-                  <div className='flex items-center'>
-                    <div className='flex-shrink-0'>
-                      <div className='w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg'>
-                        <span className='text-white text-lg font-bold'>
-                          {stats.pendingRequests}
-                        </span>
-                      </div>
-                    </div>
-                    <div className='ml-5 w-0 flex-1'>
-                      <dl>
-                        <dt className='text-sm font-semibold text-gray-600 truncate'>
-                          Pending
-                        </dt>
-                        <dd className='text-2xl font-bold text-gray-900'>
-                          {stats.pendingRequests}
-                        </dd>
-                      </dl>
-                    </div>
-                  </div>
+              <div className='bg-card border border-border rounded-lg p-4 shadow-sm'>
+                <div className='text-sm text-muted-foreground mb-1 flex items-center gap-1'>
+                  <Clock size={12} className="text-primary" /> Pending
                 </div>
+                <div className='text-2xl font-bold text-foreground'>{stats.pendingRequests}</div>
               </div>
-
-              <div className='glass bg-white/90 backdrop-blur-lg border border-white/30 overflow-hidden shadow-lg rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105'>
-                <div className='p-6'>
-                  <div className='flex items-center'>
-                    <div className='flex-shrink-0'>
-                      <div className='w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg'>
-                        <span className='text-white text-lg font-bold'>
-                          {stats.approvedRequests}
-                        </span>
-                      </div>
-                    </div>
-                    <div className='ml-5 w-0 flex-1'>
-                      <dl>
-                        <dt className='text-sm font-semibold text-gray-600 truncate'>
-                          Approved
-                        </dt>
-                        <dd className='text-2xl font-bold text-gray-900'>
-                          {stats.approvedRequests}
-                        </dd>
-                      </dl>
-                    </div>
-                  </div>
+              <div className='bg-card border border-border rounded-lg p-4 shadow-sm'>
+                <div className='text-sm text-muted-foreground mb-1 flex items-center gap-1'>
+                  <CheckCircle size={12} className="text-green-600" /> Approved
                 </div>
+                <div className='text-2xl font-bold text-foreground'>{stats.approvedRequests}</div>
               </div>
-
-              <div className='glass bg-white/90 backdrop-blur-lg border border-white/30 overflow-hidden shadow-lg rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105'>
-                <div className='p-6'>
-                  <div className='flex items-center'>
-                    <div className='flex-shrink-0'>
-                      <div className='w-12 h-12 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg'>
-                        <span className='text-white text-lg font-bold'>
-                          {stats.rejectedRequests}
-                        </span>
-                      </div>
-                    </div>
-                    <div className='ml-5 w-0 flex-1'>
-                      <dl>
-                        <dt className='text-sm font-semibold text-gray-600 truncate'>
-                          Rejected
-                        </dt>
-                        <dd className='text-2xl font-bold text-gray-900'>
-                          {stats.rejectedRequests}
-                        </dd>
-                      </dl>
-                    </div>
-                  </div>
+              <div className='bg-card border border-border rounded-lg p-4 shadow-sm'>
+                <div className='text-sm text-muted-foreground mb-1 flex items-center gap-1'>
+                  <XCircle size={12} className="text-destructive" /> Rejected
                 </div>
+                <div className='text-2xl font-bold text-foreground'>{stats.rejectedRequests}</div>
               </div>
             </div>
           </div>
 
           {/* Leave Request Stats */}
-          <div className='mb-8'>
-            <div className='flex items-center mb-6'>
-              <div className='h-8 w-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm font-bold mr-3'>
-                🏥
-              </div>
-              <h3 className='text-xl font-bold text-gray-900'>
-                Leave Request Statistics
+          <div className='space-y-4'>
+            <div className='flex items-center gap-2 mb-2'>
+              <Stethoscope className="w-5 h-5 text-primary" />
+              <h3 className='text-lg font-semibold text-foreground'>
+                Leave Requests
               </h3>
             </div>
-            <div className='grid grid-cols-1 md:grid-cols-4 gap-6'>
-              <div className='bg-white/80 backdrop-blur-sm border border-white/30 overflow-hidden shadow-lg rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105'>
-                <div className='p-6'>
-                  <div className='flex items-center'>
-                    <div className='flex-shrink-0'>
-                      <div className='w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg'>
-                        <span className='text-white text-lg font-bold'>
-                          {stats.totalLeaveRequests}
-                        </span>
-                      </div>
-                    </div>
-                    <div className='ml-5 w-0 flex-1'>
-                      <dl>
-                        <dt className='text-sm font-semibold text-gray-600 truncate'>
-                          Total Leave Requests
-                        </dt>
-                        <dd className='text-2xl font-bold text-gray-900'>
-                          {stats.totalLeaveRequests}
-                        </dd>
-                      </dl>
-                    </div>
-                  </div>
-                </div>
+            <div className='grid grid-cols-2 sm:grid-cols-4 gap-4'>
+              <div className='bg-card border border-border rounded-lg p-4 shadow-sm'>
+                <div className='text-sm text-muted-foreground mb-1'>Total</div>
+                <div className='text-2xl font-bold text-foreground'>{stats.totalLeaveRequests}</div>
               </div>
-
-              <div className='bg-white/80 backdrop-blur-sm border border-white/30 overflow-hidden shadow-lg rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105'>
-                <div className='p-6'>
-                  <div className='flex items-center'>
-                    <div className='flex-shrink-0'>
-                      <div className='w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg'>
-                        <span className='text-white text-lg font-bold'>
-                          {stats.pendingLeaveRequests}
-                        </span>
-                      </div>
-                    </div>
-                    <div className='ml-5 w-0 flex-1'>
-                      <dl>
-                        <dt className='text-sm font-semibold text-gray-600 truncate'>
-                          Pending
-                        </dt>
-                        <dd className='text-2xl font-bold text-gray-900'>
-                          {stats.pendingLeaveRequests}
-                        </dd>
-                      </dl>
-                    </div>
-                  </div>
+              <div className='bg-card border border-border rounded-lg p-4 shadow-sm'>
+                <div className='text-sm text-muted-foreground mb-1 flex items-center gap-1'>
+                  <Clock size={12} className="text-primary" /> Pending
                 </div>
+                <div className='text-2xl font-bold text-foreground'>{stats.pendingLeaveRequests}</div>
               </div>
-
-              <div className='bg-white/80 backdrop-blur-sm border border-white/30 overflow-hidden shadow-lg rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105'>
-                <div className='p-6'>
-                  <div className='flex items-center'>
-                    <div className='flex-shrink-0'>
-                      <div className='w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg'>
-                        <span className='text-white text-lg font-bold'>
-                          {stats.approvedLeaveRequests}
-                        </span>
-                      </div>
-                    </div>
-                    <div className='ml-5 w-0 flex-1'>
-                      <dl>
-                        <dt className='text-sm font-semibold text-gray-600 truncate'>
-                          Approved
-                        </dt>
-                        <dd className='text-2xl font-bold text-gray-900'>
-                          {stats.approvedLeaveRequests}
-                        </dd>
-                      </dl>
-                    </div>
-                  </div>
+              <div className='bg-card border border-border rounded-lg p-4 shadow-sm'>
+                <div className='text-sm text-muted-foreground mb-1 flex items-center gap-1'>
+                  <CheckCircle size={12} className="text-green-600" /> Approved
                 </div>
+                <div className='text-2xl font-bold text-foreground'>{stats.approvedLeaveRequests}</div>
               </div>
-
-              <div className='bg-white/80 backdrop-blur-sm border border-white/30 overflow-hidden shadow-lg rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105'>
-                <div className='p-6'>
-                  <div className='flex items-center'>
-                    <div className='flex-shrink-0'>
-                      <div className='w-12 h-12 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg'>
-                        <span className='text-white text-lg font-bold'>
-                          {stats.rejectedLeaveRequests}
-                        </span>
-                      </div>
-                    </div>
-                    <div className='ml-5 w-0 flex-1'>
-                      <dl>
-                        <dt className='text-sm font-semibold text-gray-600 truncate'>
-                          Rejected
-                        </dt>
-                        <dd className='text-2xl font-bold text-gray-900'>
-                          {stats.rejectedLeaveRequests}
-                        </dd>
-                      </dl>
-                    </div>
-                  </div>
+              <div className='bg-card border border-border rounded-lg p-4 shadow-sm'>
+                <div className='text-sm text-muted-foreground mb-1 flex items-center gap-1'>
+                  <XCircle size={12} className="text-destructive" /> Rejected
                 </div>
+                <div className='text-2xl font-bold text-foreground'>{stats.rejectedLeaveRequests}</div>
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Tabs */}
-          <div className='bg-white/80 backdrop-blur-lg border border-white/30 rounded-2xl shadow-xl overflow-hidden'>
-            <div className='border-b border-gray-200/50'>
-              <nav className='-mb-px flex overflow-x-auto'>
-                {tabs.map(tab => (
+        {/* Tabs & Content */}
+        <div className='bg-card border border-border rounded-xl shadow-sm overflow-hidden'>
+          <div className='border-b border-border bg-muted/30'>
+            <nav className='flex overflow-x-auto scrollbar-hide'>
+              {tabs.map(tab => {
+                const Icon = tab.icon
+                return (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`py-4 px-6 text-sm font-semibold border-b-2 transition-all duration-200 flex items-center space-x-2 whitespace-nowrap ${
+                    className={`py-4 px-6 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 whitespace-nowrap ${
                       activeTab === tab.id
-                        ? 'border-blue-500 text-blue-600 bg-blue-50/50 rounded-t-lg'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50/50 rounded-t-lg'
+                        ? 'border-primary text-primary bg-background'
+                        : 'border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50'
                     }`}
                   >
-                    <span className='text-lg'>{tab.icon}</span>
+                    <Icon size={18} />
                     <span>{tab.name}</span>
                   </button>
-                ))}
-              </nav>
-            </div>
+                )
+              })}
+            </nav>
+          </div>
 
-            <div className='p-8'>
-              {activeTab === 'od-requests' && (
-                <div>
-                  <div className='flex items-center mb-6'>
-                    <div className='h-8 w-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center text-white text-sm font-bold mr-3'>
-                      📝
+          <div className='p-6'>
+            {activeTab === 'od-requests' && (
+              <div className="space-y-6">
+                <div className='flex items-center gap-3 pb-4 border-b border-border'>
+                  <div className='h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary'>
+                    <FileText size={20} />
+                  </div>
+                  <h3 className='text-xl font-bold text-foreground'>
+                    My OD Requests
+                  </h3>
+                </div>
+                <RequestStatus />
+              </div>
+            )}
+
+            {activeTab === 'new-od-request' && (
+              <div className="space-y-6">
+                <div className='flex items-center gap-3 pb-4 border-b border-border'>
+                  <div className='h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary'>
+                    <Plus size={20} />
+                  </div>
+                  <h3 className='text-xl font-bold text-foreground'>
+                    Submit New OD Request
+                  </h3>
+                </div>
+                <DutyRequestForm />
+              </div>
+            )}
+
+            {activeTab === 'leave-requests' && (
+              <div className="space-y-6">
+                <div className='flex items-center gap-3 pb-4 border-b border-border'>
+                  <div className='h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary'>
+                    <Stethoscope size={20} />
+                  </div>
+                  <h3 className='text-xl font-bold text-foreground'>
+                    My Leave Requests
+                  </h3>
+                </div>
+                <LeaveRequestStatus />
+              </div>
+            )}
+
+            {activeTab === 'new-leave-request' && (
+              <div className="space-y-6">
+                <div className='flex items-center gap-3 pb-4 border-b border-border'>
+                  <div className='h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary'>
+                    <Palmtree size={20} />
+                  </div>
+                  <h3 className='text-xl font-bold text-foreground'>
+                    Submit New Leave Request
+                  </h3>
+                </div>
+                <LeaveRequestForm />
+              </div>
+            )}
+
+            {activeTab === 'profile' && (
+              <div className="space-y-6">
+                <div className='flex justify-between items-center pb-4 border-b border-border'>
+                  <div className='flex items-center gap-3'>
+                    <div className='h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary'>
+                      <User size={20} />
                     </div>
-                    <h3 className='text-2xl font-bold text-gray-900'>
-                      My OD Requests
+                    <h3 className='text-xl font-bold text-foreground'>
+                      Profile Information
                     </h3>
                   </div>
-                  <RequestStatus />
+                  <button
+                    onClick={() => setShowEditProfile(true)}
+                    className='flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-sm font-medium transition-colors shadow-sm'
+                  >
+                    <Pencil size={16} />
+                    <span>Edit Profile</span>
+                  </button>
                 </div>
-              )}
-
-              {activeTab === 'new-od-request' && (
-                <div>
-                  <div className='flex items-center mb-6'>
-                    <div className='h-8 w-8 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center text-white text-sm font-bold mr-3'>
-                      ➕
+                <div className='bg-muted/30 p-6 rounded-lg border border-border'>
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                    <div className='space-y-1'>
+                      <label className='block text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+                        Full Name
+                      </label>
+                      <p className='text-base text-foreground font-medium'>
+                        {currentUserInfo?.fullName ||
+                          currentUserInfo?.profile?.fullName}
+                      </p>
                     </div>
-                    <h3 className='text-2xl font-bold text-gray-900'>
-                      Submit New OD Request
-                    </h3>
-                  </div>
-                  <DutyRequestForm />
-                </div>
-              )}
-
-              {activeTab === 'leave-requests' && (
-                <div>
-                  <div className='flex items-center mb-6'>
-                    <div className='h-8 w-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm font-bold mr-3'>
-                      🏥
+                    <div className='space-y-1'>
+                      <label className='block text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+                        Email
+                      </label>
+                      <p className='text-base text-foreground font-medium'>
+                        {currentUserInfo?.email}
+                      </p>
                     </div>
-                    <h3 className='text-2xl font-bold text-gray-900'>
-                      My Leave Requests
-                    </h3>
-                  </div>
-                  <LeaveRequestStatus />
-                </div>
-              )}
-
-              {activeTab === 'new-leave-request' && (
-                <div>
-                  <div className='flex items-center mb-6'>
-                    <div className='h-8 w-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center text-white text-sm font-bold mr-3'>
-                      🏖️
+                    <div className='space-y-1'>
+                      <label className='block text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+                        Registration Number
+                      </label>
+                      <p className='text-base text-foreground font-medium'>
+                        {currentUserInfo?.registrationNumber ||
+                          currentUserInfo?.profile?.registrationNumber}
+                      </p>
                     </div>
-                    <h3 className='text-2xl font-bold text-gray-900'>
-                      Submit New Leave Request
-                    </h3>
-                  </div>
-                  <LeaveRequestForm />
-                </div>
-              )}
-
-              {activeTab === 'profile' && (
-                <div>
-                  <div className='flex justify-between items-center mb-6'>
-                    <div className='flex items-center'>
-                      <div className='h-8 w-8 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center text-white text-sm font-bold mr-3'>
-                        👤
-                      </div>
-                      <h3 className='text-2xl font-bold text-gray-900'>
-                        Profile Information
-                      </h3>
+                    <div className='space-y-1'>
+                      <label className='block text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+                        Department
+                      </label>
+                      <p className='text-base text-foreground font-medium'>
+                        {currentUserInfo?.department ||
+                          currentUserInfo?.profile?.department}
+                      </p>
                     </div>
-                    <button
-                      onClick={() => setShowEditProfile(true)}
-                      className='bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-2 rounded-xl text-sm font-semibold transform hover:scale-105 transition-all duration-200 shadow-md hover:shadow-lg flex items-center space-x-2'
-                    >
-                      <span>✏️</span>
-                      <span>Edit Profile</span>
-                    </button>
-                  </div>
-                  <div className='bg-gradient-to-br from-gray-50 to-gray-100 p-8 rounded-2xl border border-gray-200'>
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
-                      <div className='space-y-1'>
-                        <label className='block text-sm font-semibold text-gray-700'>
-                          Full Name
-                        </label>
-                        <p className='text-lg text-gray-900 font-medium'>
-                          {currentUserInfo?.fullName ||
-                            currentUserInfo?.profile?.fullName}
-                        </p>
-                      </div>
-                      <div className='space-y-1'>
-                        <label className='block text-sm font-semibold text-gray-700'>
-                          Email
-                        </label>
-                        <p className='text-lg text-gray-900 font-medium'>
-                          {currentUserInfo?.email}
-                        </p>
-                      </div>
-                      <div className='space-y-1'>
-                        <label className='block text-sm font-semibold text-gray-700'>
-                          Registration Number
-                        </label>
-                        <p className='text-lg text-gray-900 font-medium'>
-                          {currentUserInfo?.registrationNumber ||
-                            currentUserInfo?.profile?.registrationNumber}
-                        </p>
-                      </div>
-                      <div className='space-y-1'>
-                        <label className='block text-sm font-semibold text-gray-700'>
-                          Department
-                        </label>
-                        <p className='text-lg text-gray-900 font-medium'>
-                          {currentUserInfo?.department ||
-                            currentUserInfo?.profile?.department}
-                        </p>
-                      </div>
-                      <div className='space-y-1'>
-                        <label className='block text-sm font-semibold text-gray-700'>
-                          Year
-                        </label>
-                        <p className='text-lg text-gray-900 font-medium'>
-                          {currentUserInfo?.year ||
-                            currentUserInfo?.profile?.year}
-                        </p>
-                      </div>
-                      <div className='space-y-1'>
-                        <label className='block text-sm font-semibold text-gray-700'>
-                          Section
-                        </label>
-                        <p className='text-lg text-gray-900 font-medium'>
-                          {currentUserInfo?.section ||
-                            currentUserInfo?.profile?.section}
-                        </p>
-                      </div>
+                    <div className='space-y-1'>
+                      <label className='block text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+                        Year
+                      </label>
+                      <p className='text-base text-foreground font-medium'>
+                        {currentUserInfo?.year ||
+                          currentUserInfo?.profile?.year}
+                      </p>
+                    </div>
+                    <div className='space-y-1'>
+                      <label className='block text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+                        Section
+                      </label>
+                      <p className='text-base text-foreground font-medium'>
+                        {currentUserInfo?.section ||
+                          currentUserInfo?.profile?.section}
+                      </p>
                     </div>
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -1,6 +1,17 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import {
+  Mail,
+  User,
+  ArrowRight,
+  CheckCircle,
+  Lock,
+  RefreshCw,
+  ArrowLeft,
+  GraduationCap,
+} from 'lucide-react'
+import config from '../config/config'
 
 const Register = ({ onRegister }) => {
   const [loading, setLoading] = useState(false)
@@ -21,7 +32,7 @@ const Register = ({ onRegister }) => {
     setMessage('')
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      const response = await fetch(`${config.api.auth}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -54,19 +65,16 @@ const Register = ({ onRegister }) => {
     setMessage('')
 
     try {
-      const response = await fetch(
-        'http://localhost:5000/api/auth/verify-email',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            token: data.verificationToken,
-            password: data.password,
-          }),
-        }
-      )
+      const response = await fetch(`${config.api.auth}/verify-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          token: data.verificationToken,
+          password: data.password,
+        }),
+      })
 
       const result = await response.json()
 
@@ -90,18 +98,15 @@ const Register = ({ onRegister }) => {
 
     setLoading(true)
     try {
-      const response = await fetch(
-        'http://localhost:5000/api/auth/resend-verification',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            collegeEmail: studentInfo.collegeEmail,
-          }),
-        }
-      )
+      const response = await fetch(`${config.api.auth}/resend-verification`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          collegeEmail: studentInfo.collegeEmail,
+        }),
+      })
 
       const result = await response.json()
       setMessage(result.message)
@@ -114,13 +119,16 @@ const Register = ({ onRegister }) => {
 
   if (step === 1) {
     return (
-      <div className='min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8'>
-        <div className='max-w-md w-full space-y-8'>
-          <div>
-            <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>
+      <div className='min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-background'>
+        <div className='max-w-md w-full space-y-8 bg-card p-8 rounded-xl shadow-lg border border-border'>
+          <div className='text-center'>
+            <div className='mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-primary/10'>
+              <GraduationCap className='h-6 w-6 text-primary' />
+            </div>
+            <h2 className='mt-6 text-3xl font-extrabold text-foreground'>
               Create your account
             </h2>
-            <p className='mt-2 text-center text-sm text-gray-600'>
+            <p className='mt-2 text-sm text-muted-foreground'>
               Use your college email to register
             </p>
           </div>
@@ -133,29 +141,34 @@ const Register = ({ onRegister }) => {
               <div>
                 <label
                   htmlFor='collegeEmail'
-                  className='block text-sm font-medium text-gray-700'
+                  className='block text-sm font-medium text-foreground mb-1'
                 >
                   College Email Address
                 </label>
-                <input
-                  {...register('collegeEmail', {
-                    required: 'College email is required',
-                    pattern: {
-                      value: /^[a-zA-Z]+\d{2}[a-zA-Z]+@srishakthi\.ac\.in$/,
-                      message:
-                        'Please enter a valid college email (e.g., mithrans23it@srishakthi.ac.in)',
-                    },
-                  })}
-                  type='email'
-                  className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
-                  placeholder='yourname23dept@srishakthi.ac.in'
-                />
+                <div className='relative'>
+                  <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+                    <Mail className='h-5 w-5 text-muted-foreground' />
+                  </div>
+                  <input
+                    {...register('collegeEmail', {
+                      required: 'College email is required',
+                      pattern: {
+                        value: /^[a-zA-Z]+\d{2}[a-zA-Z]+@srishakthi\.ac\.in$/,
+                        message:
+                          'Please enter a valid college email (e.g., mithrans23it@srishakthi.ac.in)',
+                      },
+                    })}
+                    type='email'
+                    className='block w-full pl-10 pr-3 py-2 border border-input rounded-md leading-5 bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm'
+                    placeholder='yourname23dept@srishakthi.ac.in'
+                  />
+                </div>
                 {errors.collegeEmail && (
-                  <p className='mt-1 text-sm text-red-600'>
+                  <p className='mt-1 text-sm text-destructive'>
                     {errors.collegeEmail.message}
                   </p>
                 )}
-                <p className='mt-1 text-xs text-gray-500'>
+                <p className='mt-1 text-xs text-muted-foreground'>
                   Format: name + admission year + department + @srishakthi.ac.in
                 </p>
               </div>
@@ -163,24 +176,29 @@ const Register = ({ onRegister }) => {
               <div>
                 <label
                   htmlFor='rollNumber'
-                  className='block text-sm font-medium text-gray-700'
+                  className='block text-sm font-medium text-foreground mb-1'
                 >
                   Roll Number
                 </label>
-                <input
-                  {...register('rollNumber', {
-                    required: 'Roll number is required',
-                    minLength: {
-                      value: 3,
-                      message: 'Roll number must be at least 3 characters',
-                    },
-                  })}
-                  type='text'
-                  className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
-                  placeholder='Enter your roll number'
-                />
+                <div className='relative'>
+                  <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+                    <User className='h-5 w-5 text-muted-foreground' />
+                  </div>
+                  <input
+                    {...register('rollNumber', {
+                      required: 'Roll number is required',
+                      minLength: {
+                        value: 3,
+                        message: 'Roll number must be at least 3 characters',
+                      },
+                    })}
+                    type='text'
+                    className='block w-full pl-10 pr-3 py-2 border border-input rounded-md leading-5 bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm'
+                    placeholder='Enter your roll number'
+                  />
+                </div>
                 {errors.rollNumber && (
-                  <p className='mt-1 text-sm text-red-600'>
+                  <p className='mt-1 text-sm text-destructive'>
                     {errors.rollNumber.message}
                   </p>
                 )}
@@ -189,7 +207,11 @@ const Register = ({ onRegister }) => {
 
             {message && (
               <div
-                className={`p-4 rounded-md ${message.includes('error') || message.includes('failed') ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`}
+                className={`p-4 rounded-md ${
+                  message.includes('error') || message.includes('failed')
+                    ? 'bg-destructive/10 text-destructive'
+                    : 'bg-green-500/10 text-green-600'
+                }`}
               >
                 <p className='text-sm'>{message}</p>
               </div>
@@ -199,16 +221,23 @@ const Register = ({ onRegister }) => {
               <button
                 type='submit'
                 disabled={loading}
-                className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50'
+                className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 transition-colors'
               >
-                {loading ? 'Processing...' : 'Send Verification Email'}
+                {loading ? (
+                  <RefreshCw className='h-5 w-5 animate-spin' />
+                ) : (
+                  <>
+                    Send Verification Email
+                    <ArrowRight className='ml-2 h-5 w-5' />
+                  </>
+                )}
               </button>
             </div>
 
             <div className='text-center'>
               <Link
                 to='/login'
-                className='font-medium text-indigo-600 hover:text-indigo-500'
+                className='font-medium text-primary hover:text-primary/80 transition-colors'
               >
                 Already have an account? Sign in
               </Link>
@@ -221,38 +250,26 @@ const Register = ({ onRegister }) => {
 
   if (step === 2) {
     return (
-      <div className='min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8'>
-        <div className='max-w-md w-full space-y-8'>
+      <div className='min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-background'>
+        <div className='max-w-md w-full space-y-8 bg-card p-8 rounded-xl shadow-lg border border-border'>
           <div className='text-center'>
             <div className='mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100'>
-              <svg
-                className='h-6 w-6 text-green-600'
-                fill='none'
-                viewBox='0 0 24 24'
-                stroke='currentColor'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'
-                />
-              </svg>
+              <CheckCircle className='h-6 w-6 text-green-600' />
             </div>
-            <h2 className='mt-6 text-3xl font-extrabold text-gray-900'>
+            <h2 className='mt-6 text-3xl font-extrabold text-foreground'>
               Check your email
             </h2>
-            <p className='mt-2 text-sm text-gray-600'>
+            <p className='mt-2 text-sm text-muted-foreground'>
               We've sent a verification link to your college email
             </p>
           </div>
 
           {studentInfo && (
-            <div className='bg-blue-50 border border-blue-200 rounded-lg p-4'>
-              <h3 className='text-sm font-medium text-blue-800 mb-2'>
+            <div className='bg-primary/5 border border-primary/20 rounded-lg p-4'>
+              <h3 className='text-sm font-medium text-primary mb-2'>
                 Extracted Information:
               </h3>
-              <div className='text-sm text-blue-700 space-y-1'>
+              <div className='text-sm text-foreground/80 space-y-1'>
                 <p>
                   <strong>Name:</strong> {studentInfo.name}
                 </p>
@@ -277,20 +294,25 @@ const Register = ({ onRegister }) => {
               <div>
                 <label
                   htmlFor='verificationToken'
-                  className='block text-sm font-medium text-gray-700'
+                  className='block text-sm font-medium text-foreground mb-1'
                 >
                   Verification Code
                 </label>
-                <input
-                  {...register('verificationToken', {
-                    required: 'Verification code is required',
-                  })}
-                  type='text'
-                  className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
-                  placeholder='Enter the code from your email'
-                />
+                <div className='relative'>
+                  <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+                    <Lock className='h-5 w-5 text-muted-foreground' />
+                  </div>
+                  <input
+                    {...register('verificationToken', {
+                      required: 'Verification code is required',
+                    })}
+                    type='text'
+                    className='block w-full pl-10 pr-3 py-2 border border-input rounded-md leading-5 bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm'
+                    placeholder='Enter the code from your email'
+                  />
+                </div>
                 {errors.verificationToken && (
-                  <p className='mt-1 text-sm text-red-600'>
+                  <p className='mt-1 text-sm text-destructive'>
                     {errors.verificationToken.message}
                   </p>
                 )}
@@ -299,24 +321,29 @@ const Register = ({ onRegister }) => {
               <div>
                 <label
                   htmlFor='password'
-                  className='block text-sm font-medium text-gray-700'
+                  className='block text-sm font-medium text-foreground mb-1'
                 >
                   Set Password
                 </label>
-                <input
-                  {...register('password', {
-                    required: 'Password is required',
-                    minLength: {
-                      value: 6,
-                      message: 'Password must be at least 6 characters',
-                    },
-                  })}
-                  type='password'
-                  className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
-                  placeholder='Create a secure password'
-                />
+                <div className='relative'>
+                  <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+                    <Lock className='h-5 w-5 text-muted-foreground' />
+                  </div>
+                  <input
+                    {...register('password', {
+                      required: 'Password is required',
+                      minLength: {
+                        value: 6,
+                        message: 'Password must be at least 6 characters',
+                      },
+                    })}
+                    type='password'
+                    className='block w-full pl-10 pr-3 py-2 border border-input rounded-md leading-5 bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm'
+                    placeholder='Create a secure password'
+                  />
+                </div>
                 {errors.password && (
-                  <p className='mt-1 text-sm text-red-600'>
+                  <p className='mt-1 text-sm text-destructive'>
                     {errors.password.message}
                   </p>
                 )}
@@ -325,7 +352,11 @@ const Register = ({ onRegister }) => {
 
             {message && (
               <div
-                className={`p-4 rounded-md ${message.includes('error') || message.includes('failed') ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`}
+                className={`p-4 rounded-md ${
+                  message.includes('error') || message.includes('failed')
+                    ? 'bg-destructive/10 text-destructive'
+                    : 'bg-green-500/10 text-green-600'
+                }`}
               >
                 <p className='text-sm'>{message}</p>
               </div>
@@ -335,9 +366,13 @@ const Register = ({ onRegister }) => {
               <button
                 type='submit'
                 disabled={loading}
-                className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50'
+                className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 transition-colors'
               >
-                {loading ? 'Verifying...' : 'Complete Registration'}
+                {loading ? (
+                  <RefreshCw className='h-5 w-5 animate-spin' />
+                ) : (
+                  'Complete Registration'
+                )}
               </button>
             </div>
 
@@ -346,7 +381,7 @@ const Register = ({ onRegister }) => {
                 type='button'
                 onClick={resendVerification}
                 disabled={loading}
-                className='text-sm text-indigo-600 hover:text-indigo-500 disabled:opacity-50'
+                className='text-sm text-primary hover:text-primary/80 disabled:opacity-50 transition-colors'
               >
                 Resend verification email
               </button>
@@ -354,8 +389,9 @@ const Register = ({ onRegister }) => {
               <button
                 type='button'
                 onClick={() => setStep(1)}
-                className='text-sm text-gray-600 hover:text-gray-500'
+                className='inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors'
               >
+                <ArrowLeft className='mr-1 h-4 w-4' />
                 Back to registration
               </button>
             </div>

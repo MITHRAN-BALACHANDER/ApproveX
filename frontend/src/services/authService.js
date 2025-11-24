@@ -1,12 +1,10 @@
-// Authentication service for role-based access
-const API_BASE_URL =
-  import.meta.env?.VITE_API_BASE_URL || 'http://localhost:5000/api'
+import config from '../config/config'
 
 class AuthService {
   // Login with role-based authentication
   async login(email, password, role) {
     try {
-      const response = await fetch(`${API_BASE_URL}/role-auth/login`, {
+      const response = await fetch(`${config.api.roleAuth}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -72,7 +70,7 @@ class AuthService {
       const token = this.getCurrentToken()
       if (!token) return null
 
-      const response = await fetch(`${API_BASE_URL}/role-auth/me`, {
+      const response = await fetch(`${config.api.roleAuth}/me`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -101,7 +99,7 @@ class AuthService {
       const token = this.getCurrentToken()
       if (!token) return { valid: false }
 
-      const response = await fetch(`${API_BASE_URL}/role-auth/verify`, {
+      const response = await fetch(`${config.api.roleAuth}/verify`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -123,17 +121,14 @@ class AuthService {
       const token = this.getCurrentToken()
       if (!token) throw new Error('Not authenticated')
 
-      const response = await fetch(
-        `${API_BASE_URL}/role-auth/change-password`,
-        {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ currentPassword, newPassword }),
-        }
-      )
+      const response = await fetch(`${config.api.roleAuth}/change-password`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      })
 
       const result = await response.json()
       return result

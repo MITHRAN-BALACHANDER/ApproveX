@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Mail, User, MessageSquare, Send } from 'lucide-react'
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -22,17 +23,20 @@ function Contact() {
   }
 
   return (
-    <div className='max-w-2xl mx-auto'>
-      <h1 className='text-3xl font-bold text-gray-900 mb-6'>Contact Us</h1>
+    <div className='max-w-2xl mx-auto py-8 px-4'>
+      <div className="flex items-center gap-3 mb-6">
+        <Mail className="w-8 h-8 text-primary" />
+        <h1 className='text-3xl font-bold text-foreground'>Contact Us</h1>
+      </div>
 
-      <div className='bg-white rounded-lg shadow-md p-6'>
+      <div className='bg-card rounded-xl shadow-sm border border-border p-6'>
         <form onSubmit={handleSubmit} className='space-y-4'>
           <div>
             <label
               htmlFor='name'
-              className='block text-sm font-medium text-gray-700 mb-1'
+              className='text-sm font-medium text-foreground mb-1 flex items-center gap-2'
             >
-              Name
+              <User className="w-4 h-4 text-muted-foreground" /> Name
             </label>
             <input
               type='text'
@@ -41,16 +45,17 @@ function Contact() {
               value={formData.name}
               onChange={handleChange}
               required
-              className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+              className='w-full px-3 py-2 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-foreground placeholder:text-muted-foreground'
+              placeholder="Your Name"
             />
           </div>
 
           <div>
             <label
               htmlFor='email'
-              className='block text-sm font-medium text-gray-700 mb-1'
+              className='text-sm font-medium text-foreground mb-1 flex items-center gap-2'
             >
-              Email
+              <Mail className="w-4 h-4 text-muted-foreground" /> Email
             </label>
             <input
               type='email'
@@ -59,16 +64,17 @@ function Contact() {
               value={formData.email}
               onChange={handleChange}
               required
-              className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+              className='w-full px-3 py-2 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-foreground placeholder:text-muted-foreground'
+              placeholder="your.email@example.com"
             />
           </div>
 
           <div>
             <label
               htmlFor='message'
-              className='block text-sm font-medium text-gray-700 mb-1'
+              className='text-sm font-medium text-foreground mb-1 flex items-center gap-2'
             >
-              Message
+              <MessageSquare className="w-4 h-4 text-muted-foreground" /> Message
             </label>
             <textarea
               id='message'
@@ -77,15 +83,16 @@ function Contact() {
               onChange={handleChange}
               required
               rows={4}
-              className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+              className='w-full px-3 py-2 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-foreground placeholder:text-muted-foreground resize-none'
+              placeholder="How can we help you?"
             />
           </div>
 
           <button
             type='submit'
-            className='w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition-colors'
+            className='w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-2 px-4 rounded-md transition-colors flex items-center justify-center gap-2'
           >
-            Send Message
+            <Send className="w-4 h-4" /> Send Message
           </button>
         </form>
       </div>
