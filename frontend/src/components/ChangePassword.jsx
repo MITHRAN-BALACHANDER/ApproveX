@@ -164,8 +164,8 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
   if (!isOpen) return null
 
   return (
-    <div className='fixed inset-0 bg-background/80 backdrop-blur-sm overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4'>
-      <div className='relative w-full max-w-md bg-card border border-border shadow-lg rounded-xl overflow-hidden'>
+    <div className='fixed inset-0 bg-background/80 backdrop-blur-sm overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4 animate-in fade-in duration-200'>
+      <div className='relative w-full max-w-md bg-card border border-border shadow-lg rounded-xl overflow-hidden animate-in zoom-in duration-300'>
         <div className='p-6'>
           <div className='flex justify-between items-center mb-6'>
             <h3 className='text-xl font-bold text-foreground flex items-center gap-2'>
@@ -206,7 +206,7 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
                     setMethod('password')
                     setStep(2)
                   }}
-                  className='w-full p-4 border border-border rounded-xl hover:bg-muted/50 hover:border-primary/50 transition-all text-left group'
+                  className='w-full p-4 border border-border rounded-xl hover:bg-muted/50 hover:border-primary/50 transition-all duration-300 text-left group hover:scale-[1.02] active:scale-[0.98]'
                 >
                   <div className='flex items-center'>
                     <div className='w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mr-4 group-hover:bg-primary/20 transition-colors'>
@@ -226,7 +226,7 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
                     setMethod('otp')
                     requestOTP()
                   }}
-                  className='w-full p-4 border border-border rounded-xl hover:bg-muted/50 hover:border-primary/50 transition-all text-left group'
+                  className='w-full p-4 border border-border rounded-xl hover:bg-muted/50 hover:border-primary/50 transition-all duration-300 text-left group hover:scale-[1.02] active:scale-[0.98]'
                 >
                   <div className='flex items-center'>
                     <div className='w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mr-4 group-hover:bg-primary/20 transition-colors'>
@@ -426,7 +426,7 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
                   type='button'
                   onClick={requestOTP}
                   disabled={loading || timeLeft > 540}
-                  className='px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 disabled:opacity-50 transition-colors text-sm font-medium'
+                  className='px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 disabled:opacity-50 transition-all duration-300 text-sm font-medium hover:scale-105 active:scale-95'
                 >
                   {loading ? 'Sending...' : 'Resend OTP'}
                 </button>

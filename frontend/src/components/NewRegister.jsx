@@ -122,7 +122,7 @@ const Register = ({ onRegister }) => {
       <div className='min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-background'>
         <div className='max-w-md w-full space-y-8 bg-card p-8 rounded-xl shadow-lg border border-border'>
           <div className='text-center'>
-            <div className='mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-primary/10'>
+            <div className='mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 hover:bg-primary/20 hover:scale-110 transition-all duration-300 cursor-pointer'>
               <GraduationCap className='h-6 w-6 text-primary' />
             </div>
             <h2 className='mt-6 text-3xl font-extrabold text-foreground'>
@@ -221,14 +221,14 @@ const Register = ({ onRegister }) => {
               <button
                 type='submit'
                 disabled={loading}
-                className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 transition-colors'
+                className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 transition-all duration-300 hover:shadow-md hover:scale-[1.02] active:scale-[0.98]'
               >
                 {loading ? (
                   <RefreshCw className='h-5 w-5 animate-spin' />
                 ) : (
                   <>
                     Send Verification Email
-                    <ArrowRight className='ml-2 h-5 w-5' />
+                    <ArrowRight className='ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300' />
                   </>
                 )}
               </button>
@@ -253,7 +253,7 @@ const Register = ({ onRegister }) => {
       <div className='min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-background'>
         <div className='max-w-md w-full space-y-8 bg-card p-8 rounded-xl shadow-lg border border-border'>
           <div className='text-center'>
-            <div className='mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100'>
+            <div className='mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 animate-in zoom-in duration-500'>
               <CheckCircle className='h-6 w-6 text-green-600' />
             </div>
             <h2 className='mt-6 text-3xl font-extrabold text-foreground'>
@@ -366,7 +366,7 @@ const Register = ({ onRegister }) => {
               <button
                 type='submit'
                 disabled={loading}
-                className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 transition-colors'
+                className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 transition-all duration-300 hover:shadow-md hover:scale-[1.02] active:scale-[0.98]'
               >
                 {loading ? (
                   <RefreshCw className='h-5 w-5 animate-spin' />

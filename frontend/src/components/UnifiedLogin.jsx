@@ -105,7 +105,7 @@ function UnifiedLogin({ onLogin }) {
       <div className='max-w-md w-full space-y-8 relative z-10'>
         {/* Header */}
         <div className='text-center'>
-          <div className='mx-auto h-16 w-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6'>
+          <div className='mx-auto h-16 w-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 hover:bg-primary/20 hover:scale-110 transition-all duration-300 cursor-pointer'>
             <GraduationCap size={32} className="text-primary" />
           </div>
           <h2 className='text-3xl font-bold text-foreground mb-2'>
@@ -117,9 +117,9 @@ function UnifiedLogin({ onLogin }) {
         </div>
 
         {/* Login Form */}
-        <div className='bg-card border border-border rounded-xl shadow-sm p-8'>
+        <div className='bg-card border border-border rounded-xl shadow-sm p-8 hover:shadow-md hover:border-primary/30 transition-all duration-300'>
           {error && (
-            <div className='mb-6 p-4 border border-destructive/20 rounded-lg bg-destructive/10 flex items-center gap-3 text-destructive'>
+            <div className='mb-6 p-4 border border-destructive/20 rounded-lg bg-destructive/10 flex items-center gap-3 text-destructive animate-in fade-in duration-300'>
               <AlertCircle size={20} />
               <p className='text-sm font-medium'>{error}</p>
             </div>
@@ -146,7 +146,7 @@ function UnifiedLogin({ onLogin }) {
                     onChange={handleInputChange}
                     required
                     autoComplete='email'
-                    className='w-full pl-10 pr-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                    className='w-full pl-10 pr-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-all duration-200'
                     placeholder='Enter your email'
                   />
                 </div>
@@ -171,7 +171,7 @@ function UnifiedLogin({ onLogin }) {
                     onChange={handleInputChange}
                     required
                     autoComplete='current-password'
-                    className='w-full pl-10 pr-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                    className='w-full pl-10 pr-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-all duration-200'
                     placeholder='Enter your password'
                   />
                 </div>
@@ -181,7 +181,7 @@ function UnifiedLogin({ onLogin }) {
             <button
               type='submit'
               disabled={loading}
-              className='w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm'
+              className='group w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]'
             >
               {loading ? (
                 <div className='flex items-center gap-2'>
@@ -191,7 +191,7 @@ function UnifiedLogin({ onLogin }) {
               ) : (
                 <span className='flex items-center gap-2'>
                   Sign in
-                  <ArrowRight size={16} />
+                  <ArrowRight size={16} className='group-hover:translate-x-1 transition-transform duration-300' />
                 </span>
               )}
             </button>

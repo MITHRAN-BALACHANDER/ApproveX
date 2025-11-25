@@ -140,7 +140,7 @@ const LeaveRequestForm = () => {
   return (
     <div className='max-w-4xl mx-auto space-y-8'>
       {/* Header */}
-      <div className='bg-card border border-border rounded-xl p-6 shadow-sm'>
+      <div className='bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-300'>
         <div className='flex items-center gap-4 mb-4'>
           <div className='h-12 w-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary'>
             <Palmtree size={24} />
@@ -181,7 +181,7 @@ const LeaveRequestForm = () => {
       )}
 
       <form onSubmit={handleSubmit(onSubmit)} className='space-y-8'>
-        <div className='bg-card border border-border rounded-xl shadow-sm p-6'>
+        <div className='bg-card border border-border rounded-xl shadow-sm p-6 hover:shadow-md hover:border-primary/30 transition-all duration-300'>
           {/* Leave Type */}
           <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-8'>
             <div className='space-y-2'>
@@ -353,7 +353,7 @@ const LeaveRequestForm = () => {
             <label className='text-sm font-medium text-foreground mb-4 block'>
               Supporting Documents
             </label>
-            <div className='border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary/50 transition-colors bg-muted/10'>
+            <div className='border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary/50 hover:bg-muted/20 transition-all duration-300 bg-muted/10 cursor-pointer'>
               <input
                 type='file'
                 multiple
@@ -417,14 +417,14 @@ const LeaveRequestForm = () => {
                 reset()
                 setFiles([])
               }}
-              className='px-6 py-2 border border-input bg-background text-foreground rounded-lg hover:bg-muted transition-colors font-medium text-sm'
+              className='px-6 py-2 border border-input bg-background text-foreground rounded-lg hover:bg-muted transition-all duration-300 font-medium text-sm hover:scale-105 active:scale-95'
             >
               Clear Form
             </button>
             <button
               type='submit'
               disabled={isSubmitting}
-              className='px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-colors font-medium text-sm flex items-center gap-2 shadow-sm'
+              className='group px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-all duration-300 font-medium text-sm flex items-center gap-2 shadow-sm hover:shadow-md hover:scale-105 active:scale-95'
             >
               {isSubmitting ? (
                 <>
@@ -433,7 +433,7 @@ const LeaveRequestForm = () => {
                 </>
               ) : (
                 <>
-                  <Send size={16} />
+                  <Send size={16} className='group-hover:translate-x-0.5 transition-transform duration-300' />
                   <span>Submit Leave Request</span>
                 </>
               )}
