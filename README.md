@@ -1,4 +1,4 @@
-# Student On Duty Request System
+# Student On Duty Request and Leave Request System
 
 A full-stack MERN application for managing student on-duty requests with file uploads and status tracking.
 
