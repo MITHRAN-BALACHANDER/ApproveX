@@ -171,7 +171,7 @@ const RequestStatus = () => {
                     )}
 
                     {request.comments && (
-                      <div className='flex items-start gap-2 text-sm bg-muted/30 p-2 rounded-md'>
+                      <div className='flex items-start gap-2 text-sm bg-muted/30 p-2 rounded-xl'>
                         <MessageSquare size={14} className="text-muted-foreground mt-0.5" />
                         <span className='text-muted-foreground'>
                           {request.comments}

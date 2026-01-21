@@ -45,7 +45,7 @@ function Contact() {
               value={formData.name}
               onChange={handleChange}
               required
-              className='w-full px-3 py-2 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-foreground placeholder:text-muted-foreground transition-all duration-200'
+              className='w-full px-3 py-2 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-foreground placeholder:text-muted-foreground transition-all duration-200'
               placeholder="Your Name"
             />
           </div>
@@ -64,7 +64,7 @@ function Contact() {
               value={formData.email}
               onChange={handleChange}
               required
-              className='w-full px-3 py-2 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-foreground placeholder:text-muted-foreground transition-all duration-200'
+              className='w-full px-3 py-2 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-foreground placeholder:text-muted-foreground transition-all duration-200'
               placeholder="your.email@example.com"
             />
           </div>
@@ -83,14 +83,14 @@ function Contact() {
               onChange={handleChange}
               required
               rows={4}
-              className='w-full px-3 py-2 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-foreground placeholder:text-muted-foreground resize-none transition-all duration-200'
+              className='w-full px-3 py-2 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-foreground placeholder:text-muted-foreground resize-none transition-all duration-200'
               placeholder="How can we help you?"
             />
           </div>
 
           <button
             type='submit'
-            className='group w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-2 px-4 rounded-md transition-all duration-300 flex items-center justify-center gap-2 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]'
+            className='group w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-2 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]'
           >
             <Send className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-300" /> Send Message
           </button>

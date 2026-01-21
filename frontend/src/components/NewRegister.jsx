@@ -159,7 +159,7 @@ const Register = ({ onRegister }) => {
                       },
                     })}
                     type='email'
-                    className='block w-full pl-10 pr-3 py-2 border border-input rounded-md leading-5 bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm'
+                    className='block w-full pl-10 pr-3 py-2 border border-input rounded-xl leading-5 bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm'
                     placeholder='yourname23dept@srishakthi.ac.in'
                   />
                 </div>
@@ -193,7 +193,7 @@ const Register = ({ onRegister }) => {
                       },
                     })}
                     type='text'
-                    className='block w-full pl-10 pr-3 py-2 border border-input rounded-md leading-5 bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm'
+                    className='block w-full pl-10 pr-3 py-2 border border-input rounded-xl leading-5 bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm'
                     placeholder='Enter your roll number'
                   />
                 </div>
@@ -207,7 +207,7 @@ const Register = ({ onRegister }) => {
 
             {message && (
               <div
-                className={`p-4 rounded-md ${
+                className={`p-4 rounded-xl ${
                   message.includes('error') || message.includes('failed')
                     ? 'bg-destructive/10 text-destructive'
                     : 'bg-green-500/10 text-green-600'
@@ -221,7 +221,7 @@ const Register = ({ onRegister }) => {
               <button
                 type='submit'
                 disabled={loading}
-                className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 transition-all duration-300 hover:shadow-md hover:scale-[1.02] active:scale-[0.98]'
+                className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-xl text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 transition-all duration-300 hover:shadow-md hover:scale-[1.02] active:scale-[0.98]'
               >
                 {loading ? (
                   <RefreshCw className='h-5 w-5 animate-spin' />
@@ -265,7 +265,7 @@ const Register = ({ onRegister }) => {
           </div>
 
           {studentInfo && (
-            <div className='bg-primary/5 border border-primary/20 rounded-lg p-4'>
+            <div className='bg-primary/5 border border-primary/20 rounded-2xl p-4'>
               <h3 className='text-sm font-medium text-primary mb-2'>
                 Extracted Information:
               </h3>
@@ -307,7 +307,7 @@ const Register = ({ onRegister }) => {
                       required: 'Verification code is required',
                     })}
                     type='text'
-                    className='block w-full pl-10 pr-3 py-2 border border-input rounded-md leading-5 bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm'
+                    className='block w-full pl-10 pr-3 py-2 border border-input rounded-xl leading-5 bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm'
                     placeholder='Enter the code from your email'
                   />
                 </div>
@@ -338,7 +338,7 @@ const Register = ({ onRegister }) => {
                       },
                     })}
                     type='password'
-                    className='block w-full pl-10 pr-3 py-2 border border-input rounded-md leading-5 bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm'
+                    className='block w-full pl-10 pr-3 py-2 border border-input rounded-xl leading-5 bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm'
                     placeholder='Create a secure password'
                   />
                 </div>
@@ -352,7 +352,7 @@ const Register = ({ onRegister }) => {
 
             {message && (
               <div
-                className={`p-4 rounded-md ${
+                className={`p-4 rounded-xl ${
                   message.includes('error') || message.includes('failed')
                     ? 'bg-destructive/10 text-destructive'
                     : 'bg-green-500/10 text-green-600'
@@ -366,7 +366,7 @@ const Register = ({ onRegister }) => {
               <button
                 type='submit'
                 disabled={loading}
-                className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 transition-all duration-300 hover:shadow-md hover:scale-[1.02] active:scale-[0.98]'
+                className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-xl text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 transition-all duration-300 hover:shadow-md hover:scale-[1.02] active:scale-[0.98]'
               >
                 {loading ? (
                   <RefreshCw className='h-5 w-5 animate-spin' />

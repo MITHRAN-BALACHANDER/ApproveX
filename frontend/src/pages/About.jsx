@@ -105,7 +105,7 @@ function About() {
           <Terminal className="w-5 h-5 text-blue-500" /> Development Tools
         </h2>
         <div className='grid md:grid-cols-3 gap-4'>
-          <div className='group text-center p-4 bg-blue-500/10 rounded-lg border border-blue-500/20 hover:bg-blue-500/20 transition-all duration-300 hover:-translate-y-1 cursor-default'>
+          <div className='group text-center p-4 bg-blue-500/10 rounded-2xl border border-blue-500/20 hover:bg-blue-500/20 transition-all duration-300 hover:-translate-y-1 cursor-default'>
             <div className='flex justify-center mb-2'>
               <Zap className="w-6 h-6 text-blue-600 group-hover:scale-110 transition-transform duration-300" />
             </div>
@@ -116,7 +116,7 @@ function About() {
               Instant updates during development
             </p>
           </div>
-          <div className='group text-center p-4 bg-green-500/10 rounded-lg border border-green-500/20 hover:bg-green-500/20 transition-all duration-300 hover:-translate-y-1 cursor-default'>
+          <div className='group text-center p-4 bg-green-500/10 rounded-2xl border border-green-500/20 hover:bg-green-500/20 transition-all duration-300 hover:-translate-y-1 cursor-default'>
             <div className='flex justify-center mb-2'>
               <Search className="w-6 h-6 text-green-600 group-hover:scale-110 transition-transform duration-300" />
             </div>
@@ -125,7 +125,7 @@ function About() {
               ESLint + Prettier integration
             </p>
           </div>
-          <div className='group text-center p-4 bg-purple-500/10 rounded-lg border border-purple-500/20 hover:bg-purple-500/20 transition-all duration-300 hover:-translate-y-1 cursor-default'>
+          <div className='group text-center p-4 bg-purple-500/10 rounded-2xl border border-purple-500/20 hover:bg-purple-500/20 transition-all duration-300 hover:-translate-y-1 cursor-default'>
             <div className='flex justify-center mb-2'>
               <Rocket className="w-6 h-6 text-purple-600 group-hover:scale-110 transition-transform duration-300" />
             </div>
@@ -141,7 +141,7 @@ function About() {
         <h2 className='text-xl font-semibold mb-4 text-foreground flex items-center gap-2'>
           <Code className="w-5 h-5 text-orange-500 hover:scale-110 transition-transform duration-300" /> Getting Started
         </h2>
-        <div className='bg-muted text-muted-foreground p-4 rounded-lg font-mono text-sm mb-4 border border-border'>
+        <div className='bg-muted text-muted-foreground p-4 rounded-2xl font-mono text-sm mb-4 border border-border'>
           <p className='mb-2 text-foreground/50'># Install dependencies</p>
           <p className='text-foreground mb-3'>npm install</p>
           <p className='mb-2 text-foreground/50'># Start development server</p>

@@ -89,7 +89,7 @@ const LeaveRequestStatus = () => {
     }
     
     return (
-      <div className={`h-10 w-10 rounded-lg flex items-center justify-center shrink-0 ${styles[type] || 'bg-primary/10 text-primary'}`}>
+      <div className={`h-10 w-10 rounded-2xl flex items-center justify-center shrink-0 ${styles[type] || 'bg-primary/10 text-primary'}`}>
         <FileText size={20} />
       </div>
     )
@@ -164,7 +164,7 @@ const LeaveRequestStatus = () => {
         <p className='text-destructive font-medium mb-4'>{error}</p>
         <button
           onClick={fetchLeaveRequests}
-          className='px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors text-sm font-medium'
+          className='px-4 py-2 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors text-sm font-medium'
         >
           Retry
         </button>
@@ -192,7 +192,7 @@ const LeaveRequestStatus = () => {
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
         <div className='flex items-center gap-3'>
-          <div className='h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary'>
+          <div className='h-10 w-10 bg-primary/10 rounded-2xl flex items-center justify-center text-primary'>
             <Palmtree size={20} />
           </div>
           <h2 className='text-2xl font-bold text-foreground'>My Leave Requests</h2>
@@ -233,7 +233,7 @@ const LeaveRequestStatus = () => {
               </div>
             </div>
 
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 p-4 bg-muted/30 rounded-lg border border-border/50'>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 p-4 bg-muted/30 rounded-2xl border border-border/50'>
               <div>
                 <label className='block text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1'>
                   Duration
@@ -277,7 +277,7 @@ const LeaveRequestStatus = () => {
               <label className='block text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2'>
                 Reason
               </label>
-              <p className='text-sm text-foreground bg-muted/30 p-3 rounded-md border border-border/50'>
+              <p className='text-sm text-foreground bg-muted/30 p-3 rounded-xl border border-border/50'>
                 {request.reason}
               </p>
             </div>
@@ -288,7 +288,7 @@ const LeaveRequestStatus = () => {
                 <label className='block text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2'>
                   Emergency Contact
                 </label>
-                <div className='text-sm text-foreground bg-muted/30 p-3 rounded-md border border-border/50 grid grid-cols-1 sm:grid-cols-3 gap-4'>
+                <div className='text-sm text-foreground bg-muted/30 p-3 rounded-xl border border-border/50 grid grid-cols-1 sm:grid-cols-3 gap-4'>
                   <div>
                     <span className="text-muted-foreground text-xs block">Name</span>
                     <span className="font-medium">{request.emergencyContact.name}</span>
@@ -315,7 +315,7 @@ const LeaveRequestStatus = () => {
                   {request.documents.map((doc, index) => (
                     <div
                       key={index}
-                      className='flex items-center gap-2 text-sm bg-background border border-border px-3 py-2 rounded-md'
+                      className='flex items-center gap-2 text-sm bg-background border border-border px-3 py-2 rounded-xl'
                     >
                       <Paperclip size={14} className="text-primary" />
                       <span className='text-foreground font-medium'>{doc.originalname}</span>
@@ -337,7 +337,7 @@ const LeaveRequestStatus = () => {
                 </label>
                 <div className='space-y-3'>
                   {request.classTeacherApproval.remarks && (
-                    <div className='bg-blue-500/5 border border-blue-500/10 p-3 rounded-md'>
+                    <div className='bg-blue-500/5 border border-blue-500/10 p-3 rounded-xl'>
                       <p className='text-xs font-medium text-blue-600 mb-1'>
                         Class Teacher:
                       </p>
@@ -347,7 +347,7 @@ const LeaveRequestStatus = () => {
                     </div>
                   )}
                   {request.hodApproval?.remarks && (
-                    <div className='bg-purple-500/5 border border-purple-500/10 p-3 rounded-md'>
+                    <div className='bg-purple-500/5 border border-purple-500/10 p-3 rounded-xl'>
                       <p className='text-xs font-medium text-purple-600 mb-1'>HOD:</p>
                       <p className='text-sm text-foreground'>
                         {request.hodApproval.remarks}
@@ -367,7 +367,7 @@ const LeaveRequestStatus = () => {
                 {request.status === 'pending' && (
                   <button
                     onClick={() => deleteRequest(request._id)}
-                    className='flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-destructive/10 text-destructive rounded-md hover:bg-destructive/20 transition-colors border border-destructive/20'
+                    className='flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-destructive/10 text-destructive rounded-xl hover:bg-destructive/20 transition-colors border border-destructive/20'
                   >
                     <Trash2 size={14} />
                     Delete
@@ -375,7 +375,7 @@ const LeaveRequestStatus = () => {
                 )}
                 <button
                   onClick={() => window.print()}
-                  className='flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80 transition-colors border border-border'
+                  className='flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-secondary text-secondary-foreground rounded-xl hover:bg-secondary/80 transition-colors border border-border'
                 >
                   <Printer size={14} />
                   Print

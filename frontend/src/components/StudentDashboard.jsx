@@ -136,7 +136,7 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='flex justify-between items-center py-4'>
             <div className='flex items-center gap-4'>
-              <div className='h-10 w-10 bg-primary rounded-lg flex items-center justify-center text-primary-foreground shadow-sm'>
+              <div className='h-10 w-10 bg-primary rounded-2xl flex items-center justify-center text-primary-foreground shadow-sm'>
                 <GraduationCap size={20} />
               </div>
               <div>
@@ -153,14 +153,14 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
             <div className='flex gap-2'>
               <button
                 onClick={() => setShowChangePassword(true)}
-                className='flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors'
+                className='flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors'
               >
                 <Lock size={16} />
                 <span className="hidden sm:inline">Change Password</span>
               </button>
               <button
                 onClick={onLogout}
-                className='flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors'
+                className='flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors'
               >
                 <LogOut size={16} />
                 <span className="hidden sm:inline">Logout</span>
@@ -182,23 +182,23 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
               </h3>
             </div>
             <div className='grid grid-cols-2 sm:grid-cols-4 gap-4'>
-              <div className='bg-card border border-border rounded-lg p-4 shadow-sm'>
+              <div className='bg-card border border-border rounded-2xl p-4 shadow-sm'>
                 <div className='text-sm text-muted-foreground mb-1'>Total</div>
                 <div className='text-2xl font-bold text-foreground'>{stats.totalRequests}</div>
               </div>
-              <div className='bg-card border border-border rounded-lg p-4 shadow-sm'>
+              <div className='bg-card border border-border rounded-2xl p-4 shadow-sm'>
                 <div className='text-sm text-muted-foreground mb-1 flex items-center gap-1'>
                   <Clock size={12} className="text-primary" /> Pending
                 </div>
                 <div className='text-2xl font-bold text-foreground'>{stats.pendingRequests}</div>
               </div>
-              <div className='bg-card border border-border rounded-lg p-4 shadow-sm'>
+              <div className='bg-card border border-border rounded-2xl p-4 shadow-sm'>
                 <div className='text-sm text-muted-foreground mb-1 flex items-center gap-1'>
                   <CheckCircle size={12} className="text-green-600" /> Approved
                 </div>
                 <div className='text-2xl font-bold text-foreground'>{stats.approvedRequests}</div>
               </div>
-              <div className='bg-card border border-border rounded-lg p-4 shadow-sm'>
+              <div className='bg-card border border-border rounded-2xl p-4 shadow-sm'>
                 <div className='text-sm text-muted-foreground mb-1 flex items-center gap-1'>
                   <XCircle size={12} className="text-destructive" /> Rejected
                 </div>
@@ -216,23 +216,23 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
               </h3>
             </div>
             <div className='grid grid-cols-2 sm:grid-cols-4 gap-4'>
-              <div className='bg-card border border-border rounded-lg p-4 shadow-sm'>
+              <div className='bg-card border border-border rounded-2xl p-4 shadow-sm'>
                 <div className='text-sm text-muted-foreground mb-1'>Total</div>
                 <div className='text-2xl font-bold text-foreground'>{stats.totalLeaveRequests}</div>
               </div>
-              <div className='bg-card border border-border rounded-lg p-4 shadow-sm'>
+              <div className='bg-card border border-border rounded-2xl p-4 shadow-sm'>
                 <div className='text-sm text-muted-foreground mb-1 flex items-center gap-1'>
                   <Clock size={12} className="text-primary" /> Pending
                 </div>
                 <div className='text-2xl font-bold text-foreground'>{stats.pendingLeaveRequests}</div>
               </div>
-              <div className='bg-card border border-border rounded-lg p-4 shadow-sm'>
+              <div className='bg-card border border-border rounded-2xl p-4 shadow-sm'>
                 <div className='text-sm text-muted-foreground mb-1 flex items-center gap-1'>
                   <CheckCircle size={12} className="text-green-600" /> Approved
                 </div>
                 <div className='text-2xl font-bold text-foreground'>{stats.approvedLeaveRequests}</div>
               </div>
-              <div className='bg-card border border-border rounded-lg p-4 shadow-sm'>
+              <div className='bg-card border border-border rounded-2xl p-4 shadow-sm'>
                 <div className='text-sm text-muted-foreground mb-1 flex items-center gap-1'>
                   <XCircle size={12} className="text-destructive" /> Rejected
                 </div>
@@ -270,7 +270,7 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
             {activeTab === 'od-requests' && (
               <div className="space-y-6">
                 <div className='flex items-center gap-3 pb-4 border-b border-border'>
-                  <div className='h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary'>
+                  <div className='h-10 w-10 bg-primary/10 rounded-2xl flex items-center justify-center text-primary'>
                     <FileText size={20} />
                   </div>
                   <h3 className='text-xl font-bold text-foreground'>
@@ -284,7 +284,7 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
             {activeTab === 'new-od-request' && (
               <div className="space-y-6">
                 <div className='flex items-center gap-3 pb-4 border-b border-border'>
-                  <div className='h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary'>
+                  <div className='h-10 w-10 bg-primary/10 rounded-2xl flex items-center justify-center text-primary'>
                     <Plus size={20} />
                   </div>
                   <h3 className='text-xl font-bold text-foreground'>
@@ -298,7 +298,7 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
             {activeTab === 'leave-requests' && (
               <div className="space-y-6">
                 <div className='flex items-center gap-3 pb-4 border-b border-border'>
-                  <div className='h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary'>
+                  <div className='h-10 w-10 bg-primary/10 rounded-2xl flex items-center justify-center text-primary'>
                     <Stethoscope size={20} />
                   </div>
                   <h3 className='text-xl font-bold text-foreground'>
@@ -312,7 +312,7 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
             {activeTab === 'new-leave-request' && (
               <div className="space-y-6">
                 <div className='flex items-center gap-3 pb-4 border-b border-border'>
-                  <div className='h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary'>
+                  <div className='h-10 w-10 bg-primary/10 rounded-2xl flex items-center justify-center text-primary'>
                     <Palmtree size={20} />
                   </div>
                   <h3 className='text-xl font-bold text-foreground'>
@@ -327,7 +327,7 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
               <div className="space-y-6">
                 <div className='flex justify-between items-center pb-4 border-b border-border'>
                   <div className='flex items-center gap-3'>
-                    <div className='h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary'>
+                    <div className='h-10 w-10 bg-primary/10 rounded-2xl flex items-center justify-center text-primary'>
                       <User size={20} />
                     </div>
                     <h3 className='text-xl font-bold text-foreground'>
@@ -336,13 +336,13 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
                   </div>
                   <button
                     onClick={() => setShowEditProfile(true)}
-                    className='flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-sm font-medium transition-colors shadow-sm'
+                    className='flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl text-sm font-medium transition-colors shadow-sm'
                   >
                     <Pencil size={16} />
                     <span>Edit Profile</span>
                   </button>
                 </div>
-                <div className='bg-muted/30 p-6 rounded-lg border border-border'>
+                <div className='bg-muted/30 p-6 rounded-2xl border border-border'>
                   <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                     <div className='space-y-1'>
                       <label className='block text-xs font-medium text-muted-foreground uppercase tracking-wider'>

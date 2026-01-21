@@ -181,14 +181,14 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
           </div>
 
           {error && (
-            <div className='bg-destructive/10 border border-destructive/20 rounded-lg p-3 mb-4 flex items-center gap-2 text-destructive text-sm'>
+            <div className='bg-destructive/10 border border-destructive/20 rounded-2xl p-3 mb-4 flex items-center gap-2 text-destructive text-sm'>
               <AlertCircle size={16} />
               <p>{error}</p>
             </div>
           )}
 
           {success && (
-            <div className='bg-green-500/10 border border-green-500/20 rounded-lg p-3 mb-4 flex items-center gap-2 text-green-600 text-sm'>
+            <div className='bg-green-500/10 border border-green-500/20 rounded-2xl p-3 mb-4 flex items-center gap-2 text-green-600 text-sm'>
               <CheckCircle size={16} />
               <p>{success}</p>
             </div>
@@ -255,7 +255,7 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
                   {...register('oldPassword', {
                     required: 'Current password is required',
                   })}
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 />
                 {errors.oldPassword && (
                   <p className='text-destructive text-xs mt-1 flex items-center gap-1'>
@@ -278,7 +278,7 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
                       message: 'Password must be at least 6 characters',
                     },
                   })}
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 />
                 {errors.newPassword && (
                   <p className='text-destructive text-xs mt-1 flex items-center gap-1'>
@@ -299,7 +299,7 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
                     validate: value =>
                       value === newPassword || 'Passwords do not match',
                   })}
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 />
                 {errors.confirmPassword && (
                   <p className='text-destructive text-xs mt-1 flex items-center gap-1'>
@@ -313,14 +313,14 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
                 <button
                   type='button'
                   onClick={() => setStep(1)}
-                  className='px-4 py-2 border border-input bg-background text-foreground rounded-lg hover:bg-muted transition-colors text-sm font-medium'
+                  className='px-4 py-2 border border-input bg-background text-foreground rounded-2xl hover:bg-muted transition-colors text-sm font-medium'
                 >
                   Back
                 </button>
                 <button
                   type='submit'
                   disabled={loading}
-                  className='px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-colors text-sm font-medium'
+                  className='px-4 py-2 bg-primary text-primary-foreground rounded-2xl hover:bg-primary/90 disabled:opacity-50 transition-colors text-sm font-medium'
                 >
                   {loading ? 'Changing...' : 'Change Password'}
                 </button>
@@ -331,7 +331,7 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
           {step === 2 && method === 'otp' && (
             <form onSubmit={handleSubmit(onSubmitOTP)} className="space-y-4">
               {otpSent && (
-                <div className='bg-primary/5 border border-primary/10 rounded-lg p-3'>
+                <div className='bg-primary/5 border border-primary/10 rounded-2xl p-3'>
                   <p className='text-primary text-sm flex items-center'>
                     <Mail className='w-4 h-4 mr-2' />
                     OTP sent to your email address
@@ -359,7 +359,7 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
                     },
                   })}
                   placeholder='Enter 6-digit code'
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors font-mono tracking-widest text-center text-lg'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors font-mono tracking-widest text-center text-lg'
                   maxLength='6'
                 />
                 {errors.otp && (
@@ -383,7 +383,7 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
                       message: 'Password must be at least 6 characters',
                     },
                   })}
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 />
                 {errors.newPassword && (
                   <p className='text-destructive text-xs mt-1 flex items-center gap-1'>
@@ -404,7 +404,7 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
                     validate: value =>
                       value === newPassword || 'Passwords do not match',
                   })}
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 />
                 {errors.confirmPassword && (
                   <p className='text-destructive text-xs mt-1 flex items-center gap-1'>
@@ -418,7 +418,7 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
                 <button
                   type='button'
                   onClick={() => setStep(1)}
-                  className='px-4 py-2 border border-input bg-background text-foreground rounded-lg hover:bg-muted transition-colors text-sm font-medium'
+                  className='px-4 py-2 border border-input bg-background text-foreground rounded-2xl hover:bg-muted transition-colors text-sm font-medium'
                 >
                   Back
                 </button>
@@ -426,14 +426,14 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
                   type='button'
                   onClick={requestOTP}
                   disabled={loading || timeLeft > 540}
-                  className='px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 disabled:opacity-50 transition-all duration-300 text-sm font-medium hover:scale-105 active:scale-95'
+                  className='px-4 py-2 bg-secondary text-secondary-foreground rounded-2xl hover:bg-secondary/80 disabled:opacity-50 transition-all duration-300 text-sm font-medium hover:scale-105 active:scale-95'
                 >
                   {loading ? 'Sending...' : 'Resend OTP'}
                 </button>
                 <button
                   type='submit'
                   disabled={loading}
-                  className='px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-colors text-sm font-medium'
+                  className='px-4 py-2 bg-primary text-primary-foreground rounded-2xl hover:bg-primary/90 disabled:opacity-50 transition-colors text-sm font-medium'
                 >
                   {loading ? 'Changing...' : 'Change Password'}
                 </button>
@@ -454,7 +454,7 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
               </p>
               <button
                 onClick={handleClose}
-                className='px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium'
+                className='px-6 py-2 bg-primary text-primary-foreground rounded-2xl hover:bg-primary/90 transition-colors font-medium'
               >
                 Close
               </button>

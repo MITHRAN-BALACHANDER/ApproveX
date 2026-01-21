@@ -171,7 +171,7 @@ const ComprehensiveDutyRequestForm = () => {
 
       {submitMessage && (
         <div
-          className={`p-4 rounded-lg mb-6 flex items-start space-x-3 border ${
+          className={`p-4 rounded-2xl mb-6 flex items-start space-x-3 border ${
             submitMessage.includes('Error') || submitMessage.includes('error') || submitMessage.includes('failed') 
               ? 'bg-destructive/10 text-destructive border-destructive/20' 
               : 'bg-green-500/10 text-green-600 border-green-500/20'
@@ -205,7 +205,7 @@ const ComprehensiveDutyRequestForm = () => {
                 {...register('fullName', { required: 'Full name is required' })}
                 type='text'
                 defaultValue={user?.profile?.fullName}
-                className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 placeholder='Enter your full name'
               />
               {errors.fullName && (
@@ -225,7 +225,7 @@ const ComprehensiveDutyRequestForm = () => {
                 })}
                 type='text'
                 defaultValue={user?.profile?.registerNumber}
-                className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 placeholder='e.g., 21CS001'
               />
               {errors.registerNumber && (
@@ -245,7 +245,7 @@ const ComprehensiveDutyRequestForm = () => {
                     required: 'Department is required',
                   })}
                   defaultValue={user?.profile?.department}
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors text-sm'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors text-sm'
                 >
                   <option value=''>Dept</option>
                   <option value='CSE'>CSE</option>
@@ -258,7 +258,7 @@ const ComprehensiveDutyRequestForm = () => {
                 <select
                   {...register('year', { required: 'Year is required' })}
                   defaultValue={user?.profile?.year}
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors text-sm'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors text-sm'
                 >
                   <option value=''>Year</option>
                   <option value='1st Year'>1st</option>
@@ -281,7 +281,7 @@ const ComprehensiveDutyRequestForm = () => {
               <select
                 {...register('section', { required: 'Section is required' })}
                 defaultValue={user?.profile?.section}
-                className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
               >
                 <option value=''>Select section</option>
                 <option value='A'>Section A</option>
@@ -317,7 +317,7 @@ const ComprehensiveDutyRequestForm = () => {
                   {...register('reasonType', {
                     required: 'Reason type is required',
                   })}
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 >
                   <option value=''>Select reason</option>
                   <option value='seminar'>Seminar</option>
@@ -350,7 +350,7 @@ const ComprehensiveDutyRequestForm = () => {
                     required: 'Event title is required',
                   })}
                   type='text'
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                   placeholder="Official event name"
                 />
                 {errors.eventTitle && (
@@ -368,7 +368,7 @@ const ComprehensiveDutyRequestForm = () => {
               <input
                 {...register('eventTheme')}
                 type='text'
-                className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 placeholder='Brief description of the event theme'
               />
             </div>
@@ -383,7 +383,7 @@ const ComprehensiveDutyRequestForm = () => {
                     required: 'Institution name is required',
                   })}
                   type='text'
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                   placeholder='College/Company/Organization name'
                 />
                 {errors.institutionName && (
@@ -400,7 +400,7 @@ const ComprehensiveDutyRequestForm = () => {
                 <input
                   {...register('city', { required: 'City is required' })}
                   type='text'
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                   placeholder='Event city'
                 />
                 {errors.city && (
@@ -418,7 +418,7 @@ const ComprehensiveDutyRequestForm = () => {
               <textarea
                 {...register('address')}
                 rows='2'
-                className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 placeholder='Full venue address'
               />
             </div>
@@ -434,7 +434,7 @@ const ComprehensiveDutyRequestForm = () => {
                   })}
                   type='date'
                   min={new Date().toISOString().split('T')[0]}
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 />
                 {errors.startDate && (
                   <p className='text-destructive text-xs mt-1'>
@@ -453,7 +453,7 @@ const ComprehensiveDutyRequestForm = () => {
                   min={
                     watchDates?.[0] || new Date().toISOString().split('T')[0]
                   }
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 />
                 {errors.endDate && (
                   <p className='text-destructive text-xs mt-1'>
@@ -469,7 +469,7 @@ const ComprehensiveDutyRequestForm = () => {
                 <input
                   {...register('startTime')}
                   type='time'
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 />
               </div>
 
@@ -480,7 +480,7 @@ const ComprehensiveDutyRequestForm = () => {
                 <input
                   {...register('endTime')}
                   type='time'
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 />
               </div>
             </div>
@@ -495,7 +495,7 @@ const ComprehensiveDutyRequestForm = () => {
                     required: 'Organizer name is required',
                   })}
                   type='text'
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                   placeholder='Organizing body'
                 />
                 {errors.organizerName && (
@@ -513,7 +513,7 @@ const ComprehensiveDutyRequestForm = () => {
                   {...register('organizerType', {
                     required: 'Organizer type is required',
                   })}
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 >
                   <option value=''>Select type</option>
                   <option value='college'>College/University</option>
@@ -535,7 +535,7 @@ const ComprehensiveDutyRequestForm = () => {
                 <input
                   {...register('organizerContact')}
                   type='text'
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                   placeholder='Phone/Email'
                 />
               </div>
@@ -560,7 +560,7 @@ const ComprehensiveDutyRequestForm = () => {
               <textarea
                 {...register('subjectsMissed')}
                 rows='3'
-                className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 placeholder='List subjects, faculty names, dates, and time slots'
               />
               <p className='text-xs text-muted-foreground'>
@@ -578,7 +578,7 @@ const ComprehensiveDutyRequestForm = () => {
                 })}
                 rows='3'
                 defaultValue='I undertake to compensate for all missed classes/labs and complete any assignments given during my absence. I will coordinate with respective faculty members and classmates to cover the missed content.'
-                className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
               />
               {errors.undertaking && (
                 <p className='text-destructive text-xs mt-1'>
@@ -610,7 +610,7 @@ const ComprehensiveDutyRequestForm = () => {
                   onChange={e =>
                     handleFileChange('invitation', e.target.files[0])
                   }
-                  className='w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90'
+                  className='w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90'
                   required
                 />
               </div>
@@ -629,7 +629,7 @@ const ComprehensiveDutyRequestForm = () => {
                 onChange={e =>
                   handleFileChange('permissionLetter', e.target.files[0])
                 }
-                className='w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90'
+                className='w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90'
               />
               <p className='text-xs text-muted-foreground'>
                 If external participation (PDF/DOCX, Max 10MB)
@@ -646,7 +646,7 @@ const ComprehensiveDutyRequestForm = () => {
                 onChange={e =>
                   handleFileChange('travelProof', e.target.files[0])
                 }
-                className='w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90'
+                className='w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90'
               />
               <p className='text-xs text-muted-foreground'>
                 If travel is required (PDF/Image, Max 10MB)
@@ -662,7 +662,7 @@ const ComprehensiveDutyRequestForm = () => {
                 multiple
                 accept='.pdf,.doc,.docx,.jpg,.jpeg,.png'
                 onChange={e => handleMultipleFileChange(e.target.files)}
-                className='w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90'
+                className='w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90'
               />
               <p className='text-xs text-muted-foreground'>
                 Any additional supporting documents (Max 5 files, 10MB each)
@@ -703,7 +703,7 @@ const ComprehensiveDutyRequestForm = () => {
               </p>
             )}
 
-            <div className='bg-primary/10 p-4 rounded-lg border border-primary/20'>
+            <div className='bg-primary/10 p-4 rounded-2xl border border-primary/20'>
               <p className='text-sm font-medium text-primary'>
                 <strong>Note:</strong> Submit this form at least 3-5 working
                 days before the event. Emergency requests may not be processed.
@@ -718,7 +718,7 @@ const ComprehensiveDutyRequestForm = () => {
           <button
             type='submit'
             disabled={isSubmitting}
-            className='px-8 py-3 bg-primary text-primary-foreground font-medium rounded-lg transition-all hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm'
+            className='px-8 py-3 bg-primary text-primary-foreground font-medium rounded-2xl transition-all hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm'
           >
             {isSubmitting ? (
               <>

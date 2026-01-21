@@ -184,7 +184,7 @@ const TeacherDashboard = () => {
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='flex justify-between items-center py-4'>
             <div className="flex items-center gap-4">
-              <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+              <div className="h-10 w-10 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
                 <LayoutDashboard size={20} />
               </div>
               <div>
@@ -199,14 +199,14 @@ const TeacherDashboard = () => {
             <div className='flex items-center gap-2'>
               <button
                 onClick={() => setShowChangePassword(true)}
-                className='p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors'
+                className='p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-xl transition-colors'
                 title="Change Password"
               >
                 <Lock size={20} />
               </button>
               <button
                 onClick={handleLogout}
-                className='flex items-center gap-2 px-3 py-2 text-sm font-medium text-destructive hover:bg-destructive/10 rounded-md transition-colors'
+                className='flex items-center gap-2 px-3 py-2 text-sm font-medium text-destructive hover:bg-destructive/10 rounded-xl transition-colors'
               >
                 <LogOut size={18} />
                 <span className="hidden sm:inline">Logout</span>
@@ -358,7 +358,7 @@ const TeacherDashboard = () => {
                         {['pending', 'under_review', 'submitted'].includes(request.overallStatus) && (
                           <button
                             onClick={() => handleReviewRequest(request)}
-                            className='flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm'
+                            className='flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm'
                           >
                             <span>Review</span>
                             <ChevronRight size={16} />
@@ -427,7 +427,7 @@ const TeacherDashboard = () => {
                           // Implement leave review logic
                           alert('Leave review implementation pending')
                         }}
-                        className='flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm'
+                        className='flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm'
                       >
                         <span>Review</span>
                         <ChevronRight size={16} />
@@ -457,7 +457,7 @@ const TeacherDashboard = () => {
 
             <div className='p-6 overflow-y-auto flex-1 space-y-6'>
               {/* Student Info */}
-              <div className='bg-muted/30 p-4 rounded-lg border border-border'>
+              <div className='bg-muted/30 p-4 rounded-2xl border border-border'>
                 <h4 className='text-sm font-semibold text-foreground mb-3 flex items-center gap-2'>
                   <User size={16} /> Student Information
                 </h4>
@@ -482,7 +482,7 @@ const TeacherDashboard = () => {
               </div>
 
               {/* Event Details */}
-              <div className='bg-muted/30 p-4 rounded-lg border border-border'>
+              <div className='bg-muted/30 p-4 rounded-2xl border border-border'>
                 <h4 className='text-sm font-semibold text-foreground mb-3 flex items-center gap-2'>
                   <Target size={16} /> Event Details
                 </h4>
@@ -511,7 +511,7 @@ const TeacherDashboard = () => {
               </div>
 
               {/* Documents */}
-              <div className='bg-muted/30 p-4 rounded-lg border border-border'>
+              <div className='bg-muted/30 p-4 rounded-2xl border border-border'>
                 <h4 className='text-sm font-semibold text-foreground mb-3 flex items-center gap-2'>
                   <Paperclip size={16} /> Documents
                 </h4>
@@ -531,13 +531,13 @@ const TeacherDashboard = () => {
             <div className='p-6 border-t border-border bg-muted/30 flex justify-end gap-4'>
               <button
                 onClick={handleCloseDetailedView}
-                className='px-4 py-2 border border-input bg-background hover:bg-muted text-foreground rounded-md text-sm font-medium transition-colors'
+                className='px-4 py-2 border border-input bg-background hover:bg-muted text-foreground rounded-xl text-sm font-medium transition-colors'
               >
                 Close
               </button>
               <button
                 onClick={handleProceedToReview}
-                className='px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-sm font-medium transition-colors shadow-sm flex items-center gap-2'
+                className='px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl text-sm font-medium transition-colors shadow-sm flex items-center gap-2'
               >
                 <Scale size={16} />
                 Proceed to Decision
@@ -559,7 +559,7 @@ const TeacherDashboard = () => {
             </div>
             
             <div className='p-6 space-y-4'>
-              <div className='bg-primary/10 p-3 rounded-md border border-primary/20'>
+              <div className='bg-primary/10 p-3 rounded-xl border border-primary/20'>
                 <p className='text-sm text-primary font-medium'>
                   Reviewing: {selectedRequest.eventDetails?.eventTitle}
                 </p>
@@ -575,7 +575,7 @@ const TeacherDashboard = () => {
                 <select
                   value={reviewData.status}
                   onChange={e => setReviewData({ ...reviewData, status: e.target.value })}
-                  className='w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full bg-background border border-input rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 >
                   <option value=''>Select Decision</option>
                   <option value='approved'>Approve Request</option>
@@ -591,7 +591,7 @@ const TeacherDashboard = () => {
                   value={reviewData.remarks}
                   onChange={e => setReviewData({ ...reviewData, remarks: e.target.value })}
                   rows='3'
-                  className='w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full bg-background border border-input rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                   placeholder='Add comments...'
                 />
               </div>
@@ -603,14 +603,14 @@ const TeacherDashboard = () => {
                   setReviewModal(false)
                   setShowDetailedView(true)
                 }}
-                className='px-4 py-2 border border-input bg-background hover:bg-muted text-foreground rounded-md text-sm font-medium transition-colors'
+                className='px-4 py-2 border border-input bg-background hover:bg-muted text-foreground rounded-xl text-sm font-medium transition-colors'
               >
                 Back
               </button>
               <button
                 onClick={submitReview}
                 disabled={!reviewData.status}
-                className='px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-sm font-medium transition-colors shadow-sm disabled:opacity-50'
+                className='px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl text-sm font-medium transition-colors shadow-sm disabled:opacity-50'
               >
                 Submit Decision
               </button>

@@ -44,7 +44,7 @@ const Navbar = ({ user, onLogout }) => {
           {/* Logo and brand */}
           <div className='flex items-center'>
             <Link to='/' className='flex items-center group gap-3'>
-              <div className='h-10 w-10 bg-primary rounded-lg flex items-center justify-center text-primary-foreground shadow-sm group-hover:scale-110 group-hover:shadow-md transition-all duration-300'>
+              <div className='h-10 w-10 bg-primary rounded-2xl flex items-center justify-center text-primary-foreground shadow-sm group-hover:scale-110 group-hover:shadow-md transition-all duration-300'>
                 <GraduationCap size={20} className='group-hover:rotate-6 transition-transform duration-300' />
               </div>
               <div>
@@ -64,7 +64,7 @@ const Navbar = ({ user, onLogout }) => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`group flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 ${
+                className={`group flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
                   isActive(link.path)
                     ? 'bg-secondary text-secondary-foreground'
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground'
@@ -78,7 +78,7 @@ const Navbar = ({ user, onLogout }) => {
 
           {/* User menu - Desktop */}
           <div className='hidden md:flex items-center gap-4'>
-            <div className='flex items-center gap-3 px-3 py-1.5 rounded-md border border-border bg-card'>
+            <div className='flex items-center gap-3 px-3 py-1.5 rounded-xl border border-border bg-card'>
               <div className='h-8 w-8 bg-muted rounded-full flex items-center justify-center text-muted-foreground text-sm font-bold'>
                 {user?.name?.charAt(0)?.toUpperCase() ||
                   user?.fullName?.charAt(0)?.toUpperCase() ||
@@ -95,7 +95,7 @@ const Navbar = ({ user, onLogout }) => {
             </div>
             <button
               onClick={handleLogout}
-              className='group flex items-center gap-2 px-4 py-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-md text-sm font-medium transition-all duration-300 shadow-sm hover:shadow-md hover:scale-105 active:scale-95'
+              className='group flex items-center gap-2 px-4 py-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-xl text-sm font-medium transition-all duration-300 shadow-sm hover:shadow-md hover:scale-105 active:scale-95'
             >
               <LogOut size={16} className='group-hover:translate-x-0.5 transition-transform duration-300' />
               <span>Logout</span>
@@ -106,7 +106,7 @@ const Navbar = ({ user, onLogout }) => {
           <div className='md:hidden'>
             <button
               onClick={toggleMenu}
-              className='p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-300 hover:scale-110 active:scale-95'
+              className='p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-300 hover:scale-110 active:scale-95'
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -121,7 +121,7 @@ const Navbar = ({ user, onLogout }) => {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`group flex items-center gap-3 px-4 py-3 rounded-md text-base font-medium transition-all duration-300 ${
+                  className={`group flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium transition-all duration-300 ${
                     isActive(link.path)
                       ? 'bg-secondary text-secondary-foreground'
                       : 'text-muted-foreground hover:bg-muted hover:text-foreground'
@@ -134,7 +134,7 @@ const Navbar = ({ user, onLogout }) => {
               ))}
 
               <div className='border-t border-border pt-4 mt-4'>
-                <div className='flex items-center gap-3 px-4 py-3 bg-muted/50 rounded-md mb-3'>
+                <div className='flex items-center gap-3 px-4 py-3 bg-muted/50 rounded-xl mb-3'>
                   <div className='h-10 w-10 bg-muted rounded-full flex items-center justify-center text-muted-foreground text-sm font-bold border border-border'>
                     {user?.name?.charAt(0)?.toUpperCase() ||
                       user?.fullName?.charAt(0)?.toUpperCase() ||
@@ -151,7 +151,7 @@ const Navbar = ({ user, onLogout }) => {
                 </div>
                 <button
                   onClick={handleLogout}
-                  className='group flex items-center justify-center gap-2 w-full px-4 py-3 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-md text-base font-medium transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]'
+                  className='group flex items-center justify-center gap-2 w-full px-4 py-3 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-xl text-base font-medium transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]'
                 >
                   <LogOut size={18} className='group-hover:translate-x-0.5 transition-transform duration-300' />
                   <span>Logout</span>

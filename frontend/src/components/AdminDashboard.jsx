@@ -87,28 +87,28 @@ const AdminDashboard = () => {
             <div className='flex items-center space-x-4'>
               <button
                 onClick={() => setShowChangePassword(true)}
-                className='flex items-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 px-4 py-2 rounded-lg transition-colors'
+                className='flex items-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 px-4 py-2 rounded-2xl transition-colors'
               >
                 <Lock size={16} />
                 Change Password
               </button>
               <button
                 onClick={() => navigate('/admin/teachers')}
-                className='flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-lg transition-colors'
+                className='flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-2xl transition-colors'
               >
                 <Users size={16} />
                 Manage Teachers
               </button>
               <button
                 onClick={() => navigate('/admin/approval-history')}
-                className='flex items-center gap-2 bg-green-600 text-white hover:bg-green-700 px-4 py-2 rounded-lg transition-colors'
+                className='flex items-center gap-2 bg-green-600 text-white hover:bg-green-700 px-4 py-2 rounded-2xl transition-colors'
               >
                 <FileText size={16} />
                 Approval History
               </button>
               <button
                 onClick={handleLogout}
-                className='flex items-center gap-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 px-4 py-2 rounded-lg transition-colors'
+                className='flex items-center gap-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 px-4 py-2 rounded-2xl transition-colors'
               >
                 <LogOut size={16} />
                 Logout

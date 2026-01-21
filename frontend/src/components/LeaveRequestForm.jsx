@@ -154,7 +154,7 @@ const LeaveRequestForm = () => {
         </div>
 
         {totalDays > 0 && (
-          <div className='bg-muted/50 rounded-lg p-4 border border-border'>
+          <div className='bg-muted/50 rounded-2xl p-4 border border-border'>
             <div className='flex items-center justify-between'>
               <span className='font-medium text-foreground'>Total Days Requested:</span>
               <span className='text-xl font-bold text-primary'>{totalDays} days</span>
@@ -165,7 +165,7 @@ const LeaveRequestForm = () => {
 
       {submitMessage && (
         <div
-          className={`p-4 rounded-lg border flex items-center gap-3 ${
+          className={`p-4 rounded-2xl border flex items-center gap-3 ${
             submitMessage.includes('success')
               ? 'bg-green-500/10 border-green-500/20 text-green-600'
               : 'bg-destructive/10 border-destructive/20 text-destructive'
@@ -192,7 +192,7 @@ const LeaveRequestForm = () => {
                 {...register('leaveType', {
                   required: 'Leave type is required',
                 })}
-                className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
               >
                 <option value=''>Select Leave Type</option>
                 <option value='sick'>Sick Leave</option>
@@ -214,7 +214,7 @@ const LeaveRequestForm = () => {
               <label className='text-sm font-medium text-foreground'>
                 Emergency Leave
               </label>
-              <div className='flex items-center p-3 bg-background rounded-md border border-input'>
+              <div className='flex items-center p-3 bg-background rounded-xl border border-input'>
                 <input
                   type='checkbox'
                   {...register('isEmergency')}
@@ -240,7 +240,7 @@ const LeaveRequestForm = () => {
                     required: 'Start date is required',
                   })}
                   min={new Date().toISOString().split('T')[0]}
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 />
               </div>
               {errors.startDate && (
@@ -260,7 +260,7 @@ const LeaveRequestForm = () => {
                   type='date'
                   {...register('endDate', { required: 'End date is required' })}
                   min={watchDates?.[0] || new Date().toISOString().split('T')[0]}
-                  className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 />
               </div>
               {errors.endDate && (
@@ -281,7 +281,7 @@ const LeaveRequestForm = () => {
               {...register('reason', { required: 'Reason is required' })}
               rows={4}
               placeholder='Please provide a detailed reason for your leave request...'
-              className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors resize-none'
+              className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors resize-none'
             />
             {errors.reason && (
               <p className='text-destructive text-xs mt-1 flex items-center gap-1'>
@@ -296,7 +296,7 @@ const LeaveRequestForm = () => {
             ['sick', 'medical', 'family', 'emergency'].includes(
               watchLeaveType
             ) && (
-              <div className='mb-8 bg-muted/30 p-6 rounded-lg border border-border'>
+              <div className='mb-8 bg-muted/30 p-6 rounded-2xl border border-border'>
                 <div className='flex items-center gap-2 mb-6 pb-2 border-b border-border'>
                   <Phone className="text-primary w-5 h-5" />
                   <h3 className='text-lg font-semibold text-foreground'>
@@ -311,7 +311,7 @@ const LeaveRequestForm = () => {
                     <input
                       type='text'
                       {...register('emergencyContactName')}
-                      className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                      className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                       placeholder='Full name'
                     />
                   </div>
@@ -322,7 +322,7 @@ const LeaveRequestForm = () => {
                     </label>
                     <select
                       {...register('emergencyContactRelationship')}
-                      className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                      className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                     >
                       <option value=''>Select relationship</option>
                       <option value='parent'>Parent</option>
@@ -340,7 +340,7 @@ const LeaveRequestForm = () => {
                     <input
                       type='tel'
                       {...register('emergencyContactPhone')}
-                      className='w-full px-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                      className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                       placeholder='+91 XXXXXXXXXX'
                     />
                   </div>
@@ -387,7 +387,7 @@ const LeaveRequestForm = () => {
                   {files.map((file, index) => (
                     <div
                       key={index}
-                      className='flex items-center justify-between p-3 bg-background rounded-lg border border-border'
+                      className='flex items-center justify-between p-3 bg-background rounded-2xl border border-border'
                     >
                       <div className='flex items-center gap-3'>
                         <FileText className="text-muted-foreground w-4 h-4" />
@@ -417,14 +417,14 @@ const LeaveRequestForm = () => {
                 reset()
                 setFiles([])
               }}
-              className='px-6 py-2 border border-input bg-background text-foreground rounded-lg hover:bg-muted transition-all duration-300 font-medium text-sm hover:scale-105 active:scale-95'
+              className='px-6 py-2 border border-input bg-background text-foreground rounded-2xl hover:bg-muted transition-all duration-300 font-medium text-sm hover:scale-105 active:scale-95'
             >
               Clear Form
             </button>
             <button
               type='submit'
               disabled={isSubmitting}
-              className='group px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-all duration-300 font-medium text-sm flex items-center gap-2 shadow-sm hover:shadow-md hover:scale-105 active:scale-95'
+              className='group px-6 py-2 bg-primary text-primary-foreground rounded-2xl hover:bg-primary/90 disabled:opacity-50 transition-all duration-300 font-medium text-sm flex items-center gap-2 shadow-sm hover:shadow-md hover:scale-105 active:scale-95'
             >
               {isSubmitting ? (
                 <>

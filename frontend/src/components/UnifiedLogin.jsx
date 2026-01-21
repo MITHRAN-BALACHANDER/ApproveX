@@ -96,31 +96,32 @@ function UnifiedLogin({ onLogin }) {
 
   return (
     <div className='min-h-screen bg-background flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden'>
-      {/* Background elements */}
+      {/* Background elements with floating animation */}
       <div className='absolute inset-0 overflow-hidden pointer-events-none'>
-        <div className='absolute -top-[20%] -right-[10%] w-[70%] h-[70%] bg-primary/5 rounded-full blur-3xl'></div>
-        <div className='absolute -bottom-[20%] -left-[10%] w-[70%] h-[70%] bg-secondary/5 rounded-full blur-3xl'></div>
+        <div className='absolute -top-[20%] -right-[10%] w-[70%] h-[70%] bg-primary/5 rounded-full blur-3xl animate-pulse'></div>
+        <div className='absolute -bottom-[20%] -left-[10%] w-[70%] h-[70%] bg-secondary/5 rounded-full blur-3xl animate-pulse' style={{animationDelay: '1s'}}></div>
+        <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-accent/3 rounded-full blur-3xl animate-pulse' style={{animationDelay: '2s'}}></div>
       </div>
 
       <div className='max-w-md w-full space-y-8 relative z-10'>
-        {/* Header */}
-        <div className='text-center'>
-          <div className='mx-auto h-16 w-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 hover:bg-primary/20 hover:scale-110 transition-all duration-300 cursor-pointer'>
-            <GraduationCap size={32} className="text-primary" />
+        {/* Header with slide-in animation */}
+        <div className='text-center animate-in slide-in-from-top duration-500'>
+          <div className='mx-auto h-20 w-20 bg-gradient-to-br from-primary/20 to-primary/5 rounded-3xl flex items-center justify-center mb-6 hover:from-primary/30 hover:to-primary/10 hover:scale-110 hover:rotate-6 transition-all duration-500 cursor-pointer shadow-lg hover:shadow-xl'>
+            <GraduationCap size={36} className="text-primary drop-shadow-sm" />
           </div>
-          <h2 className='text-3xl font-bold text-foreground mb-2'>
+          <h2 className='text-4xl font-bold text-foreground mb-3 bg-gradient-to-r from-primary via-foreground to-primary bg-clip-text'>
             Welcome Back
           </h2>
-          <p className='text-muted-foreground'>
+          <p className='text-muted-foreground text-lg'>
             Sign in to access your dashboard
           </p>
         </div>
 
-        {/* Login Form */}
-        <div className='bg-card border border-border rounded-xl shadow-sm p-8 hover:shadow-md hover:border-primary/30 transition-all duration-300'>
+        {/* Login Form with slide-up animation */}
+        <div className='bg-card/80 backdrop-blur-xl border border-border rounded-2xl shadow-lg p-8 hover:shadow-2xl hover:border-primary/40 transition-all duration-500 animate-in slide-in-from-bottom-[20px]'>
           {error && (
-            <div className='mb-6 p-4 border border-destructive/20 rounded-lg bg-destructive/10 flex items-center gap-3 text-destructive animate-in fade-in duration-300'>
-              <AlertCircle size={20} />
+            <div className='mb-6 p-4 border border-destructive/20 rounded-2xl bg-destructive/10 flex items-center gap-3 text-destructive animate-in slide-in-from-top fade-in duration-300'>
+              <AlertCircle size={20} className='animate-pulse' />
               <p className='text-sm font-medium'>{error}</p>
             </div>
           )}
@@ -134,8 +135,8 @@ function UnifiedLogin({ onLogin }) {
                 >
                   Email Address
                 </label>
-                <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                <div className="relative group">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors duration-200">
                     <Mail size={18} />
                   </div>
                   <input
@@ -146,7 +147,7 @@ function UnifiedLogin({ onLogin }) {
                     onChange={handleInputChange}
                     required
                     autoComplete='email'
-                    className='w-full pl-10 pr-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-all duration-200'
+                    className='w-full pl-10 pr-3 py-3 bg-background border-2 border-input rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 hover:border-primary/50'
                     placeholder='Enter your email'
                   />
                 </div>
@@ -159,8 +160,8 @@ function UnifiedLogin({ onLogin }) {
                 >
                   Password
                 </label>
-                <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                <div className="relative group">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors duration-200">
                     <Lock size={18} />
                   </div>
                   <input
@@ -171,7 +172,7 @@ function UnifiedLogin({ onLogin }) {
                     onChange={handleInputChange}
                     required
                     autoComplete='current-password'
-                    className='w-full pl-10 pr-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-all duration-200'
+                    className='w-full pl-10 pr-3 py-3 bg-background border-2 border-input rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 hover:border-primary/50'
                     placeholder='Enter your password'
                   />
                 </div>
@@ -181,17 +182,17 @@ function UnifiedLogin({ onLogin }) {
             <button
               type='submit'
               disabled={loading}
-              className='group w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]'
+              className='group relative w-full flex justify-center py-3.5 px-4 border border-transparent text-base font-semibold rounded-xl text-primary-foreground bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.03] active:scale-[0.97] overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:-translate-x-full hover:before:translate-x-full before:transition-transform before:duration-700'
             >
               {loading ? (
-                <div className='flex items-center gap-2'>
-                  <div className='h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin'></div>
+                <div className='flex items-center gap-2 relative z-10'>
+                  <div className='h-5 w-5 border-2 border-current border-t-transparent rounded-full animate-spin'></div>
                   <span>Signing in...</span>
                 </div>
               ) : (
-                <span className='flex items-center gap-2'>
+                <span className='flex items-center gap-2 relative z-10'>
                   Sign in
-                  <ArrowRight size={16} className='group-hover:translate-x-1 transition-transform duration-300' />
+                  <ArrowRight size={18} className='group-hover:translate-x-1 transition-transform duration-300' />
                 </span>
               )}
             </button>
@@ -202,7 +203,7 @@ function UnifiedLogin({ onLogin }) {
               Don't have an account?{' '}
               <button
                 onClick={() => navigate('/register')}
-                className='font-medium text-primary hover:text-primary/80 transition-colors hover:underline'
+                className='font-semibold text-primary hover:text-primary/80 transition-all duration-200 hover:underline underline-offset-4'
               >
                 Register here
               </button>
@@ -211,11 +212,11 @@ function UnifiedLogin({ onLogin }) {
         </div>
 
         {/* Information */}
-        <div className='text-center text-xs text-muted-foreground'>
-          <p className='flex items-center justify-center gap-1.5'>
-            <Lock size={12} />
-            Secure login system with automatic role detection
-          </p>
+        <div className='text-center animate-in fade-in duration-1000 delay-500'>
+          <div className='inline-flex items-center gap-2 px-4 py-2 bg-card/50 backdrop-blur-sm border border-border rounded-full text-xs text-muted-foreground shadow-sm'>
+            <Lock size={12} className='text-primary' />
+            <span>Secure login with automatic role detection</span>
+          </div>
         </div>
       </div>
     </div>

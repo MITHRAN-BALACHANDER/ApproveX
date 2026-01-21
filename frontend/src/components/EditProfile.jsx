@@ -97,14 +97,14 @@ const EditProfile = ({ userInfo, onClose, onUpdate }) => {
           </div>
 
           {error && (
-            <div className='mb-4 p-3 bg-destructive/10 border border-destructive/20 text-destructive rounded-lg flex items-center gap-2 text-sm'>
+            <div className='mb-4 p-3 bg-destructive/10 border border-destructive/20 text-destructive rounded-2xl flex items-center gap-2 text-sm'>
               <AlertCircle size={16} />
               {error}
             </div>
           )}
 
           {success && (
-            <div className='mb-4 p-3 bg-green-500/10 border border-green-500/20 text-green-600 rounded-lg flex items-center gap-2 text-sm'>
+            <div className='mb-4 p-3 bg-green-500/10 border border-green-500/20 text-green-600 rounded-2xl flex items-center gap-2 text-sm'>
               <CheckCircle size={16} />
               {success}
             </div>
@@ -125,7 +125,7 @@ const EditProfile = ({ userInfo, onClose, onUpdate }) => {
                   value={formData.fullName}
                   onChange={handleInputChange}
                   required
-                  className='w-full pl-9 pr-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full pl-9 pr-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                   placeholder="Enter your full name"
                 />
               </div>
@@ -145,7 +145,7 @@ const EditProfile = ({ userInfo, onClose, onUpdate }) => {
                   value={formData.registerNumber}
                   onChange={handleInputChange}
                   required
-                  className='w-full pl-9 pr-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors'
+                  className='w-full pl-9 pr-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                   placeholder="Enter register number"
                 />
               </div>
@@ -164,7 +164,7 @@ const EditProfile = ({ userInfo, onClose, onUpdate }) => {
                   value={formData.department}
                   onChange={handleInputChange}
                   required
-                  className='w-full pl-9 pr-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors appearance-none'
+                  className='w-full pl-9 pr-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors appearance-none'
                 >
                   <option value=''>Select Department</option>
                   <option value='Computer Science Engineering'>
@@ -207,7 +207,7 @@ const EditProfile = ({ userInfo, onClose, onUpdate }) => {
                     value={formData.year}
                     onChange={handleInputChange}
                     required
-                    className='w-full pl-9 pr-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors appearance-none'
+                    className='w-full pl-9 pr-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors appearance-none'
                   >
                     <option value=''>Select Year</option>
                     <option value='1'>1st Year</option>
@@ -231,7 +231,7 @@ const EditProfile = ({ userInfo, onClose, onUpdate }) => {
                     value={formData.section}
                     onChange={handleInputChange}
                     required
-                    className='w-full pl-9 pr-3 py-2 bg-background border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-input transition-colors appearance-none'
+                    className='w-full pl-9 pr-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors appearance-none'
                   >
                     <option value=''>Select Section</option>
                     <option value='A'>Section A</option>
@@ -247,14 +247,14 @@ const EditProfile = ({ userInfo, onClose, onUpdate }) => {
               <button
                 type='button'
                 onClick={onClose}
-                className='flex-1 px-4 py-2 border border-input bg-background text-foreground rounded-lg hover:bg-muted transition-colors font-medium text-sm'
+                className='flex-1 px-4 py-2 border border-input bg-background text-foreground rounded-2xl hover:bg-muted transition-colors font-medium text-sm'
               >
                 Cancel
               </button>
               <button
                 type='submit'
                 disabled={loading}
-                className='flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-colors font-medium text-sm flex items-center justify-center gap-2'
+                className='flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-2xl hover:bg-primary/90 disabled:opacity-50 transition-colors font-medium text-sm flex items-center justify-center gap-2'
               >
                 {loading ? (
                   'Updating...'
