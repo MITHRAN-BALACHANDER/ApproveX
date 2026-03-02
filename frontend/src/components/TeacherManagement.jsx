@@ -1,22 +1,22 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { 
-  AlertTriangle, 
-  Trash2, 
-  CheckCircle, 
-  XCircle, 
-  UserPlus, 
-  Search, 
-  Filter, 
-  MoreHorizontal, 
-  Edit2, 
-  Shield, 
-  Mail, 
-  Phone, 
-  Building, 
+import {
+  AlertTriangle,
+  Trash2,
+  CheckCircle,
+  XCircle,
+  UserPlus,
+  Search,
+  Filter,
+  MoreHorizontal,
+  Edit2,
+  Shield,
+  Mail,
+  Phone,
+  Building,
   Briefcase,
-  ArrowLeft
+  ArrowLeft,
 } from 'lucide-react'
 import config from '../config/config'
 
@@ -336,12 +336,12 @@ const TeacherManagement = () => {
       <header className='bg-card border-b border-border sticky top-0 z-10'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='flex justify-between items-center py-4'>
-            <div className="flex items-center gap-4">
-              <button 
+            <div className='flex items-center gap-4'>
+              <button
                 onClick={() => navigate('/admin/dashboard')}
-                className="p-2 hover:bg-muted rounded-full transition-colors"
+                className='p-2 hover:bg-muted rounded-full transition-colors'
               >
-                <ArrowLeft size={20} className="text-muted-foreground" />
+                <ArrowLeft size={20} className='text-muted-foreground' />
               </button>
               <div>
                 <h1 className='text-xl font-bold text-foreground tracking-tight'>
@@ -357,7 +357,7 @@ const TeacherManagement = () => {
               className='flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors shadow-sm'
             >
               <UserPlus size={18} />
-              <span className="hidden sm:inline">Add Teacher</span>
+              <span className='hidden sm:inline'>Add Teacher</span>
             </button>
           </div>
         </div>
@@ -372,26 +372,29 @@ const TeacherManagement = () => {
                 <h3 className='text-lg font-semibold text-foreground'>
                   {editingTeacher ? 'Edit Teacher' : 'Add New Teacher'}
                 </h3>
-                <button onClick={cancelEdit} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={cancelEdit}
+                  className='text-muted-foreground hover:text-foreground'
+                >
                   <XCircle size={20} />
                 </button>
               </div>
-              
+
               <div className='p-6 max-h-[80vh] overflow-y-auto'>
                 <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
                   <div>
                     <label className='block text-sm font-medium text-foreground mb-1'>
                       Full Name
                     </label>
-                    <div className="relative">
-                      <UserPlus className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <div className='relative'>
+                      <UserPlus className='absolute left-3 top-2.5 h-4 w-4 text-muted-foreground' />
                       <input
                         type='text'
                         {...register('fullName', {
                           required: 'Full name is required',
                         })}
                         className='pl-9 block w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-ring focus:border-input transition-colors'
-                        placeholder="Dr. John Doe"
+                        placeholder='Dr. John Doe'
                       />
                     </div>
                     {errors.fullName && (
@@ -405,8 +408,8 @@ const TeacherManagement = () => {
                     <label className='block text-sm font-medium text-foreground mb-1'>
                       Email Address
                     </label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <div className='relative'>
+                      <Mail className='absolute left-3 top-2.5 h-4 w-4 text-muted-foreground' />
                       <input
                         type='email'
                         {...register('email', {
@@ -428,20 +431,20 @@ const TeacherManagement = () => {
                     )}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className='grid grid-cols-2 gap-4'>
                     <div>
                       <label className='block text-sm font-medium text-foreground mb-1'>
                         Employee ID
                       </label>
-                      <div className="relative">
-                        <Shield className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                      <div className='relative'>
+                        <Shield className='absolute left-3 top-2.5 h-4 w-4 text-muted-foreground' />
                         <input
                           type='text'
                           {...register('employeeId', {
                             required: 'ID is required',
                           })}
                           className='pl-9 block w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-ring focus:border-input transition-colors'
-                          placeholder="EMP001"
+                          placeholder='EMP001'
                         />
                       </div>
                       {errors.employeeId && (
@@ -455,8 +458,8 @@ const TeacherManagement = () => {
                       <label className='block text-sm font-medium text-foreground mb-1'>
                         Designation
                       </label>
-                      <div className="relative">
-                        <Briefcase className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                      <div className='relative'>
+                        <Briefcase className='absolute left-3 top-2.5 h-4 w-4 text-muted-foreground' />
                         <select
                           {...register('designation', {
                             required: 'Required',
@@ -465,8 +468,12 @@ const TeacherManagement = () => {
                         >
                           <option value=''>Select</option>
                           <option value='Professor'>Professor</option>
-                          <option value='Associate Professor'>Associate Prof.</option>
-                          <option value='Assistant Professor'>Assistant Prof.</option>
+                          <option value='Associate Professor'>
+                            Associate Prof.
+                          </option>
+                          <option value='Assistant Professor'>
+                            Assistant Prof.
+                          </option>
                           <option value='HOD'>HOD</option>
                           <option value='Principal'>Principal</option>
                         </select>
@@ -483,8 +490,8 @@ const TeacherManagement = () => {
                     <label className='block text-sm font-medium text-foreground mb-1'>
                       Department
                     </label>
-                    <div className="relative">
-                      <Building className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <div className='relative'>
+                      <Building className='absolute left-3 top-2.5 h-4 w-4 text-muted-foreground' />
                       <select
                         {...register('department', {
                           required: 'Department is required',
@@ -492,10 +499,16 @@ const TeacherManagement = () => {
                         className='pl-9 block w-full bg-background border border-input rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-ring focus:border-input transition-colors appearance-none'
                       >
                         <option value=''>Select Department</option>
-                        <option value='Computer Science and Engineering'>CSE</option>
+                        <option value='Computer Science and Engineering'>
+                          CSE
+                        </option>
                         <option value='Information Technology'>IT</option>
-                        <option value='Electronics and Communication Engineering'>ECE</option>
-                        <option value='Electrical and Electronics Engineering'>EEE</option>
+                        <option value='Electronics and Communication Engineering'>
+                          ECE
+                        </option>
+                        <option value='Electrical and Electronics Engineering'>
+                          EEE
+                        </option>
                         <option value='Mechanical Engineering'>MECH</option>
                         <option value='Civil Engineering'>CIVIL</option>
                       </select>
@@ -508,8 +521,8 @@ const TeacherManagement = () => {
                   </div>
 
                   {!editingTeacher && (
-                    <div className="pt-2 border-t border-border mt-2">
-                      <div className="mb-3">
+                    <div className='pt-2 border-t border-border mt-2'>
+                      <div className='mb-3'>
                         <label className='block text-sm font-medium text-foreground mb-1'>
                           Password (Optional)
                         </label>
@@ -569,8 +582,8 @@ const TeacherManagement = () => {
         {/* Teachers List */}
         <div className='bg-card border border-border rounded-xl shadow-sm overflow-hidden'>
           <div className='px-6 py-4 border-b border-border flex justify-between items-center bg-muted/30'>
-            <div className="flex items-center gap-2">
-              <Filter size={16} className="text-muted-foreground" />
+            <div className='flex items-center gap-2'>
+              <Filter size={16} className='text-muted-foreground' />
               <h3 className='text-sm font-medium text-foreground'>
                 All Teachers ({teachers.length})
               </h3>
@@ -585,7 +598,7 @@ const TeacherManagement = () => {
               </button>
             )}
           </div>
-          
+
           <div className='overflow-x-auto'>
             <table className='min-w-full divide-y divide-border'>
               <thead className='bg-muted/50'>
@@ -638,9 +651,9 @@ const TeacherManagement = () => {
                       />
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap'>
-                      <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                          <span className="text-xs font-bold">
+                      <div className='flex items-center gap-3'>
+                        <div className='h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary'>
+                          <span className='text-xs font-bold'>
                             {teacher.profile.fullName.charAt(0)}
                           </span>
                         </div>
@@ -649,14 +662,15 @@ const TeacherManagement = () => {
                             {teacher.profile.fullName}
                           </div>
                           <div className='text-xs text-muted-foreground'>
-                            {teacher.profile.designation} • {teacher.profile.employeeId}
+                            {teacher.profile.designation} •{' '}
+                            {teacher.profile.employeeId}
                           </div>
                         </div>
                       </div>
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap'>
                       <div className='text-sm text-foreground flex items-center gap-1.5'>
-                        <Mail size={12} className="text-muted-foreground" />
+                        <Mail size={12} className='text-muted-foreground' />
                         {teacher.email}
                       </div>
                     </td>
@@ -664,12 +678,14 @@ const TeacherManagement = () => {
                       {teacher.profile.department}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap'>
-                      <div className="flex items-center gap-3">
+                      <div className='flex items-center gap-3'>
                         <div className='text-xs text-green-600 flex items-center gap-1'>
-                          <CheckCircle size={12} /> {teacher.approvalStats?.approved || 0}
+                          <CheckCircle size={12} />{' '}
+                          {teacher.approvalStats?.approved || 0}
                         </div>
                         <div className='text-xs text-red-600 flex items-center gap-1'>
-                          <XCircle size={12} /> {teacher.approvalStats?.rejected || 0}
+                          <XCircle size={12} />{' '}
+                          {teacher.approvalStats?.rejected || 0}
                         </div>
                       </div>
                     </td>
@@ -689,7 +705,7 @@ const TeacherManagement = () => {
                         <button
                           onClick={() => startEdit(teacher)}
                           className='p-1 text-muted-foreground hover:text-primary transition-colors'
-                          title="Edit"
+                          title='Edit'
                         >
                           <Edit2 size={16} />
                         </button>
@@ -700,9 +716,13 @@ const TeacherManagement = () => {
                               ? 'text-muted-foreground hover:text-destructive'
                               : 'text-muted-foreground hover:text-green-600'
                           }`}
-                          title={teacher.isActive ? "Deactivate" : "Activate"}
+                          title={teacher.isActive ? 'Deactivate' : 'Activate'}
                         >
-                          {teacher.isActive ? <XCircle size={16} /> : <CheckCircle size={16} />}
+                          {teacher.isActive ? (
+                            <XCircle size={16} />
+                          ) : (
+                            <CheckCircle size={16} />
+                          )}
                         </button>
                         <button
                           onClick={() =>
@@ -721,10 +741,12 @@ const TeacherManagement = () => {
             </table>
             {teachers.length === 0 && (
               <div className='text-center py-12'>
-                <div className="h-12 w-12 bg-muted rounded-full flex items-center justify-center mx-auto mb-3">
-                  <UserPlus size={24} className="text-muted-foreground" />
+                <div className='h-12 w-12 bg-muted rounded-full flex items-center justify-center mx-auto mb-3'>
+                  <UserPlus size={24} className='text-muted-foreground' />
                 </div>
-                <h3 className="text-lg font-medium text-foreground">No teachers found</h3>
+                <h3 className='text-lg font-medium text-foreground'>
+                  No teachers found
+                </h3>
                 <p className='text-muted-foreground mt-1'>
                   Get started by adding your first teacher.
                 </p>

@@ -1,9 +1,11 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
 import User from './models/User.js';
+import dotenv from "dotenv";
+dotenv.config();
 
 // MongoDB connection string - update if different
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://oddeskapp:5GFGlnoTBgQBbH9W@cluster0.gxv8c.mongodb.net/oddesk?retryWrites=true&w=majority&appName=Cluster0';
+const MONGODB_URI = process.env.MONGODB_URI;
+//  || 'mongodb+srv://mithranbalachander:FHuukOU6CedUKTYJ@cluster0.foubdmg.mongodb.net/odprovider?retryWrites=true&w=majority';
 
 async function createAdmin() {
   try {
@@ -13,14 +15,15 @@ async function createAdmin() {
 
     // Admin details
     const adminData = {
-      firstName: 'Super',
-      lastName: 'Admin',
-      email: 'admin@college.edu',
+      email: 'admin@gmail.com',
       password: 'admin123',
       role: 'admin',
-      adminLevel: 'super',
-      department: 'Administration',
-      designation: 'System Administrator'
+      profile: {
+        fullName: 'Super Admin',
+        department: 'Administration',
+        designation: 'System Administrator',
+        adminLevel: 'super_admin'
+      }
     };
 
     // Check if admin already exists
@@ -33,10 +36,6 @@ async function createAdmin() {
       await mongoose.connection.close();
       return;
     }
-
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    adminData.password = await bcrypt.hash(adminData.password, salt);
 
     // Create admin user
     const admin = new User(adminData);
@@ -60,17 +59,16 @@ async function createAdmin() {
 async function createTestTeacher() {
   try {
     await mongoose.connect(MONGODB_URI);
-    
+
     const teacherData = {
-      firstName: 'John',
-      lastName: 'Smith',
       email: 'john.smith@gmail.com', // Using Gmail as example
       password: 'teacher123',
       role: 'teacher',
-      department: 'Computer Science',
-      designation: 'Assistant Professor',
-      approvalLevel: 'mentor',
-      createdBy: null // Will be set by admin later
+      profile: {
+        fullName: 'John Smith',
+        department: 'Computer Science',
+        designation: 'Assistant Professor'
+      }
     };
 
     const existingTeacher = await User.findOne({ email: teacherData.email });
@@ -79,9 +77,6 @@ async function createTestTeacher() {
       await mongoose.connection.close();
       return;
     }
-
-    const salt = await bcrypt.genSalt(10);
-    teacherData.password = await bcrypt.hash(teacherData.password, salt);
 
     const teacher = new User(teacherData);
     await teacher.save();

@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import DutyRequest from '../models/DutyRequest.js';
 import { sendTeacherInviteEmail } from '../utils/emailService.js';
+import logger from '../utils/logger.js';
 
 const router = express.Router();
 
@@ -16,7 +17,7 @@ const verifyAdmin = async (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.userId);
-    
+
     if (!user || user.role !== 'admin') {
       return res.status(403).json({ message: 'Access denied. Admin privileges required.' });
     }
@@ -391,13 +392,13 @@ router.delete('/teachers/:id', verifyAdmin, async (req, res) => {
   try {
     const teacherId = req.params.id;
     const adminId = req.user._id;
-    
+
     // Check if teacher exists
     const teacher = await User.findById(teacherId);
     if (!teacher) {
       return res.status(404).json({ message: 'Teacher not found' });
     }
-    
+
     if (teacher.role !== 'teacher') {
       return res.status(400).json({ message: 'User is not a teacher' });
     }
@@ -414,13 +415,13 @@ router.delete('/teachers/:id', verifyAdmin, async (req, res) => {
     });
 
     if (pendingApprovals > 0) {
-      return res.status(400).json({ 
-        message: `Cannot delete teacher. They have ${pendingApprovals} pending approval(s). Please reassign or complete pending requests first.` 
+      return res.status(400).json({
+        message: `Cannot delete teacher. They have ${pendingApprovals} pending approval(s). Please reassign or complete pending requests first.`
       });
     }
 
     // Log the deletion action for audit purposes
-    console.log(`🗑️ Admin ${req.user.email} is deleting teacher: ${teacher.profile.fullName} (${teacher.email})`);
+    logger.info(`🗑️ Admin ${req.user.email} is deleting teacher: ${teacher.profile.fullName} (${teacher.email})`);
 
     // Store teacher info for response before deletion
     const teacherInfo = {
@@ -434,7 +435,7 @@ router.delete('/teachers/:id', verifyAdmin, async (req, res) => {
     await User.findByIdAndDelete(teacherId);
 
     // Log successful deletion
-    console.log(`✅ Teacher successfully deleted: ${teacherInfo.name} (${teacherInfo.email})`);
+    logger.info(`✅ Teacher successfully deleted: ${teacherInfo.name} (${teacherInfo.email})`);
 
     res.json({
       success: true,

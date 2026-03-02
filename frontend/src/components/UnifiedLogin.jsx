@@ -1,6 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { GraduationCap, AlertCircle, ArrowRight, Lock, Mail } from 'lucide-react'
+import {
+  GraduationCap,
+  AlertCircle,
+  ArrowRight,
+  Lock,
+  Mail,
+} from 'lucide-react'
 import config from '../config/config.js'
 
 function UnifiedLogin({ onLogin }) {
@@ -25,9 +31,6 @@ function UnifiedLogin({ onLogin }) {
     e.preventDefault()
     setLoading(true)
     setError('')
-
-    console.log('Config object:', config); // Debugging config
-    console.log('AutoLogin URL:', config.api.autoLogin); // Debugging URL
 
     // Basic validation
     if (!formData.email || !formData.password) {
@@ -99,15 +102,21 @@ function UnifiedLogin({ onLogin }) {
       {/* Background elements with floating animation */}
       <div className='absolute inset-0 overflow-hidden pointer-events-none'>
         <div className='absolute -top-[20%] -right-[10%] w-[70%] h-[70%] bg-primary/5 rounded-full blur-3xl animate-pulse'></div>
-        <div className='absolute -bottom-[20%] -left-[10%] w-[70%] h-[70%] bg-secondary/5 rounded-full blur-3xl animate-pulse' style={{animationDelay: '1s'}}></div>
-        <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-accent/3 rounded-full blur-3xl animate-pulse' style={{animationDelay: '2s'}}></div>
+        <div
+          className='absolute -bottom-[20%] -left-[10%] w-[70%] h-[70%] bg-secondary/5 rounded-full blur-3xl animate-pulse'
+          style={{ animationDelay: '1s' }}
+        ></div>
+        <div
+          className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-accent/3 rounded-full blur-3xl animate-pulse'
+          style={{ animationDelay: '2s' }}
+        ></div>
       </div>
 
       <div className='max-w-md w-full space-y-8 relative z-10'>
         {/* Header with slide-in animation */}
         <div className='text-center animate-in slide-in-from-top duration-500'>
           <div className='mx-auto h-20 w-20 bg-gradient-to-br from-primary/20 to-primary/5 rounded-3xl flex items-center justify-center mb-6 hover:from-primary/30 hover:to-primary/10 hover:scale-110 hover:rotate-6 transition-all duration-500 cursor-pointer shadow-lg hover:shadow-xl'>
-            <GraduationCap size={36} className="text-primary drop-shadow-sm" />
+            <GraduationCap size={36} className='text-primary drop-shadow-sm' />
           </div>
           <h2 className='text-4xl font-bold text-foreground mb-3 bg-gradient-to-r from-primary via-foreground to-primary bg-clip-text'>
             Welcome Back
@@ -135,8 +144,8 @@ function UnifiedLogin({ onLogin }) {
                 >
                   Email Address
                 </label>
-                <div className="relative group">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors duration-200">
+                <div className='relative group'>
+                  <div className='absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors duration-200'>
                     <Mail size={18} />
                   </div>
                   <input
@@ -160,8 +169,8 @@ function UnifiedLogin({ onLogin }) {
                 >
                   Password
                 </label>
-                <div className="relative group">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors duration-200">
+                <div className='relative group'>
+                  <div className='absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors duration-200'>
                     <Lock size={18} />
                   </div>
                   <input
@@ -192,7 +201,10 @@ function UnifiedLogin({ onLogin }) {
               ) : (
                 <span className='flex items-center gap-2 relative z-10'>
                   Sign in
-                  <ArrowRight size={18} className='group-hover:translate-x-1 transition-transform duration-300' />
+                  <ArrowRight
+                    size={18}
+                    className='group-hover:translate-x-1 transition-transform duration-300'
+                  />
                 </span>
               )}
             </button>

@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import logger from './utils/logger.js';
 
 // Import routes
 import authRoutes from './routes/authRoutes.js';
@@ -34,8 +35,14 @@ app.set('trust proxy', 1);
 app.use(helmet());
 
 // CORS: allow only configured origins in production; allow all in dev
-const corsOrigin = process.env.CLIENT_ORIGIN || '*';
-app.use(cors({ origin: corsOrigin, credentials: true }));
+// Disable wildcard fallback to prevent unauthorized access if env var is missing
+const corsOrigin = process.env.CLIENT_ORIGIN || (process.env.NODE_ENV === 'development' ? '*' : false);
+if (corsOrigin) {
+  app.use(cors({ origin: corsOrigin, credentials: true }));
+} else {
+  logger.warn('⚠️ CORS origin not set for production. API may not be accessible from frontends.');
+  app.use(cors({ origin: false, credentials: true })); // deny by default
+}
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -77,31 +84,33 @@ app.get('/', (req, res) => {
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
-  console.error('❌ MONGODB_URI environment variable is not set');
-  console.log('💡 Please set MONGODB_URI in your .env file');
+  logger.error('❌ MONGODB_URI environment variable is not set');
+  logger.info('💡 Please set MONGODB_URI in your .env file');
   process.exit(1);
 }
 
-console.log('Attempting to connect to MongoDB Atlas...');
+logger.info('Attempting to connect to MongoDB Atlas...');
 
+// Start server only after DB connection
 mongoose.connect(MONGODB_URI)
   .then(() => {
-    console.log('✅ Connected to MongoDB Atlas successfully!');
+    logger.info('✅ Connected to MongoDB Atlas successfully!');
+    app.listen(PORT, () => {
+      logger.info(`🚀 Server is running on port ${PORT}`);
+      logger.info(`📡 API available at http://localhost:${PORT}`);
+    });
   })
   .catch((error) => {
-    console.error('❌ MongoDB Atlas connection error:', error.message);
-    console.log('💡 Please check your MongoDB Atlas credentials and network connection');
+    logger.error(`❌ MongoDB Atlas connection error: ${error.message}`);
+    logger.info('💡 Please check your MongoDB Atlas credentials and network connection');
     process.exit(1);
   });
 
-// Start server regardless of DB con  nection
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on port ${PORT}`);
-  console.log(`📡 API available at http://localhost:${PORT}`);
-});
-
 // Error handling middleware
 app.use((error, req, res, next) => {
-  console.error(error);
+  if (res.headersSent) {
+    return next(error);
+  }
+  logger.error(error);
   res.status(500).json({ message: 'Something went wrong!' });
 });

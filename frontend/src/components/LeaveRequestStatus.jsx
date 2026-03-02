@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react'
 import { getCurrentUser } from '../services/api'
 import config from '../config/config.js'
-import { 
-  Calendar, 
-  Clock, 
-  FileText, 
-  AlertCircle, 
-  CheckCircle, 
-  XCircle, 
+import {
+  Calendar,
+  Clock,
+  FileText,
+  AlertCircle,
+  CheckCircle,
+  XCircle,
   MoreHorizontal,
   Palmtree,
   User,
   Trash2,
   Printer,
-  Paperclip
+  Paperclip,
 } from 'lucide-react'
 
 const LeaveRequestStatus = () => {
@@ -87,9 +87,11 @@ const LeaveRequestStatus = () => {
       emergency: 'bg-orange-500/10 text-orange-600',
       other: 'bg-gray-500/10 text-gray-600',
     }
-    
+
     return (
-      <div className={`h-10 w-10 rounded-2xl flex items-center justify-center shrink-0 ${styles[type] || 'bg-primary/10 text-primary'}`}>
+      <div
+        className={`h-10 w-10 rounded-2xl flex items-center justify-center shrink-0 ${styles[type] || 'bg-primary/10 text-primary'}`}
+      >
         <FileText size={20} />
       </div>
     )
@@ -112,15 +114,12 @@ const LeaveRequestStatus = () => {
 
     try {
       const userToken = localStorage.getItem('userToken')
-      const response = await fetch(
-        `${config.api.leaveRequests}/${id}`,
-        {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      )
+      const response = await fetch(`${config.api.leaveRequests}/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      })
 
       const result = await response.json()
 
@@ -139,7 +138,9 @@ const LeaveRequestStatus = () => {
     return (
       <div className='flex justify-center items-center py-12'>
         <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary'></div>
-        <span className='ml-3 text-muted-foreground'>Loading leave requests...</span>
+        <span className='ml-3 text-muted-foreground'>
+          Loading leave requests...
+        </span>
       </div>
     )
   }
@@ -148,9 +149,11 @@ const LeaveRequestStatus = () => {
     return (
       <div className='text-center p-8 bg-card rounded-xl border border-border'>
         <div className='flex justify-center mb-4'>
-          <User size={48} className="text-muted-foreground" />
+          <User size={48} className='text-muted-foreground' />
         </div>
-        <p className='text-muted-foreground'>Please log in to view your leave requests.</p>
+        <p className='text-muted-foreground'>
+          Please log in to view your leave requests.
+        </p>
       </div>
     )
   }
@@ -158,7 +161,7 @@ const LeaveRequestStatus = () => {
   if (error) {
     return (
       <div className='text-center py-8'>
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-destructive/10 text-destructive mb-4">
+        <div className='inline-flex items-center justify-center w-12 h-12 rounded-full bg-destructive/10 text-destructive mb-4'>
           <AlertCircle size={24} />
         </div>
         <p className='text-destructive font-medium mb-4'>{error}</p>
@@ -176,7 +179,7 @@ const LeaveRequestStatus = () => {
     return (
       <div className='text-center py-12 bg-card rounded-xl border border-border border-dashed'>
         <div className='flex justify-center mb-4'>
-          <Palmtree size={48} className="text-muted-foreground/50" />
+          <Palmtree size={48} className='text-muted-foreground/50' />
         </div>
         <h3 className='text-lg font-medium text-foreground mb-1'>
           No Leave Requests
@@ -195,14 +198,19 @@ const LeaveRequestStatus = () => {
           <div className='h-10 w-10 bg-primary/10 rounded-2xl flex items-center justify-center text-primary'>
             <Palmtree size={20} />
           </div>
-          <h2 className='text-2xl font-bold text-foreground'>My Leave Requests</h2>
+          <h2 className='text-2xl font-bold text-foreground'>
+            My Leave Requests
+          </h2>
         </div>
         <div className='text-sm text-muted-foreground'>
-          Total Requests: <span className='font-medium text-foreground'>{leaveRequests.length}</span>
+          Total Requests:{' '}
+          <span className='font-medium text-foreground'>
+            {leaveRequests.length}
+          </span>
         </div>
       </div>
 
-      <div className="grid gap-4">
+      <div className='grid gap-4'>
         {leaveRequests.map(request => (
           <div
             key={request._id}
@@ -212,7 +220,7 @@ const LeaveRequestStatus = () => {
               <div className='flex items-start gap-4'>
                 {getLeaveTypeIcon(request.leaveType)}
                 <div>
-                  <div className="flex items-center gap-2 mb-1">
+                  <div className='flex items-center gap-2 mb-1'>
                     <h3 className='text-lg font-semibold text-foreground capitalize'>
                       {request.leaveType.replace(/([A-Z])/g, ' $1')} Leave
                     </h3>
@@ -239,8 +247,9 @@ const LeaveRequestStatus = () => {
                   Duration
                 </label>
                 <p className='text-sm font-medium text-foreground flex items-center gap-2'>
-                  <Calendar size={14} className="text-primary" />
-                  {formatDate(request.startDate)} - {formatDate(request.endDate)}
+                  <Calendar size={14} className='text-primary' />
+                  {formatDate(request.startDate)} -{' '}
+                  {formatDate(request.endDate)}
                 </p>
                 <p className='text-xs text-muted-foreground mt-1 ml-6'>
                   {request.totalDays} day{request.totalDays !== 1 ? 's' : ''}
@@ -251,7 +260,9 @@ const LeaveRequestStatus = () => {
                 <label className='block text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1'>
                   Academic Year
                 </label>
-                <p className='text-sm font-medium text-foreground'>{request.academicYear}</p>
+                <p className='text-sm font-medium text-foreground'>
+                  {request.academicYear}
+                </p>
               </div>
 
               <div>
@@ -260,7 +271,9 @@ const LeaveRequestStatus = () => {
                 </label>
                 <div className='space-y-2 mt-1'>
                   <div className='flex items-center justify-between text-sm'>
-                    <span className='text-muted-foreground'>Class Teacher:</span>
+                    <span className='text-muted-foreground'>
+                      Class Teacher:
+                    </span>
                     {getStatusBadge(request.classTeacherApproval.status)}
                   </div>
                   {request.totalDays > 3 && (
@@ -290,16 +303,28 @@ const LeaveRequestStatus = () => {
                 </label>
                 <div className='text-sm text-foreground bg-muted/30 p-3 rounded-xl border border-border/50 grid grid-cols-1 sm:grid-cols-3 gap-4'>
                   <div>
-                    <span className="text-muted-foreground text-xs block">Name</span>
-                    <span className="font-medium">{request.emergencyContact.name}</span>
+                    <span className='text-muted-foreground text-xs block'>
+                      Name
+                    </span>
+                    <span className='font-medium'>
+                      {request.emergencyContact.name}
+                    </span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground text-xs block">Relationship</span>
-                    <span className="font-medium">{request.emergencyContact.relationship}</span>
+                    <span className='text-muted-foreground text-xs block'>
+                      Relationship
+                    </span>
+                    <span className='font-medium'>
+                      {request.emergencyContact.relationship}
+                    </span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground text-xs block">Phone</span>
-                    <span className="font-medium">{request.emergencyContact.phone}</span>
+                    <span className='text-muted-foreground text-xs block'>
+                      Phone
+                    </span>
+                    <span className='font-medium'>
+                      {request.emergencyContact.phone}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -317,8 +342,10 @@ const LeaveRequestStatus = () => {
                       key={index}
                       className='flex items-center gap-2 text-sm bg-background border border-border px-3 py-2 rounded-xl'
                     >
-                      <Paperclip size={14} className="text-primary" />
-                      <span className='text-foreground font-medium'>{doc.originalname}</span>
+                      <Paperclip size={14} className='text-primary' />
+                      <span className='text-foreground font-medium'>
+                        {doc.originalname}
+                      </span>
                       <span className='text-muted-foreground text-xs'>
                         ({(doc.size / 1024).toFixed(1)} KB)
                       </span>
@@ -348,7 +375,9 @@ const LeaveRequestStatus = () => {
                   )}
                   {request.hodApproval?.remarks && (
                     <div className='bg-purple-500/5 border border-purple-500/10 p-3 rounded-xl'>
-                      <p className='text-xs font-medium text-purple-600 mb-1'>HOD:</p>
+                      <p className='text-xs font-medium text-purple-600 mb-1'>
+                        HOD:
+                      </p>
                       <p className='text-sm text-foreground'>
                         {request.hodApproval.remarks}
                       </p>

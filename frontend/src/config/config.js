@@ -1,4 +1,5 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'
 
 const config = {
   api: {
@@ -23,8 +24,8 @@ const config = {
     user: {
       profile: `${API_BASE_URL}/users/profile`,
       changePassword: `${API_BASE_URL}/users/change-password`,
-    }
-  }
-};
+    },
+  },
+}
 
-export default config;
+export default config

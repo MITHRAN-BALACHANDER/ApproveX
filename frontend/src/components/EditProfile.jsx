@@ -1,6 +1,16 @@
 import { useState } from 'react'
 import config from '../config/config.js'
-import { X, User, Hash, BookOpen, Calendar, Layers, AlertCircle, CheckCircle, Save } from 'lucide-react'
+import {
+  X,
+  User,
+  Hash,
+  BookOpen,
+  Calendar,
+  Layers,
+  AlertCircle,
+  CheckCircle,
+  Save,
+} from 'lucide-react'
 
 const EditProfile = ({ userInfo, onClose, onUpdate }) => {
   const [formData, setFormData] = useState({
@@ -31,17 +41,14 @@ const EditProfile = ({ userInfo, onClose, onUpdate }) => {
 
     try {
       const userToken = localStorage.getItem('userToken')
-      const response = await fetch(
-        config.api.updateProfile,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${userToken}`,
-          },
-          body: JSON.stringify(formData),
-        }
-      )
+      const response = await fetch(config.api.updateProfile, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userToken}`,
+        },
+        body: JSON.stringify(formData),
+      })
 
       const result = await response.json()
 
@@ -85,7 +92,7 @@ const EditProfile = ({ userInfo, onClose, onUpdate }) => {
         <div className='p-6'>
           <div className='flex justify-between items-center mb-6'>
             <h2 className='text-xl font-bold text-foreground flex items-center gap-2'>
-              <User className="w-5 h-5 text-primary" />
+              <User className='w-5 h-5 text-primary' />
               Edit Profile
             </h2>
             <button
@@ -115,8 +122,8 @@ const EditProfile = ({ userInfo, onClose, onUpdate }) => {
               <label className='block text-sm font-medium text-foreground mb-1.5'>
                 Full Name
               </label>
-              <div className="relative">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+              <div className='relative'>
+                <div className='absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground'>
                   <User size={16} />
                 </div>
                 <input
@@ -126,7 +133,7 @@ const EditProfile = ({ userInfo, onClose, onUpdate }) => {
                   onChange={handleInputChange}
                   required
                   className='w-full pl-9 pr-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
-                  placeholder="Enter your full name"
+                  placeholder='Enter your full name'
                 />
               </div>
             </div>
@@ -135,8 +142,8 @@ const EditProfile = ({ userInfo, onClose, onUpdate }) => {
               <label className='block text-sm font-medium text-foreground mb-1.5'>
                 Register Number
               </label>
-              <div className="relative">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+              <div className='relative'>
+                <div className='absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground'>
                   <Hash size={16} />
                 </div>
                 <input
@@ -146,7 +153,7 @@ const EditProfile = ({ userInfo, onClose, onUpdate }) => {
                   onChange={handleInputChange}
                   required
                   className='w-full pl-9 pr-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
-                  placeholder="Enter register number"
+                  placeholder='Enter register number'
                 />
               </div>
             </div>
@@ -155,8 +162,8 @@ const EditProfile = ({ userInfo, onClose, onUpdate }) => {
               <label className='block text-sm font-medium text-foreground mb-1.5'>
                 Department
               </label>
-              <div className="relative">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+              <div className='relative'>
+                <div className='absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground'>
                   <BookOpen size={16} />
                 </div>
                 <select
@@ -193,13 +200,13 @@ const EditProfile = ({ userInfo, onClose, onUpdate }) => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className='grid grid-cols-2 gap-4'>
               <div>
                 <label className='block text-sm font-medium text-foreground mb-1.5'>
                   Year
                 </label>
-                <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                <div className='relative'>
+                  <div className='absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground'>
                     <Calendar size={16} />
                   </div>
                   <select
@@ -222,8 +229,8 @@ const EditProfile = ({ userInfo, onClose, onUpdate }) => {
                 <label className='block text-sm font-medium text-foreground mb-1.5'>
                   Section
                 </label>
-                <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                <div className='relative'>
+                  <div className='absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground'>
                     <Layers size={16} />
                   </div>
                   <select

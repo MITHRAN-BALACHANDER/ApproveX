@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react'
 import { dutyRequestAPI } from '../services/api'
-import { 
-  CheckCircle, 
-  XCircle, 
-  Clock, 
-  RotateCcw, 
+import {
+  CheckCircle,
+  XCircle,
+  Clock,
+  RotateCcw,
   ClipboardList,
   FileText,
   Calendar,
   MessageSquare,
-  Paperclip
+  Paperclip,
 } from 'lucide-react'
 
 const RequestStatus = () => {
@@ -80,15 +80,15 @@ const RequestStatus = () => {
     switch (status) {
       case 'resolved':
       case 'approved':
-        return <CheckCircle size={20} className="text-green-600" />
+        return <CheckCircle size={20} className='text-green-600' />
       case 'rejected':
-        return <XCircle size={20} className="text-destructive" />
+        return <XCircle size={20} className='text-destructive' />
       case 'pending':
-        return <Clock size={20} className="text-primary" />
+        return <Clock size={20} className='text-primary' />
       case 'in-progress':
-        return <RotateCcw size={20} className="text-secondary" />
+        return <RotateCcw size={20} className='text-secondary' />
       default:
-        return <ClipboardList size={20} className="text-muted-foreground" />
+        return <ClipboardList size={20} className='text-muted-foreground' />
     }
   }
 
@@ -105,7 +105,9 @@ const RequestStatus = () => {
       <div className='flex items-center justify-center py-12'>
         <div className='text-center'>
           <div className='animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto mb-4'></div>
-          <p className='text-muted-foreground font-medium'>Loading your requests...</p>
+          <p className='text-muted-foreground font-medium'>
+            Loading your requests...
+          </p>
         </div>
       </div>
     )
@@ -116,8 +118,8 @@ const RequestStatus = () => {
       {requests.length === 0 ? (
         <div className='text-center py-12 bg-card rounded-xl border border-border border-dashed'>
           <div className='flex justify-center mb-4'>
-            <div className="h-16 w-16 bg-muted rounded-full flex items-center justify-center">
-              <FileText size={32} className="text-muted-foreground" />
+            <div className='h-16 w-16 bg-muted rounded-full flex items-center justify-center'>
+              <FileText size={32} className='text-muted-foreground' />
             </div>
           </div>
           <h3 className='text-lg font-semibold text-foreground mb-1'>
@@ -138,9 +140,7 @@ const RequestStatus = () => {
               <div className='flex flex-col sm:flex-row sm:items-start justify-between gap-4'>
                 <div className='flex-1 space-y-3'>
                   <div className='flex items-start gap-3'>
-                    <div className='mt-1'>
-                      {getStatusIcon(request.status)}
-                    </div>
+                    <div className='mt-1'>{getStatusIcon(request.status)}</div>
                     <div>
                       <h3 className='text-base font-semibold text-foreground line-clamp-1'>
                         {request.description ||
@@ -153,17 +153,21 @@ const RequestStatus = () => {
                     </div>
                   </div>
 
-                  <div className="pl-8 space-y-2">
+                  <div className='pl-8 space-y-2'>
                     {request.eventName && (
                       <div className='flex items-center gap-2 text-sm'>
-                        <span className='font-medium text-foreground min-w-[60px]'>Event:</span>
-                        <span className='text-muted-foreground'>{request.eventName}</span>
+                        <span className='font-medium text-foreground min-w-[60px]'>
+                          Event:
+                        </span>
+                        <span className='text-muted-foreground'>
+                          {request.eventName}
+                        </span>
                       </div>
                     )}
 
                     {request.eventDate && (
                       <div className='flex items-center gap-2 text-sm'>
-                        <Calendar size={14} className="text-muted-foreground" />
+                        <Calendar size={14} className='text-muted-foreground' />
                         <span className='text-muted-foreground'>
                           {formatDate(request.eventDate)}
                         </span>
@@ -172,7 +176,10 @@ const RequestStatus = () => {
 
                     {request.comments && (
                       <div className='flex items-start gap-2 text-sm bg-muted/30 p-2 rounded-xl'>
-                        <MessageSquare size={14} className="text-muted-foreground mt-0.5" />
+                        <MessageSquare
+                          size={14}
+                          className='text-muted-foreground mt-0.5'
+                        />
                         <span className='text-muted-foreground'>
                           {request.comments}
                         </span>

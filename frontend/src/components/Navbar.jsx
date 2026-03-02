@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { 
-  Home, 
-  BarChart3, 
-  Info, 
-  Mail, 
-  GraduationCap, 
+import {
+  Home,
+  BarChart3,
+  Info,
+  Mail,
+  GraduationCap,
   LogOut,
   Menu,
-  X
+  X,
 } from 'lucide-react'
 
 const Navbar = ({ user, onLogout }) => {
@@ -45,7 +45,10 @@ const Navbar = ({ user, onLogout }) => {
           <div className='flex items-center'>
             <Link to='/' className='flex items-center group gap-3'>
               <div className='h-10 w-10 bg-primary rounded-2xl flex items-center justify-center text-primary-foreground shadow-sm group-hover:scale-110 group-hover:shadow-md transition-all duration-300'>
-                <GraduationCap size={20} className='group-hover:rotate-6 transition-transform duration-300' />
+                <GraduationCap
+                  size={20}
+                  className='group-hover:rotate-6 transition-transform duration-300'
+                />
               </div>
               <div>
                 <span className='text-lg font-bold text-foreground tracking-tight block leading-none'>
@@ -70,7 +73,10 @@ const Navbar = ({ user, onLogout }) => {
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 }`}
               >
-                <link.icon size={16} className='group-hover:scale-110 transition-transform duration-300' />
+                <link.icon
+                  size={16}
+                  className='group-hover:scale-110 transition-transform duration-300'
+                />
                 <span>{link.label}</span>
               </Link>
             ))}
@@ -97,7 +103,10 @@ const Navbar = ({ user, onLogout }) => {
               onClick={handleLogout}
               className='group flex items-center gap-2 px-4 py-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-xl text-sm font-medium transition-all duration-300 shadow-sm hover:shadow-md hover:scale-105 active:scale-95'
             >
-              <LogOut size={16} className='group-hover:translate-x-0.5 transition-transform duration-300' />
+              <LogOut
+                size={16}
+                className='group-hover:translate-x-0.5 transition-transform duration-300'
+              />
               <span>Logout</span>
             </button>
           </div>
@@ -128,7 +137,10 @@ const Navbar = ({ user, onLogout }) => {
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <link.icon size={18} className='group-hover:scale-110 transition-transform duration-300' />
+                  <link.icon
+                    size={18}
+                    className='group-hover:scale-110 transition-transform duration-300'
+                  />
                   <span>{link.label}</span>
                 </Link>
               ))}
@@ -153,7 +165,10 @@ const Navbar = ({ user, onLogout }) => {
                   onClick={handleLogout}
                   className='group flex items-center justify-center gap-2 w-full px-4 py-3 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-xl text-base font-medium transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]'
                 >
-                  <LogOut size={18} className='group-hover:translate-x-0.5 transition-transform duration-300' />
+                  <LogOut
+                    size={18}
+                    className='group-hover:translate-x-0.5 transition-transform duration-300'
+                  />
                   <span>Logout</span>
                 </button>
               </div>

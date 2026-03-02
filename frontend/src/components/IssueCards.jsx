@@ -9,7 +9,7 @@ const IssueCards = () => {
       icon: Clock,
       color: 'text-primary',
       bg: 'bg-primary/10',
-      border: 'border-primary/20'
+      border: 'border-primary/20',
     },
     {
       title: 'Shift Scheduling',
@@ -17,7 +17,7 @@ const IssueCards = () => {
       icon: Calendar,
       color: 'text-secondary-foreground',
       bg: 'bg-secondary',
-      border: 'border-secondary/20'
+      border: 'border-secondary/20',
     },
     {
       title: 'Leave Requests',
@@ -26,7 +26,7 @@ const IssueCards = () => {
       icon: FileText,
       color: 'text-orange-600',
       bg: 'bg-orange-500/10',
-      border: 'border-orange-500/20'
+      border: 'border-orange-500/20',
     },
     {
       title: 'Attendance & Reports',
@@ -35,7 +35,7 @@ const IssueCards = () => {
       icon: HelpCircle,
       color: 'text-yellow-600',
       bg: 'bg-yellow-500/10',
-      border: 'border-yellow-500/20'
+      border: 'border-yellow-500/20',
     },
   ]
 
@@ -55,7 +55,9 @@ const IssueCards = () => {
             key={index}
             className={`bg-card rounded-xl p-5 shadow-sm border ${issue.border} cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md group`}
           >
-            <div className={`h-10 w-10 rounded-lg ${issue.bg} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+            <div
+              className={`h-10 w-10 rounded-lg ${issue.bg} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
+            >
               <issue.icon className={`w-5 h-5 ${issue.color}`} />
             </div>
             <h3 className='text-lg font-semibold mb-2 text-foreground'>

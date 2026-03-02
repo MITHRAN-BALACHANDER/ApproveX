@@ -6,6 +6,7 @@ import DutyRequest from '../models/DutyRequest.js';
 import User from '../models/User.js';
 import { body, validationResult } from 'express-validator';
 import { authenticateToken, requireStudent, requireTeacher } from '../middleware/auth.js';
+import logger from '../utils/logger.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,7 +38,7 @@ const upload = multer({
       'image/png',
       'image/jpg'
     ];
-    
+
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
@@ -51,7 +52,7 @@ const dutyRequestValidation = [
   body('requestData').custom((value, { req }) => {
     try {
       const data = typeof value === 'string' ? JSON.parse(value) : value;
-      
+
       // Validate required fields
       if (!data.studentInfo?.fullName?.trim()) {
         throw new Error('Full name is required');
@@ -80,17 +81,17 @@ const dutyRequestValidation = [
       if (!data.eventDetails?.organizer?.name?.trim()) {
         throw new Error('Organizer name is required');
       }
-      
+
       // Validate reason type
       const validReasonTypes = [
-        'seminar', 'workshop', 'symposium', 'internship', 'hackathon', 
-        'placement_drive', 'cultural', 'sports', 'medical', 
+        'seminar', 'workshop', 'symposium', 'internship', 'hackathon',
+        'placement_drive', 'cultural', 'sports', 'medical',
         'conference', 'competition', 'training', 'other'
       ];
       if (!validReasonTypes.includes(data.eventDetails?.reasonType)) {
         throw new Error('Invalid reason type');
       }
-      
+
       // Validate dates
       const startDate = new Date(data.eventDetails?.dateRange?.startDate);
       const endDate = new Date(data.eventDetails?.dateRange?.endDate);
@@ -100,7 +101,7 @@ const dutyRequestValidation = [
       if (isNaN(endDate.getTime())) {
         throw new Error('Valid end date is required');
       }
-      
+
       return true;
     } catch (error) {
       throw new Error(error.message);
@@ -119,19 +120,19 @@ if (!fs.existsSync(uploadsDir)) {
 router.get('/', authenticateToken, async (req, res) => {
   try {
     let query = {};
-    
+
     // Students can only see their own requests
     if (req.user.role === 'student') {
       query.studentId = req.user._id;
     }
-    
+
     const dutyRequests = await DutyRequest.find(query)
       .populate('studentId', 'profile.fullName profile.registerNumber profile.department')
       .populate('approvals.mentor.teacherId', 'profile.fullName profile.designation')
       .populate('approvals.hod.teacherId', 'profile.fullName profile.designation')
       .populate('approvals.principal.teacherId', 'profile.fullName profile.designation')
       .sort({ submittedAt: -1 });
-      
+
     res.json(dutyRequests);
   } catch (error) {
     console.error('Error fetching duty requests:', error);
@@ -147,7 +148,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
       .populate('approvals.mentor.teacherId', 'profile.fullName profile.designation')
       .populate('approvals.hod.teacherId', 'profile.fullName profile.designation')
       .populate('approvals.principal.teacherId', 'profile.fullName profile.designation');
-      
+
     if (!dutyRequest) {
       return res.status(404).json({ message: 'Duty request not found' });
     }
@@ -165,7 +166,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
 });
 
 // POST create new duty request (Students only)
-router.post('/', 
+router.post('/',
   authenticateToken,
   requireStudent,
   upload.fields([
@@ -180,16 +181,16 @@ router.post('/',
       // Check for validation errors
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        console.log('Validation errors:', errors.array());
-        return res.status(400).json({ 
-          message: 'Validation failed', 
+        logger.warn('Validation errors:', errors.array());
+        return res.status(400).json({
+          message: 'Validation failed',
           errors: errors.array().map(err => err.msg)
         });
       }
 
       // Check for required files
       if (!req.files || !req.files.invitation) {
-        console.log('Missing invitation file:', req.files);
+        logger.warn('Missing invitation file for request');
         return res.status(400).json({ message: 'Invitation document is required' });
       }
 
@@ -198,20 +199,16 @@ router.post('/',
       try {
         requestData = JSON.parse(req.body.requestData);
       } catch (error) {
-        console.log('Error parsing requestData:', error);
+        logger.error('Error parsing requestData:', error);
         return res.status(400).json({ message: 'Invalid request data format' });
       }
 
-      console.log('Received duty request data:', {
-        studentId: req.user._id,
-        eventTitle: requestData.eventDetails?.eventTitle,
-        files: Object.keys(req.files || {})
-      });
+      logger.info('Received duty request data for studentId: ' + req.user._id);
 
       // Validate date range
       const startDate = new Date(requestData.eventDetails.dateRange.startDate);
       const endDate = new Date(requestData.eventDetails.dateRange.endDate);
-      
+
       if (startDate > endDate) {
         return res.status(400).json({ message: 'Start date cannot be after end date' });
       }
@@ -250,7 +247,7 @@ router.post('/',
       });
 
       const savedRequest = await dutyRequest.save();
-      
+
       // Populate the response
       const populatedRequest = await DutyRequest.findById(savedRequest._id)
         .populate('studentId', 'profile.fullName profile.registerNumber profile.department');
@@ -270,7 +267,7 @@ router.post('/',
 router.put('/:id/approve', authenticateToken, requireTeacher, async (req, res) => {
   try {
     const { approvalLevel, status, remarks } = req.body;
-    
+
     if (!['approved', 'rejected'].includes(status)) {
       return res.status(400).json({ message: 'Invalid status' });
     }
@@ -330,7 +327,7 @@ router.put('/:id/approve', authenticateToken, requireTeacher, async (req, res) =
 router.get('/pending/approvals', authenticateToken, requireTeacher, async (req, res) => {
   try {
     const { level } = req.query; // mentor, hod, principal
-    
+
     let query = {
       overallStatus: { $in: ['submitted', 'under_review'] }
     };
@@ -362,7 +359,7 @@ router.get('/pending/approvals', authenticateToken, requireTeacher, async (req, 
 router.delete('/:id', authenticateToken, async (req, res) => {
   try {
     const dutyRequest = await DutyRequest.findById(req.params.id);
-    
+
     if (!dutyRequest) {
       return res.status(404).json({ message: 'Duty request not found' });
     }

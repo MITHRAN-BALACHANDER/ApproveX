@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import DutyRequest from '../models/DutyRequest.js';
 import { sendApprovalStatusEmail } from '../utils/emailService.js';
+import logger from '../utils/logger.js';
 
 const router = express.Router();
 
@@ -16,7 +17,7 @@ const verifyTeacher = async (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.userId);
-    
+
     if (!user || user.role !== 'teacher') {
       return res.status(403).json({ message: 'Access denied. Teacher privileges required.' });
     }
@@ -124,7 +125,7 @@ router.get('/requests', verifyTeacher, async (req, res) => {
 
     // Build filter query
     let matchQuery = {};
-    
+
     if (status) {
       if (status === 'pending') {
         matchQuery.$or = [
@@ -200,13 +201,7 @@ router.post('/requests/:id/review', verifyTeacher, async (req, res) => {
     const { id } = req.params;
     const { action, remarks } = req.body;
 
-    console.log('📝 Review request received:', {
-      requestId: id,
-      teacherId: req.teacher._id,
-      teacherName: req.teacher.profile.fullName,
-      action,
-      remarks
-    });
+    logger.info(`📝 Review request received: requestId=${id}, teacherId=${req.teacher._id}, action=${action}`);
 
     if (!['approved', 'rejected'].includes(action)) {
       return res.status(400).json({ message: 'Invalid action. Must be approved or rejected.' });
@@ -221,8 +216,8 @@ router.post('/requests/:id/review', verifyTeacher, async (req, res) => {
 
     // Check if already reviewed
     if (request.approval.status !== 'pending') {
-      return res.status(400).json({ 
-        message: `Request already ${request.approval.status} by ${request.approval.teacherName}` 
+      return res.status(400).json({
+        message: `Request already ${request.approval.status} by ${request.approval.teacherName}`
       });
     }
 
@@ -275,9 +270,9 @@ router.post('/requests/:id/review', verifyTeacher, async (req, res) => {
         remarks,
         request.overallStatus
       );
-      console.log('📧 Approval email sent successfully');
+      logger.info('📧 Approval email sent successfully');
     } catch (emailError) {
-      console.error('📧 Email sending failed:', emailError);
+      logger.error('📧 Email sending failed:', emailError);
       // Don't fail the request if email fails
     }
 

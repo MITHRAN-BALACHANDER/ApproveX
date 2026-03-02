@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { 
-  FileText, 
-  Plus, 
-  Stethoscope, 
-  Palmtree, 
-  User, 
-  Lock, 
-  LogOut, 
-  GraduationCap, 
+import {
+  FileText,
+  Plus,
+  Stethoscope,
+  Palmtree,
+  User,
+  Lock,
+  LogOut,
+  GraduationCap,
   Pencil,
   Clock,
   CheckCircle,
-  XCircle
+  XCircle,
 } from 'lucide-react'
 import config from '../config/config.js'
 import DutyRequestForm from './DutyRequestForm'
@@ -59,24 +59,18 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
       const userToken = localStorage.getItem('userToken')
 
       // Fetch OD requests stats
-      const odResponse = await fetch(
-        config.api.odRequests,
-        {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      )
+      const odResponse = await fetch(config.api.odRequests, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      })
 
       // Fetch Leave requests stats
-      const leaveResponse = await fetch(
-        config.api.leaveRequests,
-        {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      )
+      const leaveResponse = await fetch(config.api.leaveRequests, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      })
 
       if (odResponse.ok) {
         const odResult = await odResponse.json()
@@ -156,14 +150,14 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
                 className='flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors'
               >
                 <Lock size={16} />
-                <span className="hidden sm:inline">Change Password</span>
+                <span className='hidden sm:inline'>Change Password</span>
               </button>
               <button
                 onClick={onLogout}
                 className='flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors'
               >
                 <LogOut size={16} />
-                <span className="hidden sm:inline">Logout</span>
+                <span className='hidden sm:inline'>Logout</span>
               </button>
             </div>
           </div>
@@ -176,7 +170,7 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
           {/* OD Request Stats */}
           <div className='space-y-4'>
             <div className='flex items-center gap-2 mb-2'>
-              <FileText className="w-5 h-5 text-primary" />
+              <FileText className='w-5 h-5 text-primary' />
               <h3 className='text-lg font-semibold text-foreground'>
                 On-Duty Requests
               </h3>
@@ -184,25 +178,33 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
             <div className='grid grid-cols-2 sm:grid-cols-4 gap-4'>
               <div className='bg-card border border-border rounded-2xl p-4 shadow-sm'>
                 <div className='text-sm text-muted-foreground mb-1'>Total</div>
-                <div className='text-2xl font-bold text-foreground'>{stats.totalRequests}</div>
+                <div className='text-2xl font-bold text-foreground'>
+                  {stats.totalRequests}
+                </div>
               </div>
               <div className='bg-card border border-border rounded-2xl p-4 shadow-sm'>
                 <div className='text-sm text-muted-foreground mb-1 flex items-center gap-1'>
-                  <Clock size={12} className="text-primary" /> Pending
+                  <Clock size={12} className='text-primary' /> Pending
                 </div>
-                <div className='text-2xl font-bold text-foreground'>{stats.pendingRequests}</div>
+                <div className='text-2xl font-bold text-foreground'>
+                  {stats.pendingRequests}
+                </div>
               </div>
               <div className='bg-card border border-border rounded-2xl p-4 shadow-sm'>
                 <div className='text-sm text-muted-foreground mb-1 flex items-center gap-1'>
-                  <CheckCircle size={12} className="text-green-600" /> Approved
+                  <CheckCircle size={12} className='text-green-600' /> Approved
                 </div>
-                <div className='text-2xl font-bold text-foreground'>{stats.approvedRequests}</div>
+                <div className='text-2xl font-bold text-foreground'>
+                  {stats.approvedRequests}
+                </div>
               </div>
               <div className='bg-card border border-border rounded-2xl p-4 shadow-sm'>
                 <div className='text-sm text-muted-foreground mb-1 flex items-center gap-1'>
-                  <XCircle size={12} className="text-destructive" /> Rejected
+                  <XCircle size={12} className='text-destructive' /> Rejected
                 </div>
-                <div className='text-2xl font-bold text-foreground'>{stats.rejectedRequests}</div>
+                <div className='text-2xl font-bold text-foreground'>
+                  {stats.rejectedRequests}
+                </div>
               </div>
             </div>
           </div>
@@ -210,7 +212,7 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
           {/* Leave Request Stats */}
           <div className='space-y-4'>
             <div className='flex items-center gap-2 mb-2'>
-              <Stethoscope className="w-5 h-5 text-primary" />
+              <Stethoscope className='w-5 h-5 text-primary' />
               <h3 className='text-lg font-semibold text-foreground'>
                 Leave Requests
               </h3>
@@ -218,25 +220,33 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
             <div className='grid grid-cols-2 sm:grid-cols-4 gap-4'>
               <div className='bg-card border border-border rounded-2xl p-4 shadow-sm'>
                 <div className='text-sm text-muted-foreground mb-1'>Total</div>
-                <div className='text-2xl font-bold text-foreground'>{stats.totalLeaveRequests}</div>
+                <div className='text-2xl font-bold text-foreground'>
+                  {stats.totalLeaveRequests}
+                </div>
               </div>
               <div className='bg-card border border-border rounded-2xl p-4 shadow-sm'>
                 <div className='text-sm text-muted-foreground mb-1 flex items-center gap-1'>
-                  <Clock size={12} className="text-primary" /> Pending
+                  <Clock size={12} className='text-primary' /> Pending
                 </div>
-                <div className='text-2xl font-bold text-foreground'>{stats.pendingLeaveRequests}</div>
+                <div className='text-2xl font-bold text-foreground'>
+                  {stats.pendingLeaveRequests}
+                </div>
               </div>
               <div className='bg-card border border-border rounded-2xl p-4 shadow-sm'>
                 <div className='text-sm text-muted-foreground mb-1 flex items-center gap-1'>
-                  <CheckCircle size={12} className="text-green-600" /> Approved
+                  <CheckCircle size={12} className='text-green-600' /> Approved
                 </div>
-                <div className='text-2xl font-bold text-foreground'>{stats.approvedLeaveRequests}</div>
+                <div className='text-2xl font-bold text-foreground'>
+                  {stats.approvedLeaveRequests}
+                </div>
               </div>
               <div className='bg-card border border-border rounded-2xl p-4 shadow-sm'>
                 <div className='text-sm text-muted-foreground mb-1 flex items-center gap-1'>
-                  <XCircle size={12} className="text-destructive" /> Rejected
+                  <XCircle size={12} className='text-destructive' /> Rejected
                 </div>
-                <div className='text-2xl font-bold text-foreground'>{stats.rejectedLeaveRequests}</div>
+                <div className='text-2xl font-bold text-foreground'>
+                  {stats.rejectedLeaveRequests}
+                </div>
               </div>
             </div>
           </div>
@@ -268,7 +278,7 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
 
           <div className='p-6'>
             {activeTab === 'od-requests' && (
-              <div className="space-y-6">
+              <div className='space-y-6'>
                 <div className='flex items-center gap-3 pb-4 border-b border-border'>
                   <div className='h-10 w-10 bg-primary/10 rounded-2xl flex items-center justify-center text-primary'>
                     <FileText size={20} />
@@ -282,7 +292,7 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
             )}
 
             {activeTab === 'new-od-request' && (
-              <div className="space-y-6">
+              <div className='space-y-6'>
                 <div className='flex items-center gap-3 pb-4 border-b border-border'>
                   <div className='h-10 w-10 bg-primary/10 rounded-2xl flex items-center justify-center text-primary'>
                     <Plus size={20} />
@@ -296,7 +306,7 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
             )}
 
             {activeTab === 'leave-requests' && (
-              <div className="space-y-6">
+              <div className='space-y-6'>
                 <div className='flex items-center gap-3 pb-4 border-b border-border'>
                   <div className='h-10 w-10 bg-primary/10 rounded-2xl flex items-center justify-center text-primary'>
                     <Stethoscope size={20} />
@@ -310,7 +320,7 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
             )}
 
             {activeTab === 'new-leave-request' && (
-              <div className="space-y-6">
+              <div className='space-y-6'>
                 <div className='flex items-center gap-3 pb-4 border-b border-border'>
                   <div className='h-10 w-10 bg-primary/10 rounded-2xl flex items-center justify-center text-primary'>
                     <Palmtree size={20} />
@@ -324,7 +334,7 @@ const StudentDashboard = ({ userInfo, onLogout }) => {
             )}
 
             {activeTab === 'profile' && (
-              <div className="space-y-6">
+              <div className='space-y-6'>
                 <div className='flex justify-between items-center pb-4 border-b border-border'>
                   <div className='flex items-center gap-3'>
                     <div className='h-10 w-10 bg-primary/10 rounded-2xl flex items-center justify-center text-primary'>

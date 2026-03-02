@@ -17,15 +17,14 @@ function Contact() {
 
   const handleSubmit = e => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
     // Handle form submission here
     alert('Message sent! (This is just a demo)')
   }
 
   return (
     <div className='max-w-2xl mx-auto py-8 px-4'>
-      <div className="flex items-center gap-3 mb-6">
-        <Mail className="w-8 h-8 text-primary hover:scale-110 transition-transform duration-300" />
+      <div className='flex items-center gap-3 mb-6'>
+        <Mail className='w-8 h-8 text-primary hover:scale-110 transition-transform duration-300' />
         <h1 className='text-3xl font-bold text-foreground'>Contact Us</h1>
       </div>
 
@@ -36,7 +35,7 @@ function Contact() {
               htmlFor='name'
               className='text-sm font-medium text-foreground mb-1 flex items-center gap-2'
             >
-              <User className="w-4 h-4 text-muted-foreground" /> Name
+              <User className='w-4 h-4 text-muted-foreground' /> Name
             </label>
             <input
               type='text'
@@ -46,7 +45,7 @@ function Contact() {
               onChange={handleChange}
               required
               className='w-full px-3 py-2 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-foreground placeholder:text-muted-foreground transition-all duration-200'
-              placeholder="Your Name"
+              placeholder='Your Name'
             />
           </div>
 
@@ -55,7 +54,7 @@ function Contact() {
               htmlFor='email'
               className='text-sm font-medium text-foreground mb-1 flex items-center gap-2'
             >
-              <Mail className="w-4 h-4 text-muted-foreground" /> Email
+              <Mail className='w-4 h-4 text-muted-foreground' /> Email
             </label>
             <input
               type='email'
@@ -65,7 +64,7 @@ function Contact() {
               onChange={handleChange}
               required
               className='w-full px-3 py-2 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-foreground placeholder:text-muted-foreground transition-all duration-200'
-              placeholder="your.email@example.com"
+              placeholder='your.email@example.com'
             />
           </div>
 
@@ -74,7 +73,8 @@ function Contact() {
               htmlFor='message'
               className='text-sm font-medium text-foreground mb-1 flex items-center gap-2'
             >
-              <MessageSquare className="w-4 h-4 text-muted-foreground" /> Message
+              <MessageSquare className='w-4 h-4 text-muted-foreground' />{' '}
+              Message
             </label>
             <textarea
               id='message'
@@ -84,7 +84,7 @@ function Contact() {
               required
               rows={4}
               className='w-full px-3 py-2 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-foreground placeholder:text-muted-foreground resize-none transition-all duration-200'
-              placeholder="How can we help you?"
+              placeholder='How can we help you?'
             />
           </div>
 
@@ -92,7 +92,8 @@ function Contact() {
             type='submit'
             className='group w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-2 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]'
           >
-            <Send className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-300" /> Send Message
+            <Send className='w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-300' />{' '}
+            Send Message
           </button>
         </form>
       </div>

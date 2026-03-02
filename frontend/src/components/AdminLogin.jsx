@@ -1,7 +1,15 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { Lock, Mail, AlertCircle, ArrowRight, User, Shield, Info } from 'lucide-react'
+import {
+  Lock,
+  Mail,
+  AlertCircle,
+  ArrowRight,
+  User,
+  Shield,
+  Info,
+} from 'lucide-react'
 import config from '../config/config'
 
 const AdminLogin = () => {
@@ -51,13 +59,13 @@ const AdminLogin = () => {
   return (
     <div className='min-h-screen bg-background flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden'>
       {/* Background Elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
-        <div className="absolute top-[-10%] right-[-5%] w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-[-10%] left-[-5%] w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
+      <div className='absolute top-0 left-0 w-full h-full overflow-hidden -z-10'>
+        <div className='absolute top-[-10%] right-[-5%] w-96 h-96 bg-primary/5 rounded-full blur-3xl'></div>
+        <div className='absolute bottom-[-10%] left-[-5%] w-96 h-96 bg-primary/5 rounded-full blur-3xl'></div>
       </div>
 
       <div className='max-w-md w-full space-y-8 bg-card p-8 rounded-2xl shadow-lg border border-border'>
-        <div className="text-center">
+        <div className='text-center'>
           <div className='mx-auto h-16 w-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 transform rotate-3'>
             <Shield className='w-8 h-8 text-primary' />
           </div>
@@ -72,12 +80,15 @@ const AdminLogin = () => {
         <form className='mt-8 space-y-6' onSubmit={handleSubmit(onSubmit)}>
           <div className='space-y-4'>
             <div>
-              <label htmlFor='email' className='block text-sm font-medium text-foreground mb-1.5'>
+              <label
+                htmlFor='email'
+                className='block text-sm font-medium text-foreground mb-1.5'
+              >
                 Email Address
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-muted-foreground" />
+              <div className='relative'>
+                <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+                  <Mail className='h-5 w-5 text-muted-foreground' />
                 </div>
                 <input
                   {...register('email', {
@@ -101,12 +112,15 @@ const AdminLogin = () => {
             </div>
 
             <div>
-              <label htmlFor='password' className='block text-sm font-medium text-foreground mb-1.5'>
+              <label
+                htmlFor='password'
+                className='block text-sm font-medium text-foreground mb-1.5'
+              >
                 Password
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-muted-foreground" />
+              <div className='relative'>
+                <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+                  <Lock className='h-5 w-5 text-muted-foreground' />
                 </div>
                 <input
                   {...register('password', {
@@ -143,11 +157,14 @@ const AdminLogin = () => {
             className='group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-semibold rounded-lg text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md'
           >
             {loading ? (
-              <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <div className='h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin' />
             ) : (
-              <span className="flex items-center gap-2">
+              <span className='flex items-center gap-2'>
                 Sign in as Admin
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                <ArrowRight
+                  size={18}
+                  className='group-hover:translate-x-1 transition-transform'
+                />
               </span>
             )}
           </button>
@@ -157,7 +174,9 @@ const AdminLogin = () => {
               <div className='w-full border-t border-border'></div>
             </div>
             <div className='relative flex justify-center text-sm'>
-              <span className='px-2 bg-card text-muted-foreground'>Or continue as</span>
+              <span className='px-2 bg-card text-muted-foreground'>
+                Or continue as
+              </span>
             </div>
           </div>
 
@@ -184,7 +203,9 @@ const AdminLogin = () => {
             <div className='flex gap-3'>
               <Info className='h-5 w-5 text-primary shrink-0' />
               <div className='text-xs text-muted-foreground space-y-1'>
-                <p className="font-medium text-foreground">Default Credentials</p>
+                <p className='font-medium text-foreground'>
+                  Default Credentials
+                </p>
                 <p>Email: admin@srishakthi.ac.in</p>
                 <p>Password: admin123</p>
               </div>

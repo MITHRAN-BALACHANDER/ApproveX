@@ -1,7 +1,19 @@
 import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { dutyRequestAPI, getCurrentUser } from '../services/api'
-import { XCircle, CheckCircle, RotateCcw, Send, Upload, FileText, Calendar, MapPin, User, Building, AlertCircle } from 'lucide-react'
+import {
+  XCircle,
+  CheckCircle,
+  RotateCcw,
+  Send,
+  Upload,
+  FileText,
+  Calendar,
+  MapPin,
+  User,
+  Building,
+  AlertCircle,
+} from 'lucide-react'
 
 const ComprehensiveDutyRequestForm = () => {
   const {
@@ -172,15 +184,19 @@ const ComprehensiveDutyRequestForm = () => {
       {submitMessage && (
         <div
           className={`p-4 rounded-2xl mb-6 flex items-start space-x-3 border ${
-            submitMessage.includes('Error') || submitMessage.includes('error') || submitMessage.includes('failed') 
-              ? 'bg-destructive/10 text-destructive border-destructive/20' 
+            submitMessage.includes('Error') ||
+            submitMessage.includes('error') ||
+            submitMessage.includes('failed')
+              ? 'bg-destructive/10 text-destructive border-destructive/20'
               : 'bg-green-500/10 text-green-600 border-green-500/20'
           }`}
         >
-          {submitMessage.includes('Error') || submitMessage.includes('error') || submitMessage.includes('failed') ? (
-            <XCircle size={20} className="flex-shrink-0 mt-0.5" />
+          {submitMessage.includes('Error') ||
+          submitMessage.includes('error') ||
+          submitMessage.includes('failed') ? (
+            <XCircle size={20} className='flex-shrink-0 mt-0.5' />
           ) : (
-            <CheckCircle size={20} className="flex-shrink-0 mt-0.5" />
+            <CheckCircle size={20} className='flex-shrink-0 mt-0.5' />
           )}
           <span>{submitMessage}</span>
         </div>
@@ -189,15 +205,15 @@ const ComprehensiveDutyRequestForm = () => {
       <form onSubmit={handleSubmit(onSubmit)} className='space-y-8'>
         {/* Core Student Information */}
         <div className='bg-card border border-border rounded-xl p-6 shadow-sm'>
-          <div className="flex items-center gap-2 mb-6 pb-2 border-b border-border">
-            <User className="text-primary w-5 h-5" />
+          <div className='flex items-center gap-2 mb-6 pb-2 border-b border-border'>
+            <User className='text-primary w-5 h-5' />
             <h3 className='text-lg font-semibold text-foreground'>
               1. Core Student Information
             </h3>
           </div>
-          
+
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-            <div className="space-y-2">
+            <div className='space-y-2'>
               <label className='text-sm font-medium text-foreground'>
                 Full Name (as per college records) *
               </label>
@@ -215,7 +231,7 @@ const ComprehensiveDutyRequestForm = () => {
               )}
             </div>
 
-            <div className="space-y-2">
+            <div className='space-y-2'>
               <label className='text-sm font-medium text-foreground'>
                 Register/Roll Number *
               </label>
@@ -235,7 +251,7 @@ const ComprehensiveDutyRequestForm = () => {
               )}
             </div>
 
-            <div className="space-y-2">
+            <div className='space-y-2'>
               <label className='text-sm font-medium text-foreground'>
                 Department & Year *
               </label>
@@ -274,7 +290,7 @@ const ComprehensiveDutyRequestForm = () => {
               )}
             </div>
 
-            <div className="space-y-2">
+            <div className='space-y-2'>
               <label className='text-sm font-medium text-foreground'>
                 Section/Class *
               </label>
@@ -300,8 +316,8 @@ const ComprehensiveDutyRequestForm = () => {
 
         {/* Event/Reason Details */}
         <div className='bg-card border border-border rounded-xl p-6 shadow-sm'>
-          <div className="flex items-center gap-2 mb-6 pb-2 border-b border-border">
-            <Calendar className="text-primary w-5 h-5" />
+          <div className='flex items-center gap-2 mb-6 pb-2 border-b border-border'>
+            <Calendar className='text-primary w-5 h-5' />
             <h3 className='text-lg font-semibold text-foreground'>
               2. Event/Reason Details
             </h3>
@@ -309,7 +325,7 @@ const ComprehensiveDutyRequestForm = () => {
 
           <div className='space-y-6'>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-              <div className="space-y-2">
+              <div className='space-y-2'>
                 <label className='text-sm font-medium text-foreground'>
                   Reason for OD *
                 </label>
@@ -341,7 +357,7 @@ const ComprehensiveDutyRequestForm = () => {
                 )}
               </div>
 
-              <div className="space-y-2">
+              <div className='space-y-2'>
                 <label className='text-sm font-medium text-foreground'>
                   Event Title & Theme *
                 </label>
@@ -351,7 +367,7 @@ const ComprehensiveDutyRequestForm = () => {
                   })}
                   type='text'
                   className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
-                  placeholder="Official event name"
+                  placeholder='Official event name'
                 />
                 {errors.eventTitle && (
                   <p className='text-destructive text-xs mt-1'>
@@ -361,7 +377,7 @@ const ComprehensiveDutyRequestForm = () => {
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className='space-y-2'>
               <label className='text-sm font-medium text-foreground'>
                 Event Theme/Description
               </label>
@@ -374,7 +390,7 @@ const ComprehensiveDutyRequestForm = () => {
             </div>
 
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-              <div className="space-y-2">
+              <div className='space-y-2'>
                 <label className='text-sm font-medium text-foreground'>
                   Institution/Venue Name *
                 </label>
@@ -393,7 +409,7 @@ const ComprehensiveDutyRequestForm = () => {
                 )}
               </div>
 
-              <div className="space-y-2">
+              <div className='space-y-2'>
                 <label className='text-sm font-medium text-foreground'>
                   City *
                 </label>
@@ -411,7 +427,7 @@ const ComprehensiveDutyRequestForm = () => {
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className='space-y-2'>
               <label className='text-sm font-medium text-foreground'>
                 Complete Address
               </label>
@@ -424,7 +440,7 @@ const ComprehensiveDutyRequestForm = () => {
             </div>
 
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
-              <div className="space-y-2">
+              <div className='space-y-2'>
                 <label className='text-sm font-medium text-foreground'>
                   Start Date *
                 </label>
@@ -443,7 +459,7 @@ const ComprehensiveDutyRequestForm = () => {
                 )}
               </div>
 
-              <div className="space-y-2">
+              <div className='space-y-2'>
                 <label className='text-sm font-medium text-foreground'>
                   End Date *
                 </label>
@@ -462,7 +478,7 @@ const ComprehensiveDutyRequestForm = () => {
                 )}
               </div>
 
-              <div className="space-y-2">
+              <div className='space-y-2'>
                 <label className='text-sm font-medium text-foreground'>
                   Start Time
                 </label>
@@ -473,7 +489,7 @@ const ComprehensiveDutyRequestForm = () => {
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className='space-y-2'>
                 <label className='text-sm font-medium text-foreground'>
                   End Time
                 </label>
@@ -486,7 +502,7 @@ const ComprehensiveDutyRequestForm = () => {
             </div>
 
             <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-              <div className="space-y-2">
+              <div className='space-y-2'>
                 <label className='text-sm font-medium text-foreground'>
                   Organizer Name *
                 </label>
@@ -505,7 +521,7 @@ const ComprehensiveDutyRequestForm = () => {
                 )}
               </div>
 
-              <div className="space-y-2">
+              <div className='space-y-2'>
                 <label className='text-sm font-medium text-foreground'>
                   Organizer Type *
                 </label>
@@ -528,7 +544,7 @@ const ComprehensiveDutyRequestForm = () => {
                 )}
               </div>
 
-              <div className="space-y-2">
+              <div className='space-y-2'>
                 <label className='text-sm font-medium text-foreground'>
                   Contact Information
                 </label>
@@ -545,15 +561,15 @@ const ComprehensiveDutyRequestForm = () => {
 
         {/* Academic Compliance */}
         <div className='bg-card border border-border rounded-xl p-6 shadow-sm'>
-          <div className="flex items-center gap-2 mb-6 pb-2 border-b border-border">
-            <Building className="text-primary w-5 h-5" />
+          <div className='flex items-center gap-2 mb-6 pb-2 border-b border-border'>
+            <Building className='text-primary w-5 h-5' />
             <h3 className='text-lg font-semibold text-foreground'>
               3. Academic Compliance
             </h3>
           </div>
 
-          <div className="space-y-6">
-            <div className="space-y-2">
+          <div className='space-y-6'>
+            <div className='space-y-2'>
               <label className='text-sm font-medium text-foreground'>
                 Subjects/Classes That Will Be Missed
               </label>
@@ -568,7 +584,7 @@ const ComprehensiveDutyRequestForm = () => {
               </p>
             </div>
 
-            <div className="space-y-2">
+            <div className='space-y-2'>
               <label className='text-sm font-medium text-foreground'>
                 Student Undertaking *
               </label>
@@ -591,19 +607,19 @@ const ComprehensiveDutyRequestForm = () => {
 
         {/* Supporting Documents */}
         <div className='bg-card border border-border rounded-xl p-6 shadow-sm'>
-          <div className="flex items-center gap-2 mb-6 pb-2 border-b border-border">
-            <FileText className="text-primary w-5 h-5" />
+          <div className='flex items-center gap-2 mb-6 pb-2 border-b border-border'>
+            <FileText className='text-primary w-5 h-5' />
             <h3 className='text-lg font-semibold text-foreground'>
               4. Supporting Documents
             </h3>
           </div>
 
           <div className='space-y-6'>
-            <div className="space-y-2">
+            <div className='space-y-2'>
               <label className='text-sm font-medium text-foreground'>
                 Invitation/Brochure/Circular * (Required)
               </label>
-              <div className="flex items-center gap-2">
+              <div className='flex items-center gap-2'>
                 <input
                   type='file'
                   accept='.pdf,.jpg,.jpeg,.png'
@@ -615,11 +631,12 @@ const ComprehensiveDutyRequestForm = () => {
                 />
               </div>
               <p className='text-xs text-muted-foreground'>
-                Upload official invitation or event brochure (PDF/Image, Max 10MB)
+                Upload official invitation or event brochure (PDF/Image, Max
+                10MB)
               </p>
             </div>
 
-            <div className="space-y-2">
+            <div className='space-y-2'>
               <label className='text-sm font-medium text-foreground'>
                 Permission Letter/Nomination Letter
               </label>
@@ -636,7 +653,7 @@ const ComprehensiveDutyRequestForm = () => {
               </p>
             </div>
 
-            <div className="space-y-2">
+            <div className='space-y-2'>
               <label className='text-sm font-medium text-foreground'>
                 Travel Proof (Tickets/Booking)
               </label>
@@ -653,7 +670,7 @@ const ComprehensiveDutyRequestForm = () => {
               </p>
             </div>
 
-            <div className="space-y-2">
+            <div className='space-y-2'>
               <label className='text-sm font-medium text-foreground'>
                 Additional Documents
               </label>
@@ -673,8 +690,8 @@ const ComprehensiveDutyRequestForm = () => {
 
         {/* Student Declaration */}
         <div className='bg-card border border-border rounded-xl p-6 shadow-sm'>
-          <div className="flex items-center gap-2 mb-6 pb-2 border-b border-border">
-            <AlertCircle className="text-primary w-5 h-5" />
+          <div className='flex items-center gap-2 mb-6 pb-2 border-b border-border'>
+            <AlertCircle className='text-primary w-5 h-5' />
             <h3 className='text-lg font-semibold text-foreground'>
               5. Student Declaration
             </h3>
@@ -722,7 +739,7 @@ const ComprehensiveDutyRequestForm = () => {
           >
             {isSubmitting ? (
               <>
-                <RotateCcw size={18} className="animate-spin" />
+                <RotateCcw size={18} className='animate-spin' />
                 <span>Submitting...</span>
               </>
             ) : (

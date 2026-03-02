@@ -9,7 +9,7 @@ import {
   X,
   AlertCircle,
   ArrowLeft,
-  ShieldCheck
+  ShieldCheck,
 } from 'lucide-react'
 
 const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
@@ -50,16 +50,13 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
     setError('')
 
     try {
-      const response = await fetch(
-        config.api.requestPasswordChangeOtp,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      )
+      const response = await fetch(config.api.requestPasswordChangeOtp, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'Content-Type': 'application/json',
+        },
+      })
 
       const result = await response.json()
 
@@ -83,20 +80,17 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
     setError('')
 
     try {
-      const response = await fetch(
-        config.api.changePassword,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            oldPassword: data.oldPassword,
-            newPassword: data.newPassword,
-          }),
-        }
-      )
+      const response = await fetch(config.api.changePassword, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          oldPassword: data.oldPassword,
+          newPassword: data.newPassword,
+        }),
+      })
 
       const result = await response.json()
 
@@ -119,20 +113,17 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
     setError('')
 
     try {
-      const response = await fetch(
-        config.api.changePasswordWithOtp,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            otp: data.otp,
-            newPassword: data.newPassword,
-          }),
-        }
-      )
+      const response = await fetch(config.api.changePasswordWithOtp, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          otp: data.otp,
+          newPassword: data.newPassword,
+        }),
+      })
 
       const result = await response.json()
 
@@ -213,7 +204,9 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
                       <Key className='w-5 h-5 text-primary' />
                     </div>
                     <div>
-                      <p className='font-medium text-foreground'>Use Current Password</p>
+                      <p className='font-medium text-foreground'>
+                        Use Current Password
+                      </p>
                       <p className='text-sm text-muted-foreground'>
                         Verify with your current password
                       </p>
@@ -233,7 +226,9 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
                       <Mail className='w-5 h-5 text-primary' />
                     </div>
                     <div>
-                      <p className='font-medium text-foreground'>Use Email OTP</p>
+                      <p className='font-medium text-foreground'>
+                        Use Email OTP
+                      </p>
                       <p className='text-sm text-muted-foreground'>
                         Get verification code via email
                       </p>
@@ -245,7 +240,10 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
           )}
 
           {step === 2 && method === 'password' && (
-            <form onSubmit={handleSubmit(onSubmitPassword)} className="space-y-4">
+            <form
+              onSubmit={handleSubmit(onSubmitPassword)}
+              className='space-y-4'
+            >
               <div>
                 <label className='block text-sm font-medium text-foreground mb-1.5'>
                   Current Password
@@ -329,7 +327,7 @@ const ChangePassword = ({ isOpen, onClose, userToken, userRole }) => {
           )}
 
           {step === 2 && method === 'otp' && (
-            <form onSubmit={handleSubmit(onSubmitOTP)} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmitOTP)} className='space-y-4'>
               {otpSent && (
                 <div className='bg-primary/5 border border-primary/10 rounded-2xl p-3'>
                   <p className='text-primary text-sm flex items-center'>

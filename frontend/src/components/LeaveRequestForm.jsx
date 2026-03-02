@@ -2,18 +2,18 @@ import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { getCurrentUser } from '../services/api'
 import config from '../config/config.js'
-import { 
-  Calendar, 
-  FileText, 
-  Phone, 
-  User, 
-  Upload, 
-  X, 
-  CheckCircle, 
-  AlertCircle, 
-  Send, 
+import {
+  Calendar,
+  FileText,
+  Phone,
+  User,
+  Upload,
+  X,
+  CheckCircle,
+  AlertCircle,
+  Send,
   RotateCcw,
-  Palmtree
+  Palmtree,
 } from 'lucide-react'
 
 const LeaveRequestForm = () => {
@@ -70,9 +70,9 @@ const LeaveRequestForm = () => {
         startDate: data.startDate,
         endDate: data.endDate,
         isEmergency: data.isEmergency || false,
-        totalDays: totalDays
+        totalDays: totalDays,
       }
-      
+
       // Add emergency contact if provided
       if (data.emergencyContactName) {
         leaveData.emergencyContact = JSON.stringify({
@@ -128,7 +128,7 @@ const LeaveRequestForm = () => {
     return (
       <div className='text-center p-8 bg-card rounded-xl border border-border'>
         <div className='flex justify-center mb-4'>
-          <AlertCircle size={48} className="text-destructive" />
+          <AlertCircle size={48} className='text-destructive' />
         </div>
         <p className='text-destructive font-semibold text-lg'>
           Access denied. Only students can submit leave requests.
@@ -146,7 +146,9 @@ const LeaveRequestForm = () => {
             <Palmtree size={24} />
           </div>
           <div>
-            <h2 className='text-2xl font-bold text-foreground'>Submit Leave Request</h2>
+            <h2 className='text-2xl font-bold text-foreground'>
+              Submit Leave Request
+            </h2>
             <p className='text-muted-foreground'>
               Fill out the form below to request leave
             </p>
@@ -156,8 +158,12 @@ const LeaveRequestForm = () => {
         {totalDays > 0 && (
           <div className='bg-muted/50 rounded-2xl p-4 border border-border'>
             <div className='flex items-center justify-between'>
-              <span className='font-medium text-foreground'>Total Days Requested:</span>
-              <span className='text-xl font-bold text-primary'>{totalDays} days</span>
+              <span className='font-medium text-foreground'>
+                Total Days Requested:
+              </span>
+              <span className='text-xl font-bold text-primary'>
+                {totalDays} days
+              </span>
             </div>
           </div>
         )}
@@ -233,7 +239,7 @@ const LeaveRequestForm = () => {
               <label className='text-sm font-medium text-foreground'>
                 Start Date *
               </label>
-              <div className="relative">
+              <div className='relative'>
                 <input
                   type='date'
                   {...register('startDate', {
@@ -255,11 +261,13 @@ const LeaveRequestForm = () => {
               <label className='text-sm font-medium text-foreground'>
                 End Date *
               </label>
-              <div className="relative">
+              <div className='relative'>
                 <input
                   type='date'
                   {...register('endDate', { required: 'End date is required' })}
-                  min={watchDates?.[0] || new Date().toISOString().split('T')[0]}
+                  min={
+                    watchDates?.[0] || new Date().toISOString().split('T')[0]
+                  }
                   className='w-full px-3 py-2 bg-background border border-input rounded-xl focus:ring-2 focus:ring-ring focus:border-input transition-colors'
                 />
               </div>
@@ -298,7 +306,7 @@ const LeaveRequestForm = () => {
             ) && (
               <div className='mb-8 bg-muted/30 p-6 rounded-2xl border border-border'>
                 <div className='flex items-center gap-2 mb-6 pb-2 border-b border-border'>
-                  <Phone className="text-primary w-5 h-5" />
+                  <Phone className='text-primary w-5 h-5' />
                   <h3 className='text-lg font-semibold text-foreground'>
                     Emergency Contact Information
                   </h3>
@@ -362,9 +370,12 @@ const LeaveRequestForm = () => {
                 className='hidden'
                 id='documents'
               />
-              <label htmlFor='documents' className='cursor-pointer flex flex-col items-center'>
+              <label
+                htmlFor='documents'
+                className='cursor-pointer flex flex-col items-center'
+              >
                 <div className='h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center mb-4'>
-                  <Upload className="text-primary w-6 h-6" />
+                  <Upload className='text-primary w-6 h-6' />
                 </div>
                 <p className='text-base font-medium text-foreground mb-1'>
                   <span className='text-primary hover:underline'>
@@ -390,7 +401,7 @@ const LeaveRequestForm = () => {
                       className='flex items-center justify-between p-3 bg-background rounded-2xl border border-border'
                     >
                       <div className='flex items-center gap-3'>
-                        <FileText className="text-muted-foreground w-4 h-4" />
+                        <FileText className='text-muted-foreground w-4 h-4' />
                         <span className='text-sm text-foreground truncate max-w-[200px] sm:max-w-xs'>
                           {file.name}
                         </span>
@@ -428,12 +439,15 @@ const LeaveRequestForm = () => {
             >
               {isSubmitting ? (
                 <>
-                  <RotateCcw size={16} className="animate-spin" />
+                  <RotateCcw size={16} className='animate-spin' />
                   <span>Submitting...</span>
                 </>
               ) : (
                 <>
-                  <Send size={16} className='group-hover:translate-x-0.5 transition-transform duration-300' />
+                  <Send
+                    size={16}
+                    className='group-hover:translate-x-0.5 transition-transform duration-300'
+                  />
                   <span>Submit Leave Request</span>
                 </>
               )}
