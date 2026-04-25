@@ -5,8 +5,6 @@ dotenv.config();
 
 // MongoDB connection string - update if different
 const MONGODB_URI = process.env.MONGODB_URI;
-//  || 'mongodb+srv://mithranbalachander:FHuukOU6CedUKTYJ@cluster0.foubdmg.mongodb.net/odprovider?retryWrites=true&w=majority';
-
 async function createAdmin() {
   try {
     // Connect to MongoDB
