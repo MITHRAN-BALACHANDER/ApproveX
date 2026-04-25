@@ -34,15 +34,9 @@ app.set('trust proxy', 1);
 // Security headers
 app.use(helmet());
 
-// CORS: allow only configured origins in production; allow all in dev
-// Disable wildcard fallback to prevent unauthorized access if env var is missing
-const corsOrigin = process.env.CLIENT_ORIGIN || (process.env.NODE_ENV === 'development' ? '*' : false);
-if (corsOrigin) {
-  app.use(cors({ origin: corsOrigin, credentials: true }));
-} else {
-  logger.warn('⚠️ CORS origin not set for production. API may not be accessible from frontends.');
-  app.use(cors({ origin: false, credentials: true })); // deny by default
-}
+// CORS: allow all origins
+app.use(cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

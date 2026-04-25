@@ -15,6 +15,18 @@ import {
 import ChangePassword from './ChangePassword'
 import config from '../config/config'
 
+import { Button } from './ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
+import { Badge } from './ui/badge'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from './ui/table'
+
 const AdminDashboard = () => {
   const [dashboardData, setDashboardData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -61,265 +73,224 @@ const AdminDashboard = () => {
     navigate('/admin/login')
   }
 
+  const getStatusBadgeVariant = (status) => {
+    switch (status) {
+      case 'approved':
+        return 'default'
+      case 'rejected':
+        return 'destructive'
+      case 'under_review':
+        return 'secondary'
+      default:
+        return 'outline'
+    }
+  }
+
   if (loading) {
     return (
       <div className='min-h-screen bg-background flex items-center justify-center'>
-        <div className='text-center'>
-          <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto'></div>
-          <p className='mt-4 text-muted-foreground'>Loading dashboard...</p>
+        <div className='flex flex-col items-center space-y-4'>
+          <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary'></div>
+          <p className='text-sm text-muted-foreground'>Loading dashboard...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className='min-h-screen bg-background'>
+    <div className='min-h-screen bg-background font-sans'>
       {/* Header */}
-      <header className='bg-card shadow-sm border-b border-border'>
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='flex justify-between items-center py-6'>
-            <div>
-              <h1 className='text-3xl font-bold text-foreground'>
-                Admin Dashboard
-              </h1>
-              <p className='text-muted-foreground'>OD Provider System</p>
+      <header className='sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
+        <div className='container mx-auto px-4 md:px-8'>
+          <div className='flex h-16 items-center justify-between'>
+            <div className='flex items-center gap-2'>
+              <Shield className='h-6 w-6 text-primary' />
+              <div>
+                <h1 className='text-lg font-bold leading-none tracking-tight'>
+                  Admin Dashboard
+                </h1>
+                <p className='text-xs text-muted-foreground'>OD Provider System</p>
+              </div>
             </div>
-            <div className='flex items-center space-x-4'>
-              <button
+
+            <div className='flex items-center gap-2'>
+              <Button
+                variant='outline'
+                size='sm'
                 onClick={() => setShowChangePassword(true)}
-                className='flex items-center gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 px-4 py-2 rounded-2xl transition-colors'
+                className='hidden md:flex'
               >
-                <Lock size={16} />
-                Change Password
-              </button>
-              <button
+                <Lock className='mr-2 h-4 w-4' />
+                Password
+              </Button>
+              <Button
+                variant='outline'
+                size='sm'
                 onClick={() => navigate('/admin/teachers')}
-                className='flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-2xl transition-colors'
               >
-                <Users size={16} />
-                Manage Teachers
-              </button>
-              <button
+                <Users className='mr-2 h-4 w-4' />
+                Teachers
+              </Button>
+              <Button
+                variant='outline'
+                size='sm'
                 onClick={() => navigate('/admin/approval-history')}
-                className='flex items-center gap-2 bg-green-600 text-white hover:bg-green-700 px-4 py-2 rounded-2xl transition-colors'
+                className='text-green-600 hover:text-green-700'
               >
-                <FileText size={16} />
-                Approval History
-              </button>
-              <button
+                <FileText className='mr-2 h-4 w-4' />
+                History
+              </Button>
+              <Button
+                variant='destructive'
+                size='sm'
                 onClick={handleLogout}
-                className='flex items-center gap-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 px-4 py-2 rounded-2xl transition-colors'
               >
-                <LogOut size={16} />
+                <LogOut className='mr-2 h-4 w-4' />
                 Logout
-              </button>
+              </Button>
             </div>
           </div>
         </div>
       </header>
 
       {/* Dashboard Content */}
-      <main className='max-w-7xl mx-auto py-6 sm:px-6 lg:px-8'>
+      <main className='container mx-auto p-4 md:p-8 space-y-8'>
         {/* Stats Cards */}
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8'>
-          <div className='bg-card p-6 rounded-xl shadow-sm border border-border'>
-            <div className='flex items-center'>
-              <div className='p-3 rounded-full bg-blue-100 text-blue-600'>
-                <GraduationCap className='w-6 h-6' />
+        <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
+          <Card>
+            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+              <CardTitle className='text-sm font-medium'>Total Students</CardTitle>
+              <GraduationCap className='h-4 w-4 text-muted-foreground' />
+            </CardHeader>
+            <CardContent>
+              <div className='text-2xl font-bold'>
+                {dashboardData?.stats?.totalStudents || 0}
               </div>
-              <div className='ml-4'>
-                <p className='text-sm text-muted-foreground'>Total Students</p>
-                <p className='text-2xl font-bold text-foreground'>
-                  {dashboardData?.stats?.totalStudents || 0}
-                </p>
-              </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
-          <div className='bg-card p-6 rounded-xl shadow-sm border border-border'>
-            <div className='flex items-center'>
-              <div className='p-3 rounded-full bg-green-100 text-green-600'>
-                <Users className='w-6 h-6' />
+          <Card>
+            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+              <CardTitle className='text-sm font-medium'>Total Teachers</CardTitle>
+              <Users className='h-4 w-4 text-muted-foreground' />
+            </CardHeader>
+            <CardContent>
+              <div className='text-2xl font-bold'>
+                {dashboardData?.stats?.totalTeachers || 0}
               </div>
-              <div className='ml-4'>
-                <p className='text-sm text-muted-foreground'>Total Teachers</p>
-                <p className='text-2xl font-bold text-foreground'>
-                  {dashboardData?.stats?.totalTeachers || 0}
-                </p>
-              </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
-          <div className='bg-card p-6 rounded-xl shadow-sm border border-border'>
-            <div className='flex items-center'>
-              <div className='p-3 rounded-full bg-yellow-100 text-yellow-600'>
-                <FileText className='w-6 h-6' />
+          <Card>
+            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+              <CardTitle className='text-sm font-medium'>Total Requests</CardTitle>
+              <FileText className='h-4 w-4 text-muted-foreground' />
+            </CardHeader>
+            <CardContent>
+              <div className='text-2xl font-bold'>
+                {dashboardData?.stats?.totalRequests || 0}
               </div>
-              <div className='ml-4'>
-                <p className='text-sm text-muted-foreground'>Total Requests</p>
-                <p className='text-2xl font-bold text-foreground'>
-                  {dashboardData?.stats?.totalRequests || 0}
-                </p>
-              </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
-          <div className='bg-card p-6 rounded-xl shadow-sm border border-border'>
-            <div className='flex items-center'>
-              <div className='p-3 rounded-full bg-purple-100 text-purple-600'>
-                <Clock className='w-6 h-6' />
+          <Card>
+            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+              <CardTitle className='text-sm font-medium'>Pending Requests</CardTitle>
+              <Clock className='h-4 w-4 text-muted-foreground' />
+            </CardHeader>
+            <CardContent>
+              <div className='text-2xl font-bold'>
+                {dashboardData?.stats?.pendingRequests || 0}
               </div>
-              <div className='ml-4'>
-                <p className='text-sm text-muted-foreground'>
-                  Pending Requests
-                </p>
-                <p className='text-2xl font-bold text-foreground'>
-                  {dashboardData?.stats?.pendingRequests || 0}
-                </p>
-              </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Recent Requests */}
-        <div className='bg-card shadow-sm rounded-xl border border-border mb-8 overflow-hidden'>
-          <div className='px-6 py-4 border-b border-border'>
-            <h3 className='text-lg font-medium text-foreground'>
-              Recent OD Requests
-            </h3>
-          </div>
-          <div className='overflow-x-auto'>
-            <table className='min-w-full divide-y divide-border'>
-              <thead className='bg-muted/50'>
-                <tr>
-                  <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
-                    Student
-                  </th>
-                  <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
-                    Event
-                  </th>
-                  <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
-                    Status
-                  </th>
-                  <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
-                    Submitted
-                  </th>
-                </tr>
-              </thead>
-              <tbody className='bg-card divide-y divide-border'>
-                {dashboardData?.recentRequests?.map(request => (
-                  <tr key={request._id}>
-                    <td className='px-6 py-4 whitespace-nowrap'>
-                      <div>
-                        <div className='text-sm font-medium text-foreground'>
-                          {request.studentInfo.fullName}
-                        </div>
-                        <div className='text-sm text-muted-foreground'>
-                          {request.studentInfo.registerNumber}
-                        </div>
-                      </div>
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap'>
-                      <div className='text-sm text-foreground'>
-                        {request.eventDetails?.eventTitle}
-                      </div>
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap'>
-                      <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          request.overallStatus === 'approved'
-                            ? 'bg-green-100 text-green-800'
-                            : request.overallStatus === 'rejected'
-                              ? 'bg-red-100 text-red-800'
-                              : request.overallStatus === 'under_review'
-                                ? 'bg-yellow-100 text-yellow-800'
-                                : 'bg-gray-100 text-gray-800'
-                        }`}
-                      >
-                        {request.overallStatus === 'approved' && (
-                          <CheckCircle className='w-3 h-3 mr-1' />
-                        )}
-                        {request.overallStatus === 'rejected' && (
-                          <XCircle className='w-3 h-3 mr-1' />
-                        )}
-                        {request.overallStatus === 'under_review' && (
-                          <Clock className='w-3 h-3 mr-1' />
-                        )}
-                        {request.overallStatus.replace('_', ' ')}
-                      </span>
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-muted-foreground'>
-                      {new Date(request.submittedAt).toLocaleDateString()}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <div className='grid gap-4 md:grid-cols-1 lg:grid-cols-7'>
+          {/* Recent Requests */}
+          <Card className='lg:col-span-4'>
+            <CardHeader>
+              <CardTitle>Recent OD Requests</CardTitle>
+              <CardDescription>
+                Latest on-duty requests submitted by students.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Student</TableHead>
+                    <TableHead>Event</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className='text-right'>Submitted</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {dashboardData?.recentRequests?.map(request => (
+                    <TableRow key={request._id}>
+                      <TableCell>
+                        <div className='font-medium'>{request.studentInfo.fullName}</div>
+                        <div className='text-xs text-muted-foreground'>{request.studentInfo.registerNumber}</div>
+                      </TableCell>
+                      <TableCell>{request.eventDetails?.eventTitle}</TableCell>
+                      <TableCell>
+                        <Badge variant={getStatusBadgeVariant(request.overallStatus)} className='capitalize flex w-fit items-center gap-1'>
+                          {request.overallStatus === 'approved' && <CheckCircle className='w-3 h-3' />}
+                          {request.overallStatus === 'rejected' && <XCircle className='w-3 h-3' />}
+                          {request.overallStatus === 'under_review' && <Clock className='w-3 h-3' />}
+                          {request.overallStatus.replace('_', ' ')}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className='text-right text-muted-foreground'>
+                        {new Date(request.submittedAt).toLocaleDateString()}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
 
-        {/* Teacher Performance */}
-        <div className='bg-card shadow-sm rounded-xl border border-border overflow-hidden'>
-          <div className='px-6 py-4 border-b border-border'>
-            <h3 className='text-lg font-medium text-foreground'>
-              Teacher Approval Statistics
-            </h3>
-          </div>
-          <div className='overflow-x-auto'>
-            <table className='min-w-full divide-y divide-border'>
-              <thead className='bg-muted/50'>
-                <tr>
-                  <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
-                    Teacher
-                  </th>
-                  <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
-                    Designation
-                  </th>
-                  <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
-                    Total
-                  </th>
-                  <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
-                    Approved
-                  </th>
-                  <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
-                    Rejected
-                  </th>
-                  <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
-                    Pending
-                  </th>
-                </tr>
-              </thead>
-              <tbody className='bg-card divide-y divide-border'>
-                {dashboardData?.teacherStats?.map(teacher => (
-                  <tr key={teacher._id}>
-                    <td className='px-6 py-4 whitespace-nowrap'>
-                      <div className='text-sm font-medium text-foreground'>
-                        {teacher.fullName}
-                      </div>
-                      <div className='text-sm text-muted-foreground'>
-                        {teacher.employeeId}
-                      </div>
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-foreground'>
-                      {teacher.designation}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-foreground'>
-                      {teacher.approvalStats?.totalRequests || 0}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-green-600 font-medium'>
-                      {teacher.approvalStats?.approved || 0}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-red-600 font-medium'>
-                      {teacher.approvalStats?.rejected || 0}
-                    </td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-yellow-600 font-medium'>
-                      {teacher.approvalStats?.pending || 0}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          {/* Teacher Performance */}
+          <Card className='lg:col-span-3'>
+            <CardHeader>
+              <CardTitle>Approval Statistics</CardTitle>
+              <CardDescription>
+                Overview of teacher approval performance.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Teacher</TableHead>
+                    <TableHead className='text-center'>Total</TableHead>
+                    <TableHead className='text-center'>Apprv</TableHead>
+                    <TableHead className='text-center'>Pend</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {dashboardData?.teacherStats?.map(teacher => (
+                    <TableRow key={teacher._id}>
+                      <TableCell>
+                        <div className='font-medium'>{teacher.fullName}</div>
+                        <div className='text-xs text-muted-foreground truncate max-w-[120px]'>{teacher.designation}</div>
+                      </TableCell>
+                      <TableCell className='text-center font-medium'>
+                        {teacher.approvalStats?.totalRequests || 0}
+                      </TableCell>
+                      <TableCell className='text-center text-green-600 font-medium'>
+                        {teacher.approvalStats?.approved || 0}
+                      </TableCell>
+                      <TableCell className='text-center text-yellow-600 font-medium'>
+                        {teacher.approvalStats?.pending || 0}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
         </div>
       </main>
 
